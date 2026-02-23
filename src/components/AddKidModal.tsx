@@ -31,7 +31,7 @@ export default function AddKidModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       <div className="absolute inset-0 bg-black/30" onClick={onClose} />
-      <div className="relative w-full bg-white rounded-t-2xl p-4 pb-safe">
+      <div className="relative w-full bg-white rounded-t-2xl p-4 pb-20">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-semibold text-gray-900">
             {initial ? "Edit Member" : "Add Kid"}

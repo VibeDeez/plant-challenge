@@ -146,7 +146,7 @@ export default function AddPlantPage() {
             className="absolute inset-0 bg-black/30"
             onClick={() => setShowCustom(false)}
           />
-          <div className="relative w-full bg-white rounded-t-2xl p-4 pb-safe">
+          <div className="relative w-full bg-white rounded-t-2xl p-4 pb-20">
             <h3 className="text-sm font-semibold text-gray-900 mb-3">
               Log Custom Plant
             </h3>

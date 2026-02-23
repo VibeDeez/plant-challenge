@@ -66,6 +66,26 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const refreshMembers = useCallback(
+    () => {
+      if (userId) return fetchMembers(userId);
+    },
+    [fetchMembers, userId]
+  );
+
+  const activeMember = members.find((m) => m.id === activeMemberId) ?? null;
+
+  const contextValue = useMemo(
+    () => ({
+      userId: userId ?? "",
+      members,
+      activeMember,
+      setActiveMemberId,
+      refreshMembers: refreshMembers as () => Promise<void>,
+    }),
+    [userId, members, activeMember, setActiveMemberId, refreshMembers]
+  );
+
   useEffect(() => {
     async function init() {
       const {
@@ -91,24 +111,6 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
   }
 
   if (!userId) return null;
-
-  const activeMember = members.find((m) => m.id === activeMemberId) ?? null;
-
-  const refreshMembers = useCallback(
-    () => fetchMembers(userId),
-    [fetchMembers, userId]
-  );
-
-  const contextValue = useMemo(
-    () => ({
-      userId,
-      members,
-      activeMember,
-      setActiveMemberId,
-      refreshMembers,
-    }),
-    [userId, members, activeMember, refreshMembers]
-  );
 
   return (
     <AppContext.Provider value={contextValue}>

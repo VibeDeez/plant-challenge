@@ -139,25 +139,16 @@ export default function AuthPage() {
     <main className="min-h-screen">
       {/* ===== HERO ===== */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain">
-        {/* Floating botanical illustrations */}
+        {/* Floating botanical illustrations — kept sparse to avoid overlap */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-4 -left-6 w-48 h-48 illo-accent rotate-[-15deg] animate-gentleFloat">
-            <Image src="/illustrations/strawberry.png" alt="" width={200} height={200} className="object-contain" />
+          <div className="absolute -top-6 -left-8 w-44 h-44 rotate-[-15deg] animate-gentleFloat">
+            <Image src="/illustrations/strawberry.png" alt="" width={180} height={180} className="object-contain illo-accent" />
           </div>
-          <div className="absolute top-16 -right-4 w-44 h-44 illo-accent rotate-[12deg] animate-gentleFloat" style={{ animationDelay: "1.2s" }}>
-            <Image src="/illustrations/herbs.png" alt="" width={180} height={180} className="object-contain" />
+          <div className="absolute top-20 -right-10 w-40 h-40 rotate-[12deg] animate-gentleFloat" style={{ animationDelay: "1.2s" }}>
+            <Image src="/illustrations/herbs.png" alt="" width={160} height={160} className="object-contain illo-accent" />
           </div>
-          <div className="absolute bottom-36 -left-2 w-40 h-40 illo-accent rotate-[8deg] animate-gentleFloat" style={{ animationDelay: "2.4s" }}>
-            <Image src="/illustrations/spices.png" alt="" width={170} height={170} className="object-contain" />
-          </div>
-          <div className="absolute bottom-16 right-2 w-44 h-44 illo-accent rotate-[-10deg] animate-gentleFloat" style={{ animationDelay: "0.8s" }}>
-            <Image src="/illustrations/legumes.png" alt="" width={180} height={180} className="object-contain" />
-          </div>
-          <div className="absolute top-1/2 -left-4 w-36 h-36 illo-accent rotate-[20deg] animate-gentleFloat" style={{ animationDelay: "1.8s" }}>
-            <Image src="/illustrations/grains.png" alt="" width={150} height={150} className="object-contain" />
-          </div>
-          <div className="absolute top-1/3 right-2 w-36 h-36 illo-accent rotate-[-5deg] animate-gentleFloat" style={{ animationDelay: "3s" }}>
-            <Image src="/illustrations/seeds.png" alt="" width={150} height={150} className="object-contain" />
+          <div className="absolute bottom-28 -left-6 w-36 h-36 rotate-[8deg] animate-gentleFloat" style={{ animationDelay: "2.4s" }}>
+            <Image src="/illustrations/grains.png" alt="" width={150} height={150} className="object-contain illo-accent" />
           </div>
         </div>
 
@@ -427,11 +418,11 @@ export default function AuthPage() {
       {/* ===== AUTH ===== */}
       <section id="start" className="relative bg-brand-cream py-20 sm:py-28 px-6 overflow-hidden grain-light">
         {/* Background botanical watermarks */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute -left-16 top-1/4 w-56 h-56 rotate-[10deg]">
+        <div className="absolute inset-0 pointer-events-none hidden sm:block" aria-hidden="true">
+          <div className="absolute -left-24 top-1/4 w-56 h-56 rotate-[10deg]">
             <Image src="/illustrations/seeds.png" alt="" width={230} height={230} className="object-contain illo-accent" />
           </div>
-          <div className="absolute -right-12 bottom-1/4 w-52 h-52 rotate-[-8deg]">
+          <div className="absolute -right-20 bottom-1/4 w-52 h-52 rotate-[-8deg]">
             <Image src="/illustrations/spices.png" alt="" width={210} height={210} className="object-contain illo-accent" />
           </div>
         </div>

@@ -122,9 +122,11 @@ body {
 /* ---- Illustration opacity tiers ---- */
 @utility illo-ghost {
   opacity: 0.08;
+  mix-blend-mode: multiply;
 }
 @utility illo-accent {
-  opacity: 0.20;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
 }
 @utility illo-featured {
   opacity: 0.40;

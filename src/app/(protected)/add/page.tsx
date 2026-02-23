@@ -20,10 +20,12 @@ import {
   Sprout,
   Leaf,
   Flame,
+  Camera,
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import PhotoRecognitionModal from "@/components/PhotoRecognitionModal";
 
 const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
   Fruits: "/illustrations/strawberry.png",
@@ -76,6 +78,7 @@ export default function AddPlantPage() {
   const [customName, setCustomName] = useState("");
   const [customCategory, setCustomCategory] = useState("Fruits");
   const [showCustom, setShowCustom] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const weekStart = getWeekStart();
 
   const fetchData = useCallback(async () => {
@@ -130,6 +133,30 @@ export default function AddPlantPage() {
     }
   }
 
+  async function logRecognizedPlants(
+    plants: { name: string; category: string; points: number }[]
+  ) {
+    if (!activeMember) return;
+    const inserts = plants
+      .filter((p) => !loggedNames.has(p.name))
+      .map((p) => ({
+        member_id: activeMember.id,
+        plant_name: p.name,
+        category: p.category,
+        points: p.points,
+        week_start: weekStart,
+      }));
+    if (inserts.length === 0) return;
+    const { error } = await supabase.from("plant_log").insert(inserts);
+    if (!error) {
+      setLoggedNames((prev) => {
+        const next = new Set(prev);
+        inserts.forEach((i) => next.add(i.plant_name));
+        return next;
+      });
+    }
+  }
+
   const filtered = plants.filter((p) => {
     const matchCategory = category === "All" || p.category === category;
     const matchSearch =
@@ -170,27 +197,36 @@ export default function AddPlantPage() {
             </h1>
           </div>
 
-          {/* Search bar */}
-          <div className="relative mb-2">
-            <Search
-              size={16}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30"
-            />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search plants..."
-              className="w-full rounded-xl bg-[#f5f0e8]/10 py-2.5 pl-10 pr-3 text-sm text-[#f5f0e8] placeholder:text-[#f5f0e8]/30 focus:bg-[#f5f0e8]/15 focus:outline-none transition-colors"
-            />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30 hover:text-[#f5f0e8]"
-              >
-                <X size={16} />
-              </button>
-            )}
+          {/* Search bar + camera button */}
+          <div className="relative mb-2 flex gap-2">
+            <div className="relative flex-1">
+              <Search
+                size={16}
+                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30"
+              />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search plants..."
+                className="w-full rounded-xl bg-[#f5f0e8]/10 py-2.5 pl-10 pr-3 text-sm text-[#f5f0e8] placeholder:text-[#f5f0e8]/30 focus:bg-[#f5f0e8]/15 focus:outline-none transition-colors"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30 hover:text-[#f5f0e8]"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => setShowCamera(true)}
+              className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-[#22c55e] text-white hover:bg-[#1ea34d] active:scale-95 transition-all"
+              title="Snap to log"
+            >
+              <Camera size={18} strokeWidth={2} />
+            </button>
           </div>
         </div>
       </div>
@@ -401,6 +437,13 @@ export default function AddPlantPage() {
           <span className="text-sm font-semibold">Custom</span>
         </button>
       )}
+
+      <PhotoRecognitionModal
+        open={showCamera}
+        onClose={() => setShowCamera(false)}
+        loggedNames={loggedNames}
+        onLogPlants={logRecognizedPlants}
+      />
     </>
   );
 }

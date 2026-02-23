@@ -24,7 +24,7 @@ export default function MemberSwitcher() {
   if (members.length <= 1) return null;
 
   return (
-    <div ref={ref} className="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-sm border-b border-brand-cream/10">
+    <div ref={ref} className="sticky top-safe z-40 bg-brand-dark/95 backdrop-blur-sm border-b border-brand-cream/10">
       <div className="max-w-lg mx-auto px-5">
         <button
           onClick={() => setOpen((o) => !o)}

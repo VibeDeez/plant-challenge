@@ -138,8 +138,10 @@ export default function AuthPage() {
 
   return (
     <main className="min-h-screen">
+      {/* PWA safe area cover */}
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-brand-dark h-safe-top" />
       {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain mt-safe">
         {/* Floating botanical illustrations — kept sparse to avoid overlap */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
           <div className="absolute -top-6 -left-8 w-44 h-44 rotate-[-15deg] animate-gentleFloat">

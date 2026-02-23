@@ -1,5 +1,15 @@
 "use client";
 
+const MILESTONES = [15, 25, 30];
+
+function getLabel(current: number, target: number, complete: boolean): string {
+  if (complete) return "Challenge complete!";
+  if (current >= 25) return "Almost there!";
+  if (current >= 15) return "Halfway hero!";
+  const remaining = target - current;
+  return `${remaining} more plant${remaining === 1 ? "" : "s"} to go`;
+}
+
 export default function ProgressBar({
   current,
   target = 30,
@@ -12,12 +22,11 @@ export default function ProgressBar({
   const complete = pct >= 1;
 
   return (
-    <div className="w-full">
+    <div className={`w-full ${complete ? "animate-celebrate rounded-2xl" : ""}`}>
       {/* Big number + percentage */}
       <div className="flex items-baseline gap-3 mb-3">
         <span
-          className="text-6xl font-black tracking-tight text-brand-cream"
-          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+          className="text-6xl font-black tracking-tight text-brand-cream font-display"
         >
           {current % 1 === 0 ? current : current.toFixed(1)}
         </span>
@@ -25,15 +34,16 @@ export default function ProgressBar({
           / {target}
         </span>
         <span
-          className="ml-auto text-2xl font-bold tabular-nums"
-          style={{ color: complete ? "#22c55e" : "#f5f0e8" }}
+          className={`ml-auto text-2xl font-bold tabular-nums ${
+            complete ? "text-brand-green" : current >= 25 ? "text-brand-rose-light" : "text-brand-cream"
+          }`}
         >
           {pctDisplay}%
         </span>
       </div>
 
-      {/* Fill meter */}
-      <div className="relative w-full h-3 rounded-full bg-brand-cream/10 overflow-hidden">
+      {/* Fill meter — thickened to 6px */}
+      <div className="relative w-full h-1.5 rounded-full bg-brand-cream/10 overflow-hidden">
         <div
           className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
           style={{
@@ -46,11 +56,33 @@ export default function ProgressBar({
         />
       </div>
 
+      {/* Milestone dots */}
+      <div className="relative w-full h-4 mt-1">
+        {MILESTONES.map((m) => {
+          const pos = (m / target) * 100;
+          const reached = current >= m;
+          return (
+            <div
+              key={m}
+              className="absolute top-0 flex flex-col items-center -translate-x-1/2"
+              style={{ left: `${pos}%` }}
+            >
+              <div
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  reached ? "bg-brand-green" : "bg-brand-cream/20"
+                }`}
+              />
+              <span className={`text-[9px] mt-0.5 ${reached ? "text-brand-cream/60" : "text-brand-cream/20"}`}>
+                {m}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+
       {/* Label */}
-      <p className="mt-2 text-sm text-brand-cream/40">
-        {complete
-          ? "Challenge complete"
-          : `${target - current} more plant${target - current === 1 ? "" : "s"} to go`}
+      <p className="mt-1 text-sm text-brand-cream/40">
+        {getLabel(current, target, complete)}
       </p>
     </div>
   );

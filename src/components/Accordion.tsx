@@ -21,8 +21,7 @@ export default function Accordion({
         className="flex w-full items-center justify-between py-4 text-left"
       >
         <span
-          className="text-sm font-bold text-brand-dark"
-          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+          className="text-sm font-bold text-brand-dark font-display"
         >
           {title}
         </span>

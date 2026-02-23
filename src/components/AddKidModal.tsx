@@ -36,12 +36,12 @@ export default function AddKidModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20">
+      <div className="absolute inset-0 bg-black/40 animate-fadeIn" onClick={onClose} />
+      <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20 animate-slideUp">
+        <div className="flex justify-center pt-0 pb-3"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
         <div className="flex items-center justify-between mb-5">
           <h3
-            className="text-lg text-brand-dark"
-            style={{ fontFamily: "Georgia, serif" }}
+            className="text-lg text-brand-dark font-display"
           >
             {initial ? "Edit Member" : "Add Kid"}
           </h3>

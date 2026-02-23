@@ -74,7 +74,7 @@ export default function LeaderboardPage() {
   return (
     <>
       {/* === DARK GREEN HEADER === */}
-      <div className="relative bg-brand-dark overflow-hidden grain">
+      <div className="relative bg-brand-dark overflow-hidden grain border-b border-[#b8860b]/15">
         {/* Background botanical watermark */}
         <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
@@ -82,7 +82,7 @@ export default function LeaderboardPage() {
             alt=""
             width={160}
             height={160}
-            className="object-contain opacity-[0.10]"
+            className="object-contain illo-accent"
             priority
           />
         </div>
@@ -96,8 +96,7 @@ export default function LeaderboardPage() {
               </div>
               <div>
                 <h1
-                  className="text-2xl font-bold text-brand-cream"
-                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                  className="text-2xl font-bold text-brand-cream font-display"
                 >
                   Leaderboard
                 </h1>
@@ -136,7 +135,7 @@ export default function LeaderboardPage() {
                   alt=""
                   width={180}
                   height={180}
-                  className="object-contain opacity-[0.12]"
+                  className="object-contain illo-accent"
                 />
               </div>
 
@@ -150,8 +149,7 @@ export default function LeaderboardPage() {
                   />
                 </div>
                 <h2
-                  className="text-lg font-bold text-brand-dark mb-1.5"
-                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                  className="text-lg font-bold text-brand-dark mb-1.5 font-display"
                 >
                   No entries yet
                 </h2>
@@ -164,14 +162,15 @@ export default function LeaderboardPage() {
             /* --- Leaderboard entries --- */
             <div className="space-y-2.5">
               {entries.map((entry, i) => (
-                <LeaderboardRow
-                  key={entry.member_id}
-                  rank={i + 1}
-                  displayName={entry.display_name}
-                  emoji={entry.avatar_emoji}
-                  points={entry.total_points}
-                  isFamily={entry.user_id === userId}
-                />
+                <div key={entry.member_id} className="animate-fadeInUp" style={{ animationDelay: `${i * 0.08}s` }}>
+                  <LeaderboardRow
+                    rank={i + 1}
+                    displayName={entry.display_name}
+                    emoji={entry.avatar_emoji}
+                    points={entry.total_points}
+                    isFamily={entry.user_id === userId}
+                  />
+                </div>
               ))}
             </div>
           )}

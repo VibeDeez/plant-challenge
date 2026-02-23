@@ -12,8 +12,7 @@ export default function LearnPage() {
           <div className="flex items-center gap-2.5 mb-2">
             <BookOpen size={20} className="text-brand-green" />
             <h1
-              className="text-2xl font-bold text-brand-cream"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+              className="text-2xl font-bold text-brand-cream font-display"
             >
               Learn
             </h1>

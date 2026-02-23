@@ -16,7 +16,7 @@ import ProgressBar from "@/components/ProgressBar";
 import PlantCard from "@/components/PlantCard";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Leaf, TrendingUp } from "lucide-react";
+import { Plus, Leaf, TrendingUp, X } from "lucide-react";
 
 // Deterministic selection based on the day of the year
 function getDailyIllustration(): string {
@@ -77,6 +77,27 @@ export default function HomePage() {
     if (!error) {
       setLogs((prev) => prev.filter((l) => l.id !== id));
     }
+  }, []);
+
+  // --- Crop Circles onboarding banner ---
+  const [showCircleBanner, setShowCircleBanner] = useState(
+    () => !localStorage.getItem("dismissed_circle_prompt")
+  );
+
+  useEffect(() => {
+    if (!showCircleBanner || !activeMember) return;
+    supabase
+      .from("circle_member")
+      .select("id", { count: "exact", head: true })
+      .eq("member_id", activeMember.id)
+      .then(({ count }) => {
+        if (count && count > 0) setShowCircleBanner(false);
+      });
+  }, [showCircleBanner, activeMember]);
+
+  const dismissCircleBanner = useCallback(() => {
+    localStorage.setItem("dismissed_circle_prompt", "1");
+    setShowCircleBanner(false);
   }, []);
 
   const totalPoints = logs.reduce((sum, l) => sum + l.points, 0);
@@ -205,6 +226,43 @@ export default function HomePage() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* === CROP CIRCLES ONBOARDING BANNER === */}
+      {showCircleBanner && (
+        <section className="bg-brand-cream px-5 pt-5 grain-light">
+          <div className="max-w-lg mx-auto">
+            <div className="relative bg-brand-green/10 border border-brand-green/20 rounded-2xl p-5 animate-fadeInUp">
+              <button
+                onClick={dismissCircleBanner}
+                className="absolute top-3 right-3 text-brand-muted hover:text-brand-dark transition-colors"
+                aria-label="Dismiss"
+              >
+                <X size={18} />
+              </button>
+              <h3 className="font-display font-bold text-brand-dark">
+                Start a Crop Circle
+              </h3>
+              <p className="text-brand-muted text-sm mt-1">
+                Invite friends and compete on a weekly leaderboard
+              </p>
+              <div className="flex gap-2 mt-4">
+                <Link
+                  href="/circles/create"
+                  className="px-4 py-2 rounded-xl bg-brand-green text-white text-sm font-semibold hover:bg-brand-green-hover active:scale-[0.98] transition-all"
+                >
+                  Create
+                </Link>
+                <Link
+                  href="/circles"
+                  className="px-4 py-2 rounded-xl border border-brand-dark/15 text-brand-dark text-sm font-semibold hover:bg-brand-dark/5 active:scale-[0.98] transition-all"
+                >
+                  Join
+                </Link>
+              </div>
             </div>
           </div>
         </section>

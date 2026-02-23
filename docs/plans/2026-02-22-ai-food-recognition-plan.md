@@ -20,7 +20,7 @@
 Append to `.env.local`:
 
 ```
-OPENROUTER_API_KEY=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
+OPENROUTER_API_KEY=<your-openrouter-api-key>
 ```
 
 **Step 2: Verify it's not exposed client-side**

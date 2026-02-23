@@ -26,6 +26,10 @@ function useReveal() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
@@ -56,8 +60,8 @@ function getHeroIllustrations(): string[] {
   const len = ALL_ILLUSTRATIONS.length;
   return [
     ALL_ILLUSTRATIONS[dayOfYear % len],
-    ALL_ILLUSTRATIONS[(dayOfYear + 3) % len],
-    ALL_ILLUSTRATIONS[(dayOfYear + 6) % len],
+    ALL_ILLUSTRATIONS[(dayOfYear + 1) % len],
+    ALL_ILLUSTRATIONS[(dayOfYear + 4) % len],
   ];
 }
 
@@ -464,7 +468,7 @@ export default function LearnPage() {
             38 trillion
           </p>
           <p
-            className={`text-xs text-brand-cream/40 mb-8 transition-all duration-700 delay-250 ${
+            className={`text-xs text-brand-cream/40 mb-8 transition-all duration-700 delay-[250ms] ${
               scienceReveal.visible
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -625,7 +629,9 @@ export default function LearnPage() {
    STATIC DATA ARRAYS
 ======================================================= */
 
-const STRATEGY_ICONS: Record<string, LucideIcon> = {
+type StrategyIconKey = "Cherry" | "Flame" | "LeafyGreen" | "Wheat" | "Sprout" | "Nut";
+
+const STRATEGY_ICONS: Record<StrategyIconKey, LucideIcon> = {
   Cherry,
   Flame,
   LeafyGreen,
@@ -634,7 +640,7 @@ const STRATEGY_ICONS: Record<string, LucideIcon> = {
   Nut,
 };
 
-const STRATEGIES: { name: string; desc: string; icon: string }[] = [
+const STRATEGIES: { name: string; desc: string; icon: StrategyIconKey }[] = [
   {
     name: "Power Breakfast",
     desc: "Front-load your day. Overnight oats with oats, chia, walnuts, blueberries, banana, and cinnamon = 5.25 points before leaving the house.",

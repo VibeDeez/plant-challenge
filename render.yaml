@@ -6,7 +6,7 @@ services:
     plan: free
     branch: main
     buildCommand: npm install --include=dev && npm run build
-    startCommand: npm start
+    startCommand: npm start -- --port $PORT
     envVars:
       - key: NEXT_PUBLIC_SUPABASE_URL
         value: https://bqlbwofbohbbnelbksvy.supabase.co

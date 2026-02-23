@@ -35,6 +35,10 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/auth")
   ) {
     const url = request.nextUrl.clone();
+    if (request.nextUrl.pathname.startsWith("/join/")) {
+      const code = request.nextUrl.pathname.split("/join/")[1];
+      if (code) url.searchParams.set("join", code);
+    }
     url.pathname = "/auth";
     return NextResponse.redirect(url);
   }

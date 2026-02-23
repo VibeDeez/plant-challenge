@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const VISION_MODEL = "google/gemini-2.0-flash-lite";
+const VISION_MODEL = "google/gemini-2.0-flash-lite-001";
 
 const SYSTEM_PROMPT = `You are a food recognition assistant for a plant diversity tracking app. Analyze the photo and identify all visible plant-based whole foods.
 

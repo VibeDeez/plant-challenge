@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/ProtectedLayout";
-import { getShareUrl } from "@/lib/circles";
+import { getShareUrl, generateInviteCode } from "@/lib/circles";
 import type { Circle } from "@/lib/types/circle";
 import Link from "next/link";
 import {
@@ -14,6 +14,7 @@ import {
   X,
   AlertTriangle,
   ChevronDown,
+  RefreshCw,
 } from "lucide-react";
 
 const supabase = createClient();
@@ -48,6 +49,7 @@ export default function CircleSettingsPage() {
 
   // Section 2: Invite Code
   const [copied, setCopied] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   // Section 4: Transfer Admin
   const [transferTargetId, setTransferTargetId] = useState("");
@@ -128,6 +130,27 @@ export default function CircleSettingsPage() {
     } catch {
       // Clipboard API not available
     }
+  }
+
+  async function handleRegenerate() {
+    if (!circle || regenerating) return;
+    if (!confirm("Generate a new invite code? The current code will stop working.")) return;
+    setRegenerating(true);
+
+    // Retry up to 3 times on unique constraint collision
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const newCode = generateInviteCode();
+      const { error } = await supabase
+        .from("circle")
+        .update({ invite_code: newCode })
+        .eq("id", circleId);
+
+      if (!error) {
+        setCircle((prev) => (prev ? { ...prev, invite_code: newCode } : prev));
+        break;
+      }
+    }
+    setRegenerating(false);
   }
 
   async function handleRemoveMember(memberId: string, displayName: string) {
@@ -251,30 +274,44 @@ export default function CircleSettingsPage() {
           </div>
         </section>
 
-        {/* ===== Section 2: Invite Code ===== */}
+        {/* ===== Section 2: Invite Link ===== */}
         <section className="border-b border-brand-dark/10 pb-6 mb-6">
-          <h2 className="text-lg text-brand-dark font-display mb-3">
-            Invite Code
+          <h2 className="text-lg text-brand-dark font-display mb-1">
+            Invite Link
           </h2>
-          <div className="flex items-center gap-4">
-            <p className="font-mono text-xl tracking-widest text-brand-dark font-bold">
+          <p className="text-sm text-brand-muted mb-3">
+            Share this link to invite members to your Circle.
+          </p>
+          <div className="rounded-xl border border-brand-dark/10 bg-white/50 p-3 mb-3">
+            <p className="text-xs text-brand-muted mb-1 font-medium">Invite code</p>
+            <p className="font-mono text-lg tracking-widest text-brand-dark font-bold">
               {circle.invite_code}
             </p>
+          </div>
+          <div className="flex gap-2">
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 py-2.5 text-sm font-semibold text-brand-dark hover:bg-white/80 transition-colors"
+              className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 py-2.5 text-sm font-semibold text-brand-dark hover:bg-white/80 transition-colors"
             >
               {copied ? (
                 <>
                   <Check size={14} className="text-brand-green" />
-                  Copied!
+                  Link Copied!
                 </>
               ) : (
                 <>
                   <Copy size={14} />
-                  Copy Link
+                  Copy Invite Link
                 </>
               )}
+            </button>
+            <button
+              onClick={handleRegenerate}
+              disabled={regenerating}
+              className="flex items-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 py-2.5 text-sm font-medium text-brand-muted hover:bg-white/80 hover:text-brand-dark transition-colors disabled:opacity-50"
+            >
+              <RefreshCw size={14} className={regenerating ? "animate-spin" : ""} />
+              {regenerating ? "..." : "New Code"}
             </button>
           </div>
         </section>

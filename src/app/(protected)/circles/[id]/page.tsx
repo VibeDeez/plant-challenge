@@ -25,7 +25,7 @@ import {
   Trophy,
   Settings,
   Users,
-  Copy,
+  Link2,
   Check,
   ChevronLeft,
 } from "lucide-react";
@@ -540,13 +540,22 @@ export default function CircleDetailPage() {
 
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1.5 text-xs text-brand-cream/40 hover:text-brand-cream/70 transition-colors"
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                  copied
+                    ? "bg-brand-green/20 text-brand-green"
+                    : "bg-brand-cream/10 text-brand-cream/60 hover:bg-brand-cream/15 hover:text-brand-cream/80"
+                }`}
               >
-                <span className="font-mono tracking-wider">{circle.invite_code}</span>
                 {copied ? (
-                  <Check size={12} className="text-brand-green" />
+                  <>
+                    <Check size={12} />
+                    Link Copied
+                  </>
                 ) : (
-                  <Copy size={12} />
+                  <>
+                    <Link2 size={12} />
+                    Copy Invite Link
+                  </>
                 )}
               </button>
             </div>
@@ -643,38 +652,47 @@ export default function CircleDetailPage() {
                     </div>
                   )}
 
-                  {(currentScores[1] || currentScores[2]) && (
+                  {currentScores[1] && currentScores[2] ? (
                     <div className="grid grid-cols-2 gap-2.5">
-                      {currentScores[1] && (
-                        <div className="animate-fadeInUp" style={{ animationDelay: "0.08s" }}>
-                          <PodiumCard
-                            rank={2}
-                            entry={currentScores[1]}
-                            isMe={currentScores[1].member_id === activeMember?.id}
-                            subtitle={
-                              lbView === "alltime" && "avg_weekly" in currentScores[1]
-                                ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
-                                : undefined
-                            }
-                          />
-                        </div>
-                      )}
-                      {currentScores[2] && (
-                        <div className="animate-fadeInUp" style={{ animationDelay: "0.16s" }}>
-                          <PodiumCard
-                            rank={3}
-                            entry={currentScores[2]}
-                            isMe={currentScores[2].member_id === activeMember?.id}
-                            subtitle={
-                              lbView === "alltime" && "avg_weekly" in currentScores[2]
-                                ? `${(currentScores[2] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
-                                : undefined
-                            }
-                          />
-                        </div>
-                      )}
+                      <div className="animate-fadeInUp" style={{ animationDelay: "0.08s" }}>
+                        <PodiumCard
+                          rank={2}
+                          entry={currentScores[1]}
+                          isMe={currentScores[1].member_id === activeMember?.id}
+                          subtitle={
+                            lbView === "alltime" && "avg_weekly" in currentScores[1]
+                              ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
+                              : undefined
+                          }
+                        />
+                      </div>
+                      <div className="animate-fadeInUp" style={{ animationDelay: "0.16s" }}>
+                        <PodiumCard
+                          rank={3}
+                          entry={currentScores[2]}
+                          isMe={currentScores[2].member_id === activeMember?.id}
+                          subtitle={
+                            lbView === "alltime" && "avg_weekly" in currentScores[2]
+                              ? `${(currentScores[2] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
+                              : undefined
+                          }
+                        />
+                      </div>
                     </div>
-                  )}
+                  ) : currentScores[1] ? (
+                    <div className="animate-fadeInUp" style={{ animationDelay: "0.08s" }}>
+                      <PodiumCard
+                        rank={2}
+                        entry={currentScores[1]}
+                        isMe={currentScores[1].member_id === activeMember?.id}
+                        subtitle={
+                          lbView === "alltime" && "avg_weekly" in currentScores[1]
+                            ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
+                            : undefined
+                        }
+                      />
+                    </div>
+                  ) : null}
 
                   {/* Rank 4+ */}
                   {currentScores.slice(3).map((entry, i) => (

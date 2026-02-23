@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { getWeekStart, getWeekLabel } from "@/lib/weekUtils";
+import { getWeekStart, getWeekLabel, getWeekDays } from "@/lib/weekUtils";
 import {
   TIPS,
   CATEGORY_COLORS,
@@ -117,24 +117,14 @@ export default function HomePage() {
 
   const heroIllustration = useMemo(() => getDailyIllustration(), []);
   const collageIllustrations = useMemo(() => getCollageIllustrations(), []);
+  const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
 
   return (
     <>
       <MemberSwitcher />
 
-      {/* === TIP CARD === */}
-      <div className="bg-brand-cream px-5 pt-4 pb-2 grain-light">
-        <div className="max-w-lg mx-auto">
-          <div className="rounded-xl bg-brand-dark/5 border border-brand-dark/10 px-4 py-3">
-            <p className="text-xs font-medium text-brand-dark/70 leading-relaxed">
-              {tip}
-            </p>
-          </div>
-        </div>
-      </div>
-
       {/* === HERO HEADER === */}
-      <section className="relative bg-brand-dark px-5 pt-8 pb-10 -mt-1 overflow-hidden grain">
+      <section className="relative bg-brand-dark px-5 pt-5 pb-14 overflow-hidden grain">
         {/* Botanical illustration — anchored right, subtle */}
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
@@ -148,10 +138,36 @@ export default function HomePage() {
         </div>
 
         <div className="relative max-w-lg mx-auto">
-          {/* Week label */}
-          <p className="text-brand-cream/40 text-xs font-medium tracking-widest uppercase mb-8">
+          {/* Tip — integrated glassmorphic pill */}
+          <div className="rounded-lg bg-brand-cream/8 border border-brand-cream/10 px-3.5 py-2.5 mb-5">
+            <p className="text-[11px] font-medium text-brand-cream/50 leading-relaxed">
+              {tip}
+            </p>
+          </div>
+
+          {/* Week label — prominent */}
+          <p className="text-brand-cream/70 text-sm font-semibold tracking-wide uppercase mb-2">
             {getWeekLabel(weekStart)}
           </p>
+
+          {/* Day-of-week progress dots */}
+          <div className="flex items-center gap-2.5 mb-6">
+            {weekDays.map((day, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <div
+                  className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-colors ${
+                    day.isToday
+                      ? "bg-brand-green text-white ring-2 ring-brand-green/30"
+                      : day.passed
+                        ? "bg-brand-cream/20 text-brand-cream/70"
+                        : "bg-brand-cream/6 text-brand-cream/25"
+                  }`}
+                >
+                  {day.label}
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* Fill meter */}
           <ProgressBar current={totalPoints} />
@@ -165,8 +181,13 @@ export default function HomePage() {
             Log a Plant
           </Link>
         </div>
-        {/* Bottom gradient fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-brand-cream to-transparent" />
+
+        {/* Smooth curved transition to cream */}
+        <div className="absolute -bottom-px left-0 right-0">
+          <svg viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none" className="w-full h-8 block">
+            <path d="M0 48h1440V20C1220 0 960 8 720 16S220 40 0 20v28z" fill="#f5f0e8" />
+          </svg>
+        </div>
       </section>
 
       {/* === CATEGORY BREAKDOWN MOSAIC === */}

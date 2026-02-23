@@ -171,7 +171,6 @@ export default function PhotoRecognitionModal({
             ref={fileRef}
             type="file"
             accept="image/*"
-            capture="environment"
             onChange={handleFile}
             className="hidden"
           />

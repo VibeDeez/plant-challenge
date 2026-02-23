@@ -51,7 +51,7 @@ export default function LeaderboardRow({
             alt=""
             width={280}
             height={280}
-            className="object-contain opacity-[0.18] translate-x-8"
+            className="object-contain illo-accent translate-x-8"
           />
         </div>
 
@@ -64,11 +64,8 @@ export default function LeaderboardRow({
               style={{ backgroundColor: rankColor.accent }}
             >
               <span
-                className="text-3xl font-bold"
-                style={{
-                  fontFamily: "Georgia, 'Times New Roman', serif",
-                  color: rankColor.text,
-                }}
+                className="text-3xl font-bold font-display"
+                style={{ color: rankColor.text }}
               >
                 1
               </span>
@@ -80,8 +77,7 @@ export default function LeaderboardRow({
                 <span className="text-2xl">{emoji}</span>
                 <div className="min-w-0">
                   <p
-                    className="text-lg font-bold text-brand-dark truncate"
-                    style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                    className="text-lg font-bold text-brand-dark truncate font-display"
                   >
                     {displayName}
                   </p>
@@ -95,8 +91,7 @@ export default function LeaderboardRow({
             {/* Points */}
             <div className="text-right shrink-0">
               <p
-                className="text-3xl font-bold text-brand-dark"
-                style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                className="text-3xl font-bold text-brand-dark font-display"
               >
                 {pointsDisplay}
               </p>
@@ -149,11 +144,11 @@ export default function LeaderboardRow({
             alt=""
             width={160}
             height={160}
-            className="object-contain opacity-[0.14] translate-x-4"
+            className="object-contain illo-accent translate-x-4"
           />
         </div>
 
-        <div className="relative bg-white/20 backdrop-blur-sm px-4 py-3.5">
+        <div className="relative bg-white/30 backdrop-blur-sm px-4 py-3.5">
           <div className="flex items-center gap-3.5">
             {/* Rank badge */}
             <div
@@ -161,11 +156,8 @@ export default function LeaderboardRow({
               style={{ backgroundColor: rankColor.accent }}
             >
               <span
-                className="text-xl font-bold"
-                style={{
-                  fontFamily: "Georgia, 'Times New Roman', serif",
-                  color: rankColor.text,
-                }}
+                className="text-xl font-bold font-display"
+                style={{ color: rankColor.text }}
               >
                 {rank}
               </span>
@@ -187,8 +179,7 @@ export default function LeaderboardRow({
             {/* Points + mini progress */}
             <div className="text-right shrink-0">
               <p
-                className="text-xl font-bold text-brand-dark"
-                style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                className="text-xl font-bold text-brand-dark font-display"
               >
                 {pointsDisplay}
               </p>

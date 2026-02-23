@@ -161,8 +161,7 @@ export default function AddPlantPage() {
               <ArrowLeft size={22} />
             </Link>
             <h1
-              className="text-2xl font-bold text-brand-cream"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+              className="text-2xl font-bold text-brand-cream font-display"
             >
               Log Plants
             </h1>
@@ -222,12 +221,12 @@ export default function AddPlantPage() {
           {showGallery ? (
             // Gallery view: grouped by category with big section headers
             <div className="space-y-8">
-              {Object.entries(grouped).map(([cat, items]) => {
+              {Object.entries(grouped).map(([cat, items], i) => {
                 const Icon = CATEGORY_ICONS[cat] ?? Leaf;
                 const color = CATEGORY_COLORS[cat] ?? "#6b7260";
                 const illustration = CATEGORY_ILLUSTRATIONS[cat];
                 return (
-                  <section key={cat}>
+                  <section key={cat} className="animate-fadeInUp" style={{ animationDelay: `${i * 0.1}s` }}>
                     {/* Category header */}
                     <div className="rounded-2xl mb-3"
                       style={{ backgroundColor: `${color}08` }}
@@ -245,11 +244,7 @@ export default function AddPlantPage() {
                         </div>
                         <div>
                           <h2
-                            className="text-lg font-bold text-brand-dark"
-                            style={{
-                              fontFamily:
-                                "Georgia, 'Times New Roman', serif",
-                            }}
+                            className="text-lg font-bold text-brand-dark font-display"
                           >
                             {cat}
                           </h2>
@@ -273,7 +268,7 @@ export default function AddPlantPage() {
                             alt=""
                             width={280}
                             height={280}
-                            className="object-contain opacity-[0.25]"
+                            className="object-contain illo-accent"
                           />
                         </div>
                       )}
@@ -357,14 +352,14 @@ export default function AddPlantPage() {
       {showCustom ? (
         <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/40 animate-fadeIn"
             onClick={() => setShowCustom(false)}
           />
-          <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20">
+          <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20 animate-slideUp">
+            <div className="flex justify-center pt-0 pb-3"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
             <div className="flex items-center justify-between mb-4">
               <h3
-                className="text-lg font-bold text-brand-dark"
-                style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                className="text-lg font-bold text-brand-dark font-display"
               >
                 Custom Plant
               </h3>

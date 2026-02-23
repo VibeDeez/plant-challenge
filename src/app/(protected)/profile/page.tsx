@@ -84,7 +84,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-brand-bg">
       {/* Dark green header with botanical watermark */}
       <div className="relative bg-brand-dark px-5 pt-6 pb-8 overflow-hidden grain">
-        <div className="absolute -right-6 -bottom-6 w-44 h-44 opacity-[0.10] pointer-events-none">
+        <div className="absolute -right-6 -bottom-6 w-44 h-44 illo-accent pointer-events-none">
           <Image
             src="/illustrations/herbs.png"
             alt=""
@@ -94,8 +94,7 @@ export default function ProfilePage() {
           />
         </div>
         <h1
-          className="relative text-2xl text-brand-cream"
-          style={{ fontFamily: "Georgia, serif" }}
+          className="relative text-2xl text-brand-cream font-display"
         >
           Profile
         </h1>
@@ -106,7 +105,7 @@ export default function ProfilePage() {
         {owner && !editingOwner && (
           <div className="relative rounded-2xl overflow-hidden shadow-sm">
             {/* Botanical background */}
-            <div className="absolute -right-4 -top-2 w-36 h-36 opacity-[0.15] pointer-events-none">
+            <div className="absolute -right-4 -top-2 w-36 h-36 illo-accent pointer-events-none">
               <Image
                 src="/illustrations/vegetables.png"
                 alt=""
@@ -121,12 +120,11 @@ export default function ProfilePage() {
                 <span className="text-5xl">{owner.avatar_emoji}</span>
                 <div className="flex-1">
                   <p
-                    className="text-xl text-brand-dark"
-                    style={{ fontFamily: "Georgia, serif" }}
+                    className="text-xl text-brand-dark font-display"
                   >
                     {owner.display_name}
                   </p>
-                  <p className="text-sm text-brand-muted mt-0.5">
+                  <p className="text-sm text-brand-rose mt-0.5">
                     Account owner
                   </p>
                 </div>
@@ -176,8 +174,7 @@ export default function ProfilePage() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <h2
-              className="text-lg text-brand-dark"
-              style={{ fontFamily: "Georgia, serif" }}
+              className="text-lg text-brand-dark font-display"
             >
               Family
             </h2>
@@ -192,7 +189,7 @@ export default function ProfilePage() {
 
           {kids.length === 0 ? (
             <div className="relative rounded-2xl overflow-hidden">
-              <div className="absolute right-4 top-2 w-36 h-36 opacity-[0.2] pointer-events-none">
+              <div className="absolute right-4 top-2 w-36 h-36 illo-accent pointer-events-none">
                 <Image
                   src="/illustrations/seeds.png"
                   alt=""
@@ -203,8 +200,7 @@ export default function ProfilePage() {
               </div>
               <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl py-10 px-6 text-center">
                 <p
-                  className="text-brand-muted text-base"
-                  style={{ fontFamily: "Georgia, serif" }}
+                  className="text-brand-muted text-base font-display"
                 >
                   No kids added yet
                 </p>
@@ -221,7 +217,7 @@ export default function ProfilePage() {
                   className="relative rounded-2xl overflow-hidden"
                 >
                   {/* Rotating botanical background */}
-                  <div className="absolute -right-4 -top-2 w-32 h-32 opacity-[0.2] pointer-events-none">
+                  <div className="absolute -right-4 -top-2 w-32 h-32 illo-accent pointer-events-none">
                     <Image
                       src={ALL_ILLUSTRATIONS[index % ALL_ILLUSTRATIONS.length]}
                       alt=""
@@ -234,8 +230,7 @@ export default function ProfilePage() {
                   <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl px-4 py-3.5 flex items-center gap-3">
                     <span className="text-2xl">{kid.avatar_emoji}</span>
                     <p
-                      className="flex-1 text-brand-dark font-medium"
-                      style={{ fontFamily: "Georgia, serif" }}
+                      className="flex-1 text-brand-dark font-medium font-display"
                     >
                       {kid.display_name}
                     </p>
@@ -251,7 +246,7 @@ export default function ProfilePage() {
                       onClick={() => deleteKid(kid.id)}
                       className="p-2 rounded-xl hover:bg-red-50 transition-colors"
                     >
-                      <Trash2 size={14} className="text-brand-muted/50 hover:text-red-500" />
+                      <Trash2 size={14} className="text-brand-muted/60 hover:text-red-500" />
                     </button>
                   </div>
                 </div>

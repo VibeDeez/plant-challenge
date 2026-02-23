@@ -109,7 +109,7 @@ export default function HomePage() {
       </div>
 
       {/* === HERO HEADER === */}
-      <section className="relative bg-brand-dark px-5 pt-6 pb-8 -mt-1 overflow-hidden grain">
+      <section className="relative bg-brand-dark px-5 pt-8 pb-10 -mt-1 overflow-hidden grain">
         {/* Botanical illustration — anchored right, subtle */}
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
@@ -117,7 +117,7 @@ export default function HomePage() {
             alt=""
             width={180}
             height={180}
-            className="object-contain opacity-[0.10]"
+            className="object-contain illo-accent"
             priority
           />
         </div>
@@ -140,6 +140,8 @@ export default function HomePage() {
             Log a Plant
           </Link>
         </div>
+        {/* Bottom gradient fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-brand-cream to-transparent" />
       </section>
 
       {/* === CATEGORY BREAKDOWN MOSAIC === */}
@@ -173,12 +175,12 @@ export default function HomePage() {
                           alt=""
                           width={200}
                           height={200}
-                          className="object-cover w-full h-full opacity-[0.35]"
+                          className="object-cover w-full h-full illo-featured"
                         />
                       </div>
                     )}
                     {/* Glassmorphic overlay */}
-                    <div className="relative bg-white/40 backdrop-blur-sm px-3.5 py-3 flex items-center gap-2.5">
+                    <div className="relative bg-white/30 backdrop-blur-sm px-3.5 py-3 flex items-center gap-2.5">
                       <div
                         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
                         style={{ backgroundColor: `${color}20` }}
@@ -219,7 +221,7 @@ export default function HomePage() {
                 alt=""
                 width={220}
                 height={220}
-                className="object-contain opacity-[0.06]"
+                className="object-contain illo-ghost"
               />
             </div>
             <div className="absolute top-1/4 -right-10 w-60 h-60 rotate-[10deg]">
@@ -228,7 +230,7 @@ export default function HomePage() {
                 alt=""
                 width={240}
                 height={240}
-                className="object-contain opacity-[0.05]"
+                className="object-contain illo-ghost"
               />
             </div>
             <div className="absolute -bottom-8 left-1/4 w-52 h-52 rotate-[5deg]">
@@ -237,7 +239,7 @@ export default function HomePage() {
                 alt=""
                 width={200}
                 height={200}
-                className="object-contain opacity-[0.04]"
+                className="object-contain illo-ghost"
               />
             </div>
           </div>
@@ -246,8 +248,7 @@ export default function HomePage() {
         <div className="relative max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h2
-              className="text-xl font-bold text-brand-dark"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+              className="text-xl font-bold text-brand-dark font-display"
             >
               This Week
             </h2>
@@ -269,7 +270,7 @@ export default function HomePage() {
                   alt=""
                   width={200}
                   height={200}
-                  className="object-contain opacity-[0.15]"
+                  className="object-contain illo-accent"
                 />
               </div>
               <div className="relative">
@@ -281,8 +282,7 @@ export default function HomePage() {
                   />
                 </div>
                 <p
-                  className="text-lg font-semibold text-brand-dark mb-1"
-                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                  className="text-lg font-semibold text-brand-dark mb-1 font-display"
                 >
                   No plants yet
                 </p>
@@ -293,8 +293,10 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {logs.map((log) => (
-                <PlantCard key={log.id} log={log} onDelete={handleDelete} />
+              {logs.map((log, i) => (
+                <div key={log.id} className="animate-fadeInUp" style={{ animationDelay: `${Math.min(i * 0.05, 0.75)}s` }}>
+                  <PlantCard log={log} onDelete={handleDelete} />
+                </div>
               ))}
             </div>
           )}

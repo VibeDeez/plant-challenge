@@ -12,6 +12,8 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import BottomNav from "./BottomNav";
+import MemberSwitcher from "./MemberSwitcher";
+import AddToHomeScreen from "./AddToHomeScreen";
 
 type Member = {
   id: string;
@@ -114,10 +116,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider value={contextValue}>
+      <MemberSwitcher />
       <div className="min-h-screen pb-24 bg-brand-bg">
         {children}
       </div>
       <BottomNav />
+      <AddToHomeScreen />
     </AppContext.Provider>
   );
 }

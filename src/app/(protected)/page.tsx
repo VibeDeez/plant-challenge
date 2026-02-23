@@ -11,7 +11,6 @@ import {
   ALL_ILLUSTRATIONS,
 } from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
-import MemberSwitcher from "@/components/MemberSwitcher";
 import ProgressBar from "@/components/ProgressBar";
 import PlantCard from "@/components/PlantCard";
 import Link from "next/link";
@@ -121,8 +120,6 @@ export default function HomePage() {
 
   return (
     <>
-      <MemberSwitcher />
-
       {/* === HERO HEADER === */}
       <section className="relative bg-brand-dark px-5 pt-5 pb-14 overflow-hidden grain">
         {/* Botanical illustration — anchored right, subtle */}

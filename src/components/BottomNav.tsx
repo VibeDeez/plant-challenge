@@ -6,7 +6,7 @@ import { Home, Trophy, User, BookOpen } from "lucide-react";
 
 const tabs = [
   { href: "/", label: "Home", icon: Home },
-  { href: "/leaderboard", label: "Board", icon: Trophy },
+  { href: "/circles", label: "Circles", icon: Trophy },
   { href: "/learn", label: "Learn", icon: BookOpen },
   { href: "/profile", label: "Profile", icon: User },
 ] as const;

@@ -12,6 +12,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import BottomNav from "./BottomNav";
+import AddToHomeScreen from "./AddToHomeScreen";
 
 type Member = {
   id: string;
@@ -118,6 +119,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         {children}
       </div>
       <BottomNav />
+      <AddToHomeScreen />
     </AppContext.Provider>
   );
 }

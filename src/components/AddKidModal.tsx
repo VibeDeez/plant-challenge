@@ -31,7 +31,7 @@ export default function AddKidModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative w-full bg-[#f5f0e8] rounded-t-3xl p-5 pb-safe">
+      <div className="relative w-full bg-[#f5f0e8] rounded-t-3xl p-5 pb-20">
         <div className="flex items-center justify-between mb-5">
           <h3
             className="text-lg text-[#1a3a2a]"

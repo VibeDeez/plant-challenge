@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart, getWeekLabel } from "@/lib/weekUtils";
+import { TIPS } from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
 import MemberSwitcher from "@/components/MemberSwitcher";
 import ProgressRing from "@/components/ProgressRing";
@@ -117,6 +118,7 @@ export default function HomePage() {
   }
 
   const totalPoints = logs.reduce((sum, l) => sum + l.points, 0);
+  const [tip] = useState(() => TIPS[Math.floor(Math.random() * TIPS.length)]);
 
   // Group logs by category for the breakdown
   const categoryBreakdown = logs.reduce<Record<string, number>>((acc, log) => {
@@ -132,6 +134,17 @@ export default function HomePage() {
   return (
     <>
       <MemberSwitcher />
+
+      {/* === TIP CARD === */}
+      <div className="bg-[#f5f0e8] px-5 pt-4 pb-2 grain-light">
+        <div className="max-w-lg mx-auto">
+          <div className="rounded-xl bg-[#1a3a2a]/5 border border-[#1a3a2a]/10 px-4 py-3">
+            <p className="text-xs font-medium text-[#1a3a2a]/70 leading-relaxed">
+              {tip}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* === HERO HEADER === */}
       <section className="relative bg-[#1a3a2a] px-5 pt-6 pb-8 -mt-1 overflow-hidden grain">

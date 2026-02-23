@@ -346,7 +346,7 @@ export default function AddPlantPage() {
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowCustom(false)}
           />
-          <div className="relative w-full bg-[#f5f0e8] rounded-t-3xl p-5 pb-safe">
+          <div className="relative w-full bg-[#f5f0e8] rounded-t-3xl p-5 pb-20">
             <div className="flex items-center justify-between mb-4">
               <h3
                 className="text-lg font-bold text-[#1a3a2a]"

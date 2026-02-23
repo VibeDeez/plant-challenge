@@ -3,8 +3,18 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { CATEGORY_COLORS, CATEGORY_ICONS, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
+import { CATEGORY_COLORS, CATEGORY_ICONS, CATEGORY_ILLUSTRATIONS, ALL_ILLUSTRATIONS } from "@/lib/constants";
+import Accordion from "@/components/Accordion";
 import Image from "next/image";
+import {
+  Flame,
+  Cherry,
+  LeafyGreen,
+  Wheat,
+  Nut,
+  Sprout,
+  type LucideIcon,
+} from "lucide-react";
 
 const supabase = createClient();
 
@@ -35,6 +45,53 @@ const CATEGORY_DISPLAY = [
   { name: "Seeds", examples: "Chia, Flax, Hemp, Pumpkin Seeds", pts: "1 pt each" },
   { name: "Herbs", examples: "Basil, Cilantro, Mint, Rosemary", pts: "\u00BC pt each" },
   { name: "Spices", examples: "Turmeric, Cumin, Cinnamon, Ginger", pts: "\u00BC pt each" },
+];
+
+type StrategyIconKey = "Cherry" | "Flame" | "LeafyGreen" | "Wheat" | "Sprout" | "Nut";
+
+const STRATEGY_ICONS: Record<StrategyIconKey, LucideIcon> = {
+  Cherry,
+  Flame,
+  LeafyGreen,
+  Wheat,
+  Sprout,
+  Nut,
+};
+
+const STRATEGIES: { name: string; desc: string; icon: StrategyIconKey }[] = [
+  { name: "Power Breakfast", desc: "Overnight oats with oats, chia, walnuts, blueberries, banana, and cinnamon = 5.25 points before leaving the house.", icon: "Cherry" },
+  { name: "Spice Rack Hack", desc: "Use 4-8 different spices daily. Over a week, herbs and spices alone can contribute 7-10+ points.", icon: "Flame" },
+  { name: "Mixed Bag Approach", desc: "Buy pre-mixed bags: mixed greens, trail mix, frozen stir-fry blends. Each component counts individually.", icon: "LeafyGreen" },
+  { name: "Grain Rotation", desc: "Rotate through oats, quinoa, barley, farro, buckwheat, millet, and brown rice. 7 grain points with zero extra effort.", icon: "Wheat" },
+  { name: "Smoothie Stacking", desc: "A single smoothie can contain 6-10 plants: spinach, banana, mango, hemp seeds, flaxseed, ginger, turmeric.", icon: "Sprout" },
+  { name: "Topping Tax", desc: "Add seeds, nuts, or fresh herbs to every meal. Pumpkin seeds on soup, sesame on stir-fry. Adds 2-4 points daily.", icon: "Nut" },
+];
+
+const EDGE_CASES = [
+  { q: "Red, green, brown lentils?", a: "1 point EACH. Different varieties have different fiber profiles." },
+  { q: "Red, green, yellow bell pepper?", a: "1 point TOTAL. Same species, just different ripeness stages." },
+  { q: "Tofu, tempeh, edamame?", a: "1 point TOTAL (soy). All derived from soybeans." },
+  { q: "White rice?", a: "0 points. It's a refined grain. Switch to brown rice for 1 point." },
+  { q: "Coffee and tea?", a: "1 point EACH. Distinct plant species." },
+  { q: "Dark chocolate (>70%)?", a: "1 point. Minimally processed cacao bean counts." },
+  { q: "Frozen vegetables?", a: "Full points. Flash-freezing retains nutrients." },
+  { q: "Nut butters and tahini?", a: "Yes — ground but not chemically processed. PB = 1 peanut point." },
+  { q: "Fermented plants (kimchi, sauerkraut)?", a: "Counts for the base plant AND adds probiotic benefits." },
+  { q: "Mushrooms and seaweed?", a: "1 point each. Not technically plants, but included for gut benefits." },
+];
+
+const COMMON_MISTAKES = [
+  { title: "Counting processed foods", desc: "White bread, pasta, and vegetable oils don't count. If you can't recognize the original plant, it doesn't earn a point." },
+  { title: "Double-counting the same species", desc: "Chickpeas on Monday and hummus on Wednesday = 1 chickpea point for the week." },
+  { title: "Counting herbs as full points", desc: "Herbs and spices are 1/4 point because you eat them in small quantities." },
+  { title: "Going too hard too fast", desc: "Increase by 5 plants per week over a month. Your gut bacteria need time to adapt." },
+];
+
+const SPECIAL_SITUATIONS = [
+  { q: "I have IBS or gut sensitivities", a: "Use small amounts of many plants. A single blueberry counts. A teaspoon of chia counts." },
+  { q: "My family has picky eaters", a: "Gamify it for kids: make a colorful chart, blend plants into smoothies or sauces." },
+  { q: "I'm on a tight budget", a: "Frozen veggies, canned beans, dried lentils, and bulk seeds are among the cheapest foods — and all fully valid." },
+  { q: "I'm traveling", a: "Pack mixed nuts, seeds, and dried fruit. Lower your target to 20 during travel weeks." },
 ];
 
 
@@ -270,6 +327,100 @@ export default function AuthPage() {
           <p className="text-sm text-brand-cream/40">
             Based on the American Gut Project &amp; the work of Dr. Will Bulsiewicz
           </p>
+        </div>
+      </section>
+
+      {/* ===== TIPS ===== */}
+      <section className="bg-brand-bg py-20 sm:py-28 px-6 grain-light">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display">
+            Tips for Hitting 30
+          </h2>
+          <p className="text-center text-brand-muted mb-14 max-w-lg mx-auto">
+            Simple strategies to build plant diversity into every meal.
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+            {STRATEGIES.map((s, i) => {
+              const Icon = STRATEGY_ICONS[s.icon];
+              const illo = ALL_ILLUSTRATIONS[i % ALL_ILLUSTRATIONS.length];
+              return (
+                <div
+                  key={s.name}
+                  className="relative overflow-hidden rounded-2xl border border-brand-dark/10 animate-fadeIn"
+                  style={{ animationDelay: `${i * 0.08}s` }}
+                >
+                  <div className="absolute -bottom-4 -right-4 w-24 h-24 pointer-events-none">
+                    <Image src={illo} alt="" width={96} height={96} className="object-contain illo-ghost" />
+                  </div>
+                  <div className="relative bg-white/30 backdrop-blur-sm p-5">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-dark mb-3">
+                      <Icon size={18} className="text-brand-cream" />
+                    </div>
+                    <h3 className="font-bold text-brand-dark text-sm mb-1 font-display">{s.name}</h3>
+                    <p className="text-xs text-brand-muted leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== FAQ ===== */}
+      <section className="bg-brand-cream py-20 sm:py-28 px-6 grain-light">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display">
+            Common Questions
+          </h2>
+          <p className="text-center text-brand-muted mb-14 max-w-lg mx-auto">
+            Edge cases, common mistakes, and special situations.
+          </p>
+
+          <div className="bg-white/40 backdrop-blur-sm rounded-2xl border border-brand-dark/10 divide-y divide-brand-dark/5 overflow-hidden">
+            <div className="px-4">
+              <Accordion title="What Counts? (Edge Cases)" defaultOpen>
+                <div className="space-y-2">
+                  {EDGE_CASES.map((item, i) => (
+                    <details key={i} className="group">
+                      <summary className="cursor-pointer text-brand-dark font-medium text-xs py-1 group-open:text-brand-green">
+                        {item.q}
+                      </summary>
+                      <p className="text-xs text-brand-muted mt-1 ml-1 pb-1">{item.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </Accordion>
+            </div>
+
+            <div className="px-4">
+              <Accordion title="Common Mistakes">
+                <ul className="space-y-3">
+                  {COMMON_MISTAKES.map((item, i) => (
+                    <li key={i}>
+                      <p className="text-xs font-semibold text-brand-dark">{item.title}</p>
+                      <p className="text-xs text-brand-muted mt-0.5">{item.desc}</p>
+                    </li>
+                  ))}
+                </ul>
+              </Accordion>
+            </div>
+
+            <div className="px-4">
+              <Accordion title="Special Situations">
+                <div className="space-y-2">
+                  {SPECIAL_SITUATIONS.map((item, i) => (
+                    <details key={i} className="group">
+                      <summary className="cursor-pointer text-brand-dark font-medium text-xs py-1 group-open:text-brand-green">
+                        {item.q}
+                      </summary>
+                      <p className="text-xs text-brand-muted mt-1 ml-1 pb-1">{item.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </Accordion>
+            </div>
+          </div>
         </div>
       </section>
 

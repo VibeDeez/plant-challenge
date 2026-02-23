@@ -126,7 +126,8 @@ export default function AuthPage() {
         });
         if (authError) throw authError;
       }
-      router.push("/");
+      const joinCode = new URLSearchParams(window.location.search).get("join");
+      router.push(joinCode ? `/join/${joinCode}` : "/");
       router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");

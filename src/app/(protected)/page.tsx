@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart, getWeekLabel } from "@/lib/weekUtils";
+import { TIPS } from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
 import MemberSwitcher from "@/components/MemberSwitcher";
 import ProgressRing from "@/components/ProgressRing";
@@ -51,15 +52,22 @@ export default function HomePage() {
   }
 
   const totalPoints = logs.reduce((sum, l) => sum + l.points, 0);
+  const [tip] = useState(() => TIPS[Math.floor(Math.random() * TIPS.length)]);
 
   return (
     <>
       <MemberSwitcher />
 
       <div className="px-4 pt-2">
-        <p className="text-xs text-gray-500 text-center mb-4">
+        <p className="text-xs text-gray-500 text-center mb-3">
           {getWeekLabel(weekStart)}
         </p>
+
+        <div className="mx-4 mb-4 rounded-xl bg-green-50 border border-green-100 px-4 py-3">
+          <p className="text-xs font-medium text-green-800 leading-relaxed">
+            {tip}
+          </p>
+        </div>
 
         <div className="flex justify-center mb-6">
           <ProgressRing current={totalPoints} />

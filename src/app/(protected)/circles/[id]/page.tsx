@@ -365,18 +365,24 @@ export default function CircleDetailPage() {
 
   // ---------- Lifecycle ----------
   useEffect(() => {
-    fetchCircle();
+    let cancelled = false;
+    fetchCircle().then(() => {
+      if (cancelled) return;
+    });
+    return () => { cancelled = true; };
   }, [fetchCircle]);
 
   // Fetch tab data when circle loads or tab/view changes
   useEffect(() => {
     if (!circle) return;
+    let cancelled = false;
     if (tab === "leaderboard") {
-      if (lbView === "weekly") fetchWeekly();
-      else fetchAlltime();
+      if (lbView === "weekly") fetchWeekly().then(() => { if (cancelled) return; });
+      else fetchAlltime().then(() => { if (cancelled) return; });
     } else {
-      fetchActivity();
+      fetchActivity().then(() => { if (cancelled) return; });
     }
+    return () => { cancelled = true; };
   }, [circle, tab, lbView, fetchWeekly, fetchAlltime, fetchActivity]);
 
   // ---------- Copy invite ----------
@@ -406,16 +412,18 @@ export default function CircleDetailPage() {
         .eq("member_id", activeMember.id);
     } else if (existing) {
       // Switch emoji: delete old, insert new
-      await supabase
+      const { error } = await supabase
         .from("circle_activity_reaction")
         .delete()
         .eq("activity_id", activityId)
         .eq("member_id", activeMember.id);
-      await supabase.from("circle_activity_reaction").insert({
-        activity_id: activityId,
-        member_id: activeMember.id,
-        emoji,
-      });
+      if (!error) {
+        await supabase.from("circle_activity_reaction").insert({
+          activity_id: activityId,
+          member_id: activeMember.id,
+          emoji,
+        });
+      }
     } else {
       // New reaction
       await supabase.from("circle_activity_reaction").insert({
@@ -439,18 +447,21 @@ export default function CircleDetailPage() {
   }
 
   // ---------- Helpers ----------
-  function getReactionsForActivity(activityId: string) {
-    const forActivity = reactions.filter((r) => r.activity_id === activityId);
-    // Group by emoji
-    const grouped = new Map<ReactionEmoji, { count: number; userReacted: boolean }>();
-    for (const r of forActivity) {
-      const prev = grouped.get(r.emoji) ?? { count: 0, userReacted: false };
+  const reactionsByActivity = useMemo(() => {
+    const map = new Map<string, Map<ReactionEmoji, { count: number; userReacted: boolean }>>();
+    for (const r of reactions) {
+      let actMap = map.get(r.activity_id);
+      if (!actMap) {
+        actMap = new Map();
+        map.set(r.activity_id, actMap);
+      }
+      const prev = actMap.get(r.emoji) ?? { count: 0, userReacted: false };
       prev.count += 1;
       if (activeMember && r.member_id === activeMember.id) prev.userReacted = true;
-      grouped.set(r.emoji, prev);
+      actMap.set(r.emoji, prev);
     }
-    return grouped;
-  }
+    return map;
+  }, [reactions, activeMember]);
 
   // ---------- Sorted leaderboard data ----------
   const currentScores = lbView === "weekly" ? weeklyScores : alltimeScores;
@@ -710,7 +721,7 @@ export default function CircleDetailPage() {
               ) : (
                 <div className="space-y-3">
                   {activities.map((act, i) => {
-                    const rxMap = getReactionsForActivity(act.id);
+                    const rxMap = reactionsByActivity.get(act.id) ?? new Map();
                     const pickerOpen = openPicker === act.id;
 
                     return (

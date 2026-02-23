@@ -86,7 +86,11 @@ export default function CirclesPage() {
   }, [activeMember, weekStart]);
 
   useEffect(() => {
-    fetchCircles();
+    let cancelled = false;
+    fetchCircles().then(() => {
+      if (cancelled) return;
+    });
+    return () => { cancelled = true; };
   }, [fetchCircles]);
 
   async function handleJoin(e: React.FormEvent) {

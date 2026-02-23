@@ -80,9 +80,13 @@ export default function HomePage() {
   }, []);
 
   // --- Crop Circles onboarding banner ---
-  const [showCircleBanner, setShowCircleBanner] = useState(
-    () => !localStorage.getItem("dismissed_circle_prompt")
-  );
+  const [showCircleBanner, setShowCircleBanner] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && !localStorage.getItem("dismissed_circle_prompt")) {
+      setShowCircleBanner(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!showCircleBanner || !activeMember) return;

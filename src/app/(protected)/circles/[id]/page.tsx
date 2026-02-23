@@ -25,7 +25,7 @@ import {
   Trophy,
   Settings,
   Users,
-  Copy,
+  Link2,
   Check,
   ChevronLeft,
 } from "lucide-react";
@@ -540,13 +540,22 @@ export default function CircleDetailPage() {
 
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1.5 text-xs text-brand-cream/40 hover:text-brand-cream/70 transition-colors"
+                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                  copied
+                    ? "bg-brand-green/20 text-brand-green"
+                    : "bg-brand-cream/10 text-brand-cream/60 hover:bg-brand-cream/15 hover:text-brand-cream/80"
+                }`}
               >
-                <span className="font-mono tracking-wider">{circle.invite_code}</span>
                 {copied ? (
-                  <Check size={12} className="text-brand-green" />
+                  <>
+                    <Check size={12} />
+                    Link Copied
+                  </>
                 ) : (
-                  <Copy size={12} />
+                  <>
+                    <Link2 size={12} />
+                    Copy Invite Link
+                  </>
                 )}
               </button>
             </div>

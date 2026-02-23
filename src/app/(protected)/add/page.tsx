@@ -197,36 +197,43 @@ export default function AddPlantPage() {
             </h1>
           </div>
 
-          {/* Search bar + camera button */}
-          <div className="relative mb-2 flex gap-2">
-            <div className="relative flex-1">
-              <Search
-                size={16}
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30"
-              />
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search plants..."
-                className="w-full rounded-xl bg-[#f5f0e8]/10 py-2.5 pl-10 pr-3 text-sm text-[#f5f0e8] placeholder:text-[#f5f0e8]/30 focus:bg-[#f5f0e8]/15 focus:outline-none transition-colors"
-              />
-              {search && (
-                <button
-                  onClick={() => setSearch("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30 hover:text-[#f5f0e8]"
-                >
-                  <X size={16} />
-                </button>
-              )}
+          {/* Snap to Log banner */}
+          <button
+            onClick={() => setShowCamera(true)}
+            className="w-full mb-3 flex items-center gap-3 rounded-2xl bg-[#22c55e] px-4 py-3 text-left hover:bg-[#1ea34d] active:scale-[0.98] transition-all"
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
+              <Camera size={22} className="text-white" strokeWidth={2} />
             </div>
-            <button
-              onClick={() => setShowCamera(true)}
-              className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-xl bg-[#22c55e] text-white hover:bg-[#1ea34d] active:scale-95 transition-all"
-              title="Snap to log"
-            >
-              <Camera size={18} strokeWidth={2} />
-            </button>
+            <div>
+              <p className="text-sm font-bold text-white">Snap to Log</p>
+              <p className="text-[11px] text-white/70">
+                Take a photo and we&apos;ll find the plants
+              </p>
+            </div>
+          </button>
+
+          {/* Search bar */}
+          <div className="relative mb-2">
+            <Search
+              size={16}
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30"
+            />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search plants..."
+              className="w-full rounded-xl bg-[#f5f0e8]/10 py-2.5 pl-10 pr-3 text-sm text-[#f5f0e8] placeholder:text-[#f5f0e8]/30 focus:bg-[#f5f0e8]/15 focus:outline-none transition-colors"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30 hover:text-[#f5f0e8]"
+              >
+                <X size={16} />
+              </button>
+            )}
           </div>
         </div>
       </div>

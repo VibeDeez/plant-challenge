@@ -15,21 +15,26 @@ export default function Accordion({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-gray-100">
+    <div className="border-b border-[#1a3a2a]/10">
       <button
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between py-4 text-left"
       >
-        <span className="text-sm font-semibold text-gray-900">{title}</span>
+        <span
+          className="text-sm font-bold text-[#1a3a2a]"
+          style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+        >
+          {title}
+        </span>
         <ChevronDown
           size={18}
-          className={`text-gray-400 transition-transform duration-200 ${
+          className={`text-[#6b7260] transition-transform duration-200 ${
             open ? "rotate-180" : ""
           }`}
         />
       </button>
       {open && (
-        <div className="pb-4 text-sm text-gray-600 leading-relaxed">
+        <div className="pb-4 text-sm text-[#6b7260] leading-relaxed">
           {children}
         </div>
       )}

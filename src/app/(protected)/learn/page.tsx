@@ -5,179 +5,208 @@ import { BookOpen } from "lucide-react";
 
 export default function LearnPage() {
   return (
-    <div className="px-4 pt-4 pb-8">
-      <div className="flex items-center gap-2 mb-4">
-        <BookOpen size={20} className="text-green-600" />
-        <h1 className="text-lg font-semibold text-gray-900">Learn</h1>
+    <>
+      {/* === HEADER === */}
+      <div className="bg-[#1a3a2a] px-5 pt-6 pb-6 -mt-1 grain">
+        <div className="max-w-lg mx-auto">
+          <div className="flex items-center gap-2.5 mb-2">
+            <BookOpen size={20} className="text-[#22c55e]" />
+            <h1
+              className="text-2xl font-bold text-[#f5f0e8]"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+              Learn
+            </h1>
+          </div>
+          <p className="text-sm text-[#f5f0e8]/50">
+            Everything you need to know about the 30 Plant Point Challenge,
+            based on the work of Dr. Will Bulsiewicz.
+          </p>
+        </div>
       </div>
 
-      <p className="text-sm text-gray-500 mb-4">
-        Everything you need to know about the 30 Plant Point Challenge, based on
-        the work of Dr. Will Bulsiewicz.
-      </p>
+      {/* === CONTENT === */}
+      <div className="bg-[#f5f0e8] min-h-[60vh] grain-light">
+        <div className="relative max-w-lg mx-auto px-5 py-4">
+          {/* Section 1: What Is the Challenge? */}
+          <Accordion title="What Is the Challenge?" defaultOpen>
+            <p>
+              The 30 Plant Point Challenge is a science-backed framework: eat 30
+              or more different plant species every week to maximize gut
+              microbiome diversity. It comes from the American Gut Project, which
+              found that people eating 30+ plants per week had significantly more
+              diverse gut bacteria — regardless of diet label.
+            </p>
+            <p className="mt-2">
+              This isn't a restrictive diet. You don't eliminate anything. You
+              simply add variety. The goal is 30 unique plant points across seven
+              days.
+            </p>
+          </Accordion>
 
-      {/* Section 1: What Is the Challenge? */}
-      <Accordion title="What Is the Challenge?" defaultOpen>
-        <p>
-          The 30 Plant Point Challenge is a science-backed framework: eat 30 or
-          more different plant species every week to maximize gut microbiome
-          diversity. It comes from the American Gut Project, which found that
-          people eating 30+ plants per week had significantly more diverse gut
-          bacteria — regardless of diet label.
-        </p>
-        <p className="mt-2">
-          This isn't a restrictive diet. You don't eliminate anything. You simply
-          add variety. The goal is 30 unique plant points across seven days.
-        </p>
-      </Accordion>
+          {/* Section 2: How Scoring Works */}
+          <Accordion title="How Scoring Works">
+            <table className="w-full text-xs mb-3">
+              <thead>
+                <tr className="text-left text-[#6b7260]">
+                  <th className="pb-1 font-medium">Category</th>
+                  <th className="pb-1 font-medium">Points</th>
+                </tr>
+              </thead>
+              <tbody className="text-[#1a3a2a]">
+                <tr>
+                  <td className="py-0.5">Fruits, Vegetables, Whole Grains</td>
+                  <td>1 pt each</td>
+                </tr>
+                <tr>
+                  <td className="py-0.5">Legumes, Nuts, Seeds</td>
+                  <td>1 pt each</td>
+                </tr>
+                <tr>
+                  <td className="py-0.5">Herbs &amp; Spices</td>
+                  <td>1/4 pt each</td>
+                </tr>
+              </tbody>
+            </table>
 
-      {/* Section 2: How Scoring Works */}
-      <Accordion title="How Scoring Works">
-        <table className="w-full text-xs mb-3">
-          <thead>
-            <tr className="text-left text-gray-500">
-              <th className="pb-1 font-medium">Category</th>
-              <th className="pb-1 font-medium">Points</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-700">
-            <tr><td className="py-0.5">Fruits, Vegetables, Whole Grains</td><td>1 pt each</td></tr>
-            <tr><td className="py-0.5">Legumes, Nuts, Seeds</td><td>1 pt each</td></tr>
-            <tr><td className="py-0.5">Herbs &amp; Spices</td><td>1/4 pt each</td></tr>
-          </tbody>
-        </table>
+            <p className="font-medium text-[#1a3a2a] mt-3 mb-1">Key Rules</p>
+            <ul className="space-y-1.5 list-disc pl-4">
+              <li>
+                <strong>Resets weekly:</strong> Your count resets every Monday.
+                Same plant twice in a week = 1 point.
+              </li>
+              <li>
+                <strong>Species, not preparations:</strong> Roasted carrot and
+                raw carrot are the same carrot. The point is tied to the species.
+              </li>
+              <li>
+                <strong>Herbs and spices stack:</strong> 4 unique herbs/spices =
+                1 full point.
+              </li>
+              <li>
+                <strong>Variety counts (sometimes):</strong> Different lentil
+                types count separately. Different bell pepper colors do not (same
+                species).
+              </li>
+              <li>
+                <strong>Whole foods rule:</strong> The plant must be whole or
+                minimally processed. White flour, refined sugar, and oils don't
+                count.
+              </li>
+            </ul>
+          </Accordion>
 
-        <p className="font-medium text-gray-800 mt-3 mb-1">Key Rules</p>
-        <ul className="space-y-1.5 list-disc pl-4">
-          <li>
-            <strong>Resets weekly:</strong> Your count resets every Monday. Same
-            plant twice in a week = 1 point.
-          </li>
-          <li>
-            <strong>Species, not preparations:</strong> Roasted carrot and raw
-            carrot are the same carrot. The point is tied to the species.
-          </li>
-          <li>
-            <strong>Herbs and spices stack:</strong> 4 unique herbs/spices = 1
-            full point.
-          </li>
-          <li>
-            <strong>Variety counts (sometimes):</strong> Different lentil types
-            count separately. Different bell pepper colors do not (same species).
-          </li>
-          <li>
-            <strong>Whole foods rule:</strong> The plant must be whole or
-            minimally processed. White flour, refined sugar, and oils don't
-            count.
-          </li>
-        </ul>
-      </Accordion>
-
-      {/* Section 3: What Counts? (Edge Cases) */}
-      <Accordion title="What Counts? (Edge Cases)">
-        <div className="space-y-2">
-          {EDGE_CASES.map((item, i) => (
-            <details key={i} className="group">
-              <summary className="cursor-pointer text-gray-800 font-medium text-xs py-1 group-open:text-green-700">
-                {item.q}
-              </summary>
-              <p className="text-xs text-gray-600 mt-1 ml-1 pb-1">
-                {item.a}
-              </p>
-            </details>
-          ))}
-        </div>
-      </Accordion>
-
-      {/* Section 4: Tips for Hitting 30 */}
-      <Accordion title="Tips for Hitting 30">
-        <div className="space-y-3">
-          {STRATEGIES.map((s, i) => (
-            <div key={i}>
-              <p className="font-medium text-gray-800 text-xs">{s.name}</p>
-              <p className="text-xs text-gray-600 mt-0.5">{s.desc}</p>
+          {/* Section 3: What Counts? (Edge Cases) */}
+          <Accordion title="What Counts? (Edge Cases)">
+            <div className="space-y-2">
+              {EDGE_CASES.map((item, i) => (
+                <details key={i} className="group">
+                  <summary className="cursor-pointer text-[#1a3a2a] font-medium text-xs py-1 group-open:text-[#22c55e]">
+                    {item.q}
+                  </summary>
+                  <p className="text-xs text-[#6b7260] mt-1 ml-1 pb-1">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
             </div>
-          ))}
-        </div>
-      </Accordion>
+          </Accordion>
 
-      {/* Section 5: Sample Week */}
-      <Accordion title="Sample Week Meal Plan">
-        <div className="space-y-3">
-          {SAMPLE_WEEK.map((day, i) => (
-            <div key={i}>
-              <p className="font-medium text-gray-800 text-xs">{day.day}</p>
-              <p className="text-xs text-gray-600 mt-0.5">{day.meals}</p>
+          {/* Section 4: Tips for Hitting 30 */}
+          <Accordion title="Tips for Hitting 30">
+            <div className="space-y-3">
+              {STRATEGIES.map((s, i) => (
+                <div key={i}>
+                  <p className="font-medium text-[#1a3a2a] text-xs">
+                    {s.name}
+                  </p>
+                  <p className="text-xs text-[#6b7260] mt-0.5">{s.desc}</p>
+                </div>
+              ))}
             </div>
-          ))}
+          </Accordion>
+
+          {/* Section 5: Sample Week */}
+          <Accordion title="Sample Week Meal Plan">
+            <div className="space-y-3">
+              {SAMPLE_WEEK.map((day, i) => (
+                <div key={i}>
+                  <p className="font-medium text-[#1a3a2a] text-xs">
+                    {day.day}
+                  </p>
+                  <p className="text-xs text-[#6b7260] mt-0.5">{day.meals}</p>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-xs text-[#6b7260]/70 italic">
+              This sample plan hits ~36 plant points with 68 unique plants
+              including herbs/spices.
+            </p>
+          </Accordion>
+
+          {/* Section 6: Common Mistakes */}
+          <Accordion title="Common Mistakes">
+            <ul className="space-y-2 list-disc pl-4">
+              <li>
+                <strong>Counting processed foods:</strong> White bread, pasta,
+                juice concentrate, and vegetable oils don't count. If you can't
+                recognize the original plant, it doesn't earn a point.
+              </li>
+              <li>
+                <strong>Double-counting the same species:</strong> Chickpeas on
+                Monday and hummus on Wednesday = 1 chickpea point for the week.
+              </li>
+              <li>
+                <strong>Counting herbs as full points:</strong> Herbs and spices
+                are 1/4 point because you eat them in small quantities.
+              </li>
+              <li>
+                <strong>Going too hard too fast:</strong> If you currently eat
+                8-10 species per week, increase by 5 per week over a month. Your
+                gut bacteria need time to adapt.
+              </li>
+            </ul>
+          </Accordion>
+
+          {/* Section 7: The Science */}
+          <Accordion title="The Science">
+            <p>
+              Your gut contains ~38 trillion microbes. Each bacterial species
+              feeds on specific fibers and polyphenols. Narrow plant variety =
+              narrow bacteria = fragile ecosystem.
+            </p>
+            <p className="mt-2">
+              The American Gut Project (McDonald et al., 2018) found that the
+              number of unique plant types per week was the single strongest
+              predictor of gut microbial diversity. People eating 30+ plants
+              showed greater species richness, more short-chain fatty acid
+              producers (which reduce inflammation and strengthen immunity), and
+              lower antibiotic resistance genes.
+            </p>
+            <p className="mt-2">
+              Gut diversity is linked to reduced risk of type 2 diabetes,
+              obesity, IBD, depression, anxiety, and certain cancers.
+            </p>
+          </Accordion>
+
+          {/* Section 8: Special Situations */}
+          <Accordion title="Special Situations">
+            <div className="space-y-2">
+              {SPECIAL_SITUATIONS.map((item, i) => (
+                <details key={i} className="group">
+                  <summary className="cursor-pointer text-[#1a3a2a] font-medium text-xs py-1 group-open:text-[#22c55e]">
+                    {item.q}
+                  </summary>
+                  <p className="text-xs text-[#6b7260] mt-1 ml-1 pb-1">
+                    {item.a}
+                  </p>
+                </details>
+              ))}
+            </div>
+          </Accordion>
         </div>
-        <p className="mt-3 text-xs text-gray-500 italic">
-          This sample plan hits ~36 plant points with 68 unique plants
-          including herbs/spices.
-        </p>
-      </Accordion>
-
-      {/* Section 6: Common Mistakes */}
-      <Accordion title="Common Mistakes">
-        <ul className="space-y-2 list-disc pl-4">
-          <li>
-            <strong>Counting processed foods:</strong> White bread, pasta, juice
-            concentrate, and vegetable oils don't count. If you can't recognize
-            the original plant, it doesn't earn a point.
-          </li>
-          <li>
-            <strong>Double-counting the same species:</strong> Chickpeas on
-            Monday and hummus on Wednesday = 1 chickpea point for the week.
-          </li>
-          <li>
-            <strong>Counting herbs as full points:</strong> Herbs and spices are
-            1/4 point because you eat them in small quantities.
-          </li>
-          <li>
-            <strong>Going too hard too fast:</strong> If you currently eat 8-10
-            species per week, increase by 5 per week over a month. Your gut
-            bacteria need time to adapt.
-          </li>
-        </ul>
-      </Accordion>
-
-      {/* Section 7: The Science */}
-      <Accordion title="The Science">
-        <p>
-          Your gut contains ~38 trillion microbes. Each bacterial species feeds
-          on specific fibers and polyphenols. Narrow plant variety = narrow
-          bacteria = fragile ecosystem.
-        </p>
-        <p className="mt-2">
-          The American Gut Project (McDonald et al., 2018) found that the number
-          of unique plant types per week was the single strongest predictor of
-          gut microbial diversity. People eating 30+ plants showed greater
-          species richness, more short-chain fatty acid producers (which reduce
-          inflammation and strengthen immunity), and lower antibiotic resistance
-          genes.
-        </p>
-        <p className="mt-2">
-          Gut diversity is linked to reduced risk of type 2 diabetes, obesity,
-          IBD, depression, anxiety, and certain cancers.
-        </p>
-      </Accordion>
-
-      {/* Section 8: Special Situations */}
-      <Accordion title="Special Situations">
-        <div className="space-y-2">
-          {SPECIAL_SITUATIONS.map((item, i) => (
-            <details key={i} className="group">
-              <summary className="cursor-pointer text-gray-800 font-medium text-xs py-1 group-open:text-green-700">
-                {item.q}
-              </summary>
-              <p className="text-xs text-gray-600 mt-1 ml-1 pb-1">
-                {item.a}
-              </p>
-            </details>
-          ))}
-        </div>
-      </Accordion>
-    </div>
+      </div>
+    </>
   );
 }
 

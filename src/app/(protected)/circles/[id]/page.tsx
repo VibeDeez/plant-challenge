@@ -643,38 +643,47 @@ export default function CircleDetailPage() {
                     </div>
                   )}
 
-                  {(currentScores[1] || currentScores[2]) && (
+                  {currentScores[1] && currentScores[2] ? (
                     <div className="grid grid-cols-2 gap-2.5">
-                      {currentScores[1] && (
-                        <div className="animate-fadeInUp" style={{ animationDelay: "0.08s" }}>
-                          <PodiumCard
-                            rank={2}
-                            entry={currentScores[1]}
-                            isMe={currentScores[1].member_id === activeMember?.id}
-                            subtitle={
-                              lbView === "alltime" && "avg_weekly" in currentScores[1]
-                                ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
-                                : undefined
-                            }
-                          />
-                        </div>
-                      )}
-                      {currentScores[2] && (
-                        <div className="animate-fadeInUp" style={{ animationDelay: "0.16s" }}>
-                          <PodiumCard
-                            rank={3}
-                            entry={currentScores[2]}
-                            isMe={currentScores[2].member_id === activeMember?.id}
-                            subtitle={
-                              lbView === "alltime" && "avg_weekly" in currentScores[2]
-                                ? `${(currentScores[2] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
-                                : undefined
-                            }
-                          />
-                        </div>
-                      )}
+                      <div className="animate-fadeInUp" style={{ animationDelay: "0.08s" }}>
+                        <PodiumCard
+                          rank={2}
+                          entry={currentScores[1]}
+                          isMe={currentScores[1].member_id === activeMember?.id}
+                          subtitle={
+                            lbView === "alltime" && "avg_weekly" in currentScores[1]
+                              ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
+                              : undefined
+                          }
+                        />
+                      </div>
+                      <div className="animate-fadeInUp" style={{ animationDelay: "0.16s" }}>
+                        <PodiumCard
+                          rank={3}
+                          entry={currentScores[2]}
+                          isMe={currentScores[2].member_id === activeMember?.id}
+                          subtitle={
+                            lbView === "alltime" && "avg_weekly" in currentScores[2]
+                              ? `${(currentScores[2] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
+                              : undefined
+                          }
+                        />
+                      </div>
                     </div>
-                  )}
+                  ) : currentScores[1] ? (
+                    <div className="animate-fadeInUp" style={{ animationDelay: "0.08s" }}>
+                      <PodiumCard
+                        rank={2}
+                        entry={currentScores[1]}
+                        isMe={currentScores[1].member_id === activeMember?.id}
+                        subtitle={
+                          lbView === "alltime" && "avg_weekly" in currentScores[1]
+                            ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
+                            : undefined
+                        }
+                      />
+                    </div>
+                  ) : null}
 
                   {/* Rank 4+ */}
                   {currentScores.slice(3).map((entry, i) => (

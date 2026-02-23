@@ -110,11 +110,15 @@ export default function CirclesPage() {
       return;
     }
 
-    // The RPC returns the circle_id
-    const circleId = data as string;
+    const result = data as { success?: boolean; error?: string; circle_id?: string };
+    if (result.error) {
+      setJoinError(result.error);
+      setJoining(false);
+      return;
+    }
     setJoining(false);
     setJoinOpen(false);
-    router.push(`/circles/${circleId}`);
+    router.push(`/circles/${result.circle_id}`);
   }
 
   return (

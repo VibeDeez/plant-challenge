@@ -1,7 +1,28 @@
 "use client";
 
-import { CATEGORY_COLORS, CATEGORY_EMOJI } from "@/lib/constants";
-import { Check } from "lucide-react";
+import { CATEGORY_COLORS } from "@/lib/constants";
+import { Check, type LucideIcon } from "lucide-react";
+import {
+  Cherry,
+  LeafyGreen,
+  Wheat,
+  Bean,
+  Nut,
+  Sprout,
+  Leaf,
+  Flame,
+} from "lucide-react";
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  Fruits: Cherry,
+  Vegetables: LeafyGreen,
+  "Whole Grains": Wheat,
+  Legumes: Bean,
+  Nuts: Nut,
+  Seeds: Sprout,
+  Herbs: Leaf,
+  Spices: Flame,
+};
 
 type Plant = {
   id: number;
@@ -19,31 +40,36 @@ export default function PlantListItem({
   logged: boolean;
   onLog: (plant: Plant) => void;
 }) {
-  const color = CATEGORY_COLORS[plant.category] ?? "#6b7280";
-  const emoji = CATEGORY_EMOJI[plant.category] ?? "🌱";
+  const color = CATEGORY_COLORS[plant.category] ?? "#6b7260";
+  const Icon = CATEGORY_ICONS[plant.category] ?? Leaf;
 
   return (
     <button
       onClick={() => !logged && onLog(plant)}
       disabled={logged}
-      className={`flex items-center gap-3 w-full rounded-xl px-4 py-3 text-left transition-all ${
+      className={`flex items-center gap-3 w-full rounded-2xl px-4 py-3.5 text-left transition-all ${
         logged
-          ? "bg-gray-50 opacity-50"
-          : "bg-white shadow-sm border border-gray-100 active:scale-[0.98]"
+          ? "bg-[#1a3a2a]/5 opacity-60"
+          : "bg-white hover:shadow-md active:scale-[0.98]"
       }`}
     >
-      <span className="text-xl">{emoji}</span>
+      <div
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+        style={{ backgroundColor: `${color}12` }}
+      >
+        <Icon size={20} style={{ color }} strokeWidth={1.75} />
+      </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 truncate">
+        <p className="text-[15px] font-semibold text-[#1a3a2a] truncate">
           {plant.name}
         </p>
-        <p className="text-xs" style={{ color }}>
-          {plant.category} · {plant.points === 0.25 ? "¼" : plant.points} pt
+        <p className="text-xs font-medium" style={{ color }}>
+          {plant.points === 0.25 ? "\u00BC" : plant.points} pt
         </p>
       </div>
       {logged && (
-        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-green-100">
-          <Check size={14} className="text-green-600" />
+        <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#22c55e]/10">
+          <Check size={16} className="text-[#22c55e]" strokeWidth={2.5} />
         </div>
       )}
     </button>

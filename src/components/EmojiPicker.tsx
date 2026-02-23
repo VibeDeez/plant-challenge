@@ -16,10 +16,10 @@ export default function EmojiPicker({
           key={emoji}
           type="button"
           onClick={() => onChange(emoji)}
-          className={`w-10 h-10 text-xl rounded-lg flex items-center justify-center transition-all ${
+          className={`w-10 h-10 text-xl rounded-xl flex items-center justify-center transition-all ${
             value === emoji
-              ? "bg-green-100 ring-2 ring-green-500 scale-110"
-              : "bg-gray-50 hover:bg-gray-100"
+              ? "bg-[#22c55e]/15 ring-2 ring-[#22c55e] scale-110"
+              : "bg-[#1a3a2a]/5 hover:bg-[#1a3a2a]/10"
           }`}
         >
           {emoji}

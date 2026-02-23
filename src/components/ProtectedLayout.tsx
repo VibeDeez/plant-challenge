@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -79,13 +80,12 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
       setLoading(false);
     }
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchMembers, router]);
 
   if (loading) {
     return (
-      <main className="flex items-center justify-center min-h-screen bg-[#1a3a2a]">
-        <div className="w-8 h-8 border-2 border-[#22c55e]/20 border-t-[#22c55e] rounded-full animate-spin" />
+      <main className="flex items-center justify-center min-h-screen bg-brand-dark">
+        <div className="w-8 h-8 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
       </main>
     );
   }
@@ -94,17 +94,25 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
 
   const activeMember = members.find((m) => m.id === activeMemberId) ?? null;
 
+  const refreshMembers = useCallback(
+    () => fetchMembers(userId),
+    [fetchMembers, userId]
+  );
+
+  const contextValue = useMemo(
+    () => ({
+      userId,
+      members,
+      activeMember,
+      setActiveMemberId,
+      refreshMembers,
+    }),
+    [userId, members, activeMember, refreshMembers]
+  );
+
   return (
-    <AppContext.Provider
-      value={{
-        userId,
-        members,
-        activeMember,
-        setActiveMemberId,
-        refreshMembers: () => fetchMembers(userId),
-      }}
-    >
-      <div className="min-h-screen pb-24 bg-[#f8faf8]">
+    <AppContext.Provider value={contextValue}>
+      <div className="min-h-screen pb-24 bg-brand-bg">
         {children}
       </div>
       <BottomNav />

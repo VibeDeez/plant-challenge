@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart, getWeekLabel } from "@/lib/weekUtils";
 import { useApp } from "@/components/ProtectedLayout";
@@ -22,7 +22,7 @@ export default function LeaderboardPage() {
   const { userId } = useApp();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const weekStart = getWeekStart();
+  const weekStart = useMemo(() => getWeekStart(), []);
 
   const fetchLeaderboard = useCallback(async () => {
     setLoading(true);
@@ -38,13 +38,12 @@ export default function LeaderboardPage() {
     }
 
     // Aggregate by member
+    type MemberJoin = { display_name: string; avatar_emoji: string; user_id: string };
     const map = new Map<string, LeaderboardEntry>();
     for (const log of logs) {
-      const member = log.member as unknown as {
-        display_name: string;
-        avatar_emoji: string;
-        user_id: string;
-      } | null;
+      // Supabase FK join — runtime guarantees single object, SDK types as array
+      const raw = log.member as unknown;
+      const member = (Array.isArray(raw) ? raw[0] : raw) as MemberJoin | null;
       if (!member) continue;
 
       const existing = map.get(log.member_id);
@@ -75,7 +74,7 @@ export default function LeaderboardPage() {
   return (
     <>
       {/* === DARK GREEN HEADER === */}
-      <div className="relative bg-[#1a3a2a] overflow-hidden grain">
+      <div className="relative bg-brand-dark overflow-hidden grain">
         {/* Background botanical watermark */}
         <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
@@ -92,17 +91,17 @@ export default function LeaderboardPage() {
           <div className="max-w-lg mx-auto">
             {/* Trophy icon + title */}
             <div className="flex items-center gap-3 mb-1">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#f5f0e8]/10">
-                <Trophy size={20} className="text-[#f5f0e8]/60" strokeWidth={1.75} />
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-cream/10">
+                <Trophy size={20} className="text-brand-cream/60" strokeWidth={1.75} />
               </div>
               <div>
                 <h1
-                  className="text-2xl font-bold text-[#f5f0e8]"
+                  className="text-2xl font-bold text-brand-cream"
                   style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                 >
                   Leaderboard
                 </h1>
-                <p className="text-xs text-[#f5f0e8]/40 mt-0.5">
+                <p className="text-xs text-brand-cream/40 mt-0.5">
                   {getWeekLabel(weekStart)}
                 </p>
               </div>
@@ -110,7 +109,7 @@ export default function LeaderboardPage() {
 
             {/* Summary line */}
             {!loading && entries.length > 0 && (
-              <p className="text-[13px] text-[#f5f0e8]/30 mt-3">
+              <p className="text-[13px] text-brand-cream/30 mt-3">
                 {entries.length} {entries.length === 1 ? "participant" : "participants"} this week
               </p>
             )}
@@ -119,13 +118,13 @@ export default function LeaderboardPage() {
       </div>
 
       {/* === CONTENT === */}
-      <div className="bg-[#f8faf8] min-h-[60vh] grain-light">
+      <div className="bg-brand-bg min-h-[60vh] grain-light">
         <div className="max-w-lg mx-auto px-5 py-4">
           {loading ? (
             /* --- Loading spinner --- */
             <div className="flex flex-col items-center justify-center py-16">
-              <div className="h-8 w-8 rounded-full border-2 border-[#22c55e]/20 border-t-[#22c55e] animate-spin" />
-              <p className="mt-4 text-sm text-[#6b7260]">Loading leaderboard...</p>
+              <div className="h-8 w-8 rounded-full border-2 border-brand-green/20 border-t-brand-green animate-spin" />
+              <p className="mt-4 text-sm text-brand-muted">Loading leaderboard...</p>
             </div>
           ) : entries.length === 0 ? (
             /* --- Empty state with botanical accent --- */
@@ -143,20 +142,20 @@ export default function LeaderboardPage() {
 
               {/* Empty message */}
               <div className="relative text-center">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1a3a2a]/[0.04]">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-dark/[0.04]">
                   <Trophy
                     size={28}
-                    className="text-[#1a3a2a]/20"
+                    className="text-brand-dark/20"
                     strokeWidth={1.5}
                   />
                 </div>
                 <h2
-                  className="text-lg font-bold text-[#1a3a2a] mb-1.5"
+                  className="text-lg font-bold text-brand-dark mb-1.5"
                   style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                 >
                   No entries yet
                 </h2>
-                <p className="text-sm text-[#6b7260]">
+                <p className="text-sm text-brand-muted">
                   Start logging plants to see the leaderboard come alive!
                 </p>
               </div>

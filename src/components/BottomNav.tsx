@@ -15,7 +15,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-[#1a3a2a] pb-safe z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-brand-dark pb-safe z-50">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
         {tabs.map(({ href, label, icon: Icon }) => {
           const active =
@@ -26,8 +26,8 @@ export default function BottomNav() {
               href={href}
               className={`flex flex-col items-center gap-1 text-[11px] font-medium tracking-wide transition-colors ${
                 active
-                  ? "text-[#22c55e]"
-                  : "text-[#f5f0e8]/40 hover:text-[#f5f0e8]/70"
+                  ? "text-brand-green"
+                  : "text-brand-cream/40 hover:text-brand-cream/70"
               }`}
             >
               <Icon size={22} strokeWidth={active ? 2.25 : 1.5} />

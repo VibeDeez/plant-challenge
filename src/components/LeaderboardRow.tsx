@@ -39,8 +39,8 @@ export default function LeaderboardRow({
       <div
         className={`relative overflow-hidden rounded-3xl border ${
           isFamily
-            ? "border-[#22c55e]/30 shadow-[0_0_24px_rgba(34,197,94,0.12)]"
-            : "border-[#1a3a2a]/10"
+            ? "border-brand-green/30 shadow-[0_0_24px_rgba(34,197,94,0.12)]"
+            : "border-brand-dark/10"
         }`}
         style={{ backgroundColor: rankColor.bg }}
       >
@@ -80,13 +80,13 @@ export default function LeaderboardRow({
                 <span className="text-2xl">{emoji}</span>
                 <div className="min-w-0">
                   <p
-                    className="text-lg font-bold text-[#1a3a2a] truncate"
+                    className="text-lg font-bold text-brand-dark truncate"
                     style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                   >
                     {displayName}
                   </p>
                   {isFamily && (
-                    <p className="text-xs font-medium text-[#22c55e]">Your family</p>
+                    <p className="text-xs font-medium text-brand-green">Your family</p>
                   )}
                 </div>
               </div>
@@ -95,24 +95,24 @@ export default function LeaderboardRow({
             {/* Points */}
             <div className="text-right shrink-0">
               <p
-                className="text-3xl font-bold text-[#1a3a2a]"
+                className="text-3xl font-bold text-brand-dark"
                 style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
               >
                 {pointsDisplay}
               </p>
-              <p className="text-xs text-[#6b7260]">points</p>
+              <p className="text-xs text-brand-muted">points</p>
             </div>
           </div>
 
           {/* Progress bar */}
           <div className="mt-4">
             <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[11px] text-[#6b7260]">Progress to 30</p>
-              <p className="text-[11px] font-semibold text-[#1a3a2a]">
+              <p className="text-[11px] text-brand-muted">Progress to 30</p>
+              <p className="text-[11px] font-semibold text-brand-dark">
                 {Math.round(progress * 100)}%
               </p>
             </div>
-            <div className="relative w-full h-2.5 rounded-full bg-[#1a3a2a]/[0.06] overflow-hidden">
+            <div className="relative w-full h-2.5 rounded-full bg-brand-dark/[0.06] overflow-hidden">
               <div
                 className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
                 style={{
@@ -137,8 +137,8 @@ export default function LeaderboardRow({
       <div
         className={`relative overflow-hidden rounded-2xl border ${
           isFamily
-            ? "border-[#22c55e]/25 shadow-[0_0_16px_rgba(34,197,94,0.08)]"
-            : "border-[#1a3a2a]/10"
+            ? "border-brand-green/25 shadow-[0_0_16px_rgba(34,197,94,0.08)]"
+            : "border-brand-dark/10"
         }`}
         style={{ backgroundColor: rankColor.bg }}
       >
@@ -176,23 +176,23 @@ export default function LeaderboardRow({
 
             {/* Name */}
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-semibold text-[#1a3a2a] truncate">
+              <p className="text-[15px] font-semibold text-brand-dark truncate">
                 {displayName}
               </p>
               {isFamily && (
-                <p className="text-[11px] font-medium text-[#22c55e]">Your family</p>
+                <p className="text-[11px] font-medium text-brand-green">Your family</p>
               )}
             </div>
 
             {/* Points + mini progress */}
             <div className="text-right shrink-0">
               <p
-                className="text-xl font-bold text-[#1a3a2a]"
+                className="text-xl font-bold text-brand-dark"
                 style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
               >
                 {pointsDisplay}
               </p>
-              <div className="mt-1 w-16 h-1.5 rounded-full bg-[#1a3a2a]/[0.06] overflow-hidden">
+              <div className="mt-1 w-16 h-1.5 rounded-full bg-brand-dark/[0.06] overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700 ease-out"
                   style={{
@@ -213,13 +213,13 @@ export default function LeaderboardRow({
     <div
       className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${
         isFamily
-          ? "bg-[#22c55e]/[0.06] border border-[#22c55e]/20"
-          : "bg-white border border-[#1a3a2a]/[0.06]"
+          ? "bg-brand-green/[0.06] border border-brand-green/20"
+          : "bg-white border border-brand-dark/[0.06]"
       }`}
     >
       {/* Rank number */}
       <div className="w-8 text-center">
-        <span className="text-sm font-medium text-[#6b7260]">{rank}</span>
+        <span className="text-sm font-medium text-brand-muted">{rank}</span>
       </div>
 
       {/* Avatar */}
@@ -227,15 +227,15 @@ export default function LeaderboardRow({
 
       {/* Name */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#1a3a2a] truncate">{displayName}</p>
+        <p className="text-sm font-medium text-brand-dark truncate">{displayName}</p>
         {isFamily && (
-          <p className="text-[11px] font-medium text-[#22c55e]">Your family</p>
+          <p className="text-[11px] font-medium text-brand-green">Your family</p>
         )}
       </div>
 
       {/* Points + mini progress */}
       <div className="flex items-center gap-3">
-        <div className="w-12 h-1.5 rounded-full bg-[#1a3a2a]/[0.06] overflow-hidden">
+        <div className="w-12 h-1.5 rounded-full bg-brand-dark/[0.06] overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-700 ease-out"
             style={{
@@ -246,8 +246,8 @@ export default function LeaderboardRow({
           />
         </div>
         <div className="text-right">
-          <p className="text-sm font-bold text-[#1a3a2a]">{pointsDisplay}</p>
-          <p className="text-[10px] text-[#6b7260]">pts</p>
+          <p className="text-sm font-bold text-brand-dark">{pointsDisplay}</p>
+          <p className="text-[10px] text-brand-muted">pts</p>
         </div>
       </div>
     </div>

@@ -1,28 +1,8 @@
 "use client";
 
-import { Trash2, type LucideIcon } from "lucide-react";
-import {
-  Cherry,
-  LeafyGreen,
-  Wheat,
-  Bean,
-  Nut,
-  Sprout,
-  Leaf,
-  Flame,
-} from "lucide-react";
-import { CATEGORY_COLORS } from "@/lib/constants";
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  Fruits: Cherry,
-  Vegetables: LeafyGreen,
-  "Whole Grains": Wheat,
-  Legumes: Bean,
-  Nuts: Nut,
-  Seeds: Sprout,
-  Herbs: Leaf,
-  Spices: Flame,
-};
+import { Trash2 } from "lucide-react";
+import { Leaf } from "lucide-react";
+import { CATEGORY_COLORS, CATEGORY_ICONS } from "@/lib/constants";
 
 type PlantLog = {
   id: string;
@@ -50,7 +30,7 @@ export default function PlantCard({
         <Icon size={20} style={{ color }} strokeWidth={1.75} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[15px] font-semibold text-[#1a3a2a] truncate">
+        <p className="text-[15px] font-semibold text-brand-dark truncate">
           {log.plant_name}
         </p>
         <p className="text-xs font-medium" style={{ color }}>
@@ -59,7 +39,7 @@ export default function PlantCard({
       </div>
       <button
         onClick={() => onDelete(log.id)}
-        className="p-2 rounded-xl text-[#1a3a2a]/20 opacity-0 group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"
+        className="p-2 rounded-xl text-brand-dark/20 sm:opacity-0 sm:group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"
       >
         <Trash2 size={16} />
       </button>

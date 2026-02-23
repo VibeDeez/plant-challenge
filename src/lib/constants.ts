@@ -1,3 +1,16 @@
+import {
+  Cherry,
+  LeafyGreen,
+  Wheat,
+  Bean,
+  Nut,
+  Sprout,
+  Leaf,
+  Flame,
+  LayoutGrid,
+  type LucideIcon,
+} from "lucide-react";
+
 export const CATEGORIES = [
   "All",
   "Fruits",
@@ -34,6 +47,35 @@ export const CATEGORY_EMOJI: Record<string, string> = {
   Spices: "🧂",
 };
 
+export const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  All: LayoutGrid,
+  Fruits: Cherry,
+  Vegetables: LeafyGreen,
+  "Whole Grains": Wheat,
+  Legumes: Bean,
+  Nuts: Nut,
+  Seeds: Sprout,
+  Herbs: Leaf,
+  Spices: Flame,
+};
+
+export const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
+  Fruits: "/illustrations/strawberry.png",
+  Vegetables: "/illustrations/vegetables.png",
+  "Whole Grains": "/illustrations/grains.png",
+  Legumes: "/illustrations/legumes.png",
+  Nuts: "/illustrations/nuts.png",
+  Seeds: "/illustrations/seeds.png",
+  Herbs: "/illustrations/herbs.png",
+  Spices: "/illustrations/spices.png",
+};
+
+export const ALL_ILLUSTRATIONS = Object.values(CATEGORY_ILLUSTRATIONS);
+
+export const CATEGORY_ORDER = CATEGORIES.filter(
+  (c): c is Exclude<Category, "All"> => c !== "All"
+);
+
 export const MEMBER_EMOJIS = [
   "🌱", "🌿", "🍀", "🌻", "🌸", "🌺", "🍄", "🌈",
   "⭐", "🦋", "🐢", "🦊", "🐻", "🐰", "🦁", "🐸",
@@ -42,7 +84,7 @@ export const MEMBER_EMOJIS = [
 export const TIPS = [
   "Each unique plant species you eat in a week earns points — fruits, veggies, grains, legumes, nuts, and seeds earn 1 point each.",
   "Herbs and spices earn 1/4 point each. A well-spiced curry can contribute 1-2 full points from seasonings alone.",
-  "Your plant count resets every Monday. Eating the same plant twice in one week still counts as 1 point.",
+  "Your plant count resets every Sunday. Eating the same plant twice in one week still counts as 1 point.",
   "Different lentil types (red, green, brown) count separately — they have distinct nutritional profiles.",
   "Red, green, and yellow bell peppers are the same species at different ripeness stages — they count as 1 point total.",
   "Tofu, tempeh, and edamame all come from soybeans — that's 1 soy point total, not 3.",

@@ -17,8 +17,8 @@ export default function MemberSwitcher() {
             onClick={() => setActiveMemberId(m.id)}
             className={`flex items-center gap-2 shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all ${
               active
-                ? "bg-[#22c55e] text-white shadow-sm"
-                : "bg-[#1a3a2a]/5 text-[#1a3a2a]/60 hover:bg-[#1a3a2a]/10"
+                ? "bg-brand-green text-white shadow-sm"
+                : "bg-brand-dark/5 text-brand-dark/60 hover:bg-brand-dark/10"
             }`}
           >
             <span>{m.avatar_emoji}</span>

@@ -1,30 +1,7 @@
 "use client";
 
-import { CATEGORIES, CATEGORY_COLORS, type Category } from "@/lib/constants";
-import {
-  Cherry,
-  LeafyGreen,
-  Wheat,
-  Bean,
-  Nut,
-  Sprout,
-  Leaf,
-  Flame,
-  LayoutGrid,
-  type LucideIcon,
-} from "lucide-react";
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  All: LayoutGrid,
-  Fruits: Cherry,
-  Vegetables: LeafyGreen,
-  "Whole Grains": Wheat,
-  Legumes: Bean,
-  Nuts: Nut,
-  Seeds: Sprout,
-  Herbs: Leaf,
-  Spices: Flame,
-};
+import { CATEGORIES, CATEGORY_COLORS, CATEGORY_ICONS, type Category } from "@/lib/constants";
+import { Leaf } from "lucide-react";
 
 export default function CategoryTabs({
   active,
@@ -46,7 +23,7 @@ export default function CategoryTabs({
             className={`shrink-0 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all ${
               isActive
                 ? "text-white shadow-sm"
-                : "bg-[#1a3a2a]/5 text-[#1a3a2a]/60 hover:bg-[#1a3a2a]/10"
+                : "bg-brand-dark/5 text-brand-dark/60 hover:bg-brand-dark/10"
             }`}
             style={
               isActive

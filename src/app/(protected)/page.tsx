@@ -1,60 +1,22 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart, getWeekLabel } from "@/lib/weekUtils";
-import { TIPS } from "@/lib/constants";
+import {
+  TIPS,
+  CATEGORY_COLORS,
+  CATEGORY_ICONS,
+  CATEGORY_ILLUSTRATIONS,
+  ALL_ILLUSTRATIONS,
+} from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
 import MemberSwitcher from "@/components/MemberSwitcher";
-import ProgressRing from "@/components/ProgressRing";
+import ProgressBar from "@/components/ProgressBar";
 import PlantCard from "@/components/PlantCard";
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Leaf, TrendingUp } from "lucide-react";
-import {
-  Cherry,
-  LeafyGreen,
-  Wheat,
-  Bean,
-  Nut,
-  Sprout,
-  Flame,
-  type LucideIcon,
-} from "lucide-react";
-import { CATEGORY_COLORS } from "@/lib/constants";
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  Fruits: Cherry,
-  Vegetables: LeafyGreen,
-  "Whole Grains": Wheat,
-  Legumes: Bean,
-  Nuts: Nut,
-  Seeds: Sprout,
-  Herbs: Leaf,
-  Spices: Flame,
-};
-
-const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
-  Fruits: "/illustrations/strawberry.png",
-  Vegetables: "/illustrations/vegetables.png",
-  "Whole Grains": "/illustrations/grains.png",
-  Legumes: "/illustrations/legumes.png",
-  Nuts: "/illustrations/nuts.png",
-  Seeds: "/illustrations/seeds.png",
-  Herbs: "/illustrations/herbs.png",
-  Spices: "/illustrations/spices.png",
-};
-
-const ALL_ILLUSTRATIONS = [
-  "/illustrations/strawberry.png",
-  "/illustrations/vegetables.png",
-  "/illustrations/grains.png",
-  "/illustrations/legumes.png",
-  "/illustrations/nuts.png",
-  "/illustrations/seeds.png",
-  "/illustrations/herbs.png",
-  "/illustrations/spices.png",
-];
 
 // Deterministic selection based on the day of the year
 function getDailyIllustration(): string {
@@ -91,7 +53,7 @@ export default function HomePage() {
   const { activeMember } = useApp();
   const [logs, setLogs] = useState<PlantLog[]>([]);
   const [loading, setLoading] = useState(true);
-  const weekStart = getWeekStart();
+  const weekStart = useMemo(() => getWeekStart(), []);
 
   const fetchLogs = useCallback(async () => {
     if (!activeMember) return;
@@ -110,12 +72,12 @@ export default function HomePage() {
     fetchLogs();
   }, [fetchLogs]);
 
-  async function handleDelete(id: string) {
+  const handleDelete = useCallback(async (id: string) => {
     const { error } = await supabase.from("plant_log").delete().eq("id", id);
     if (!error) {
       setLogs((prev) => prev.filter((l) => l.id !== id));
     }
-  }
+  }, []);
 
   const totalPoints = logs.reduce((sum, l) => sum + l.points, 0);
   const [tip] = useState(() => TIPS[Math.floor(Math.random() * TIPS.length)]);
@@ -128,18 +90,18 @@ export default function HomePage() {
 
   const categoriesUsed = Object.keys(categoryBreakdown).length;
 
-  const heroIllustration = getDailyIllustration();
-  const collageIllustrations = getCollageIllustrations();
+  const heroIllustration = useMemo(() => getDailyIllustration(), []);
+  const collageIllustrations = useMemo(() => getCollageIllustrations(), []);
 
   return (
     <>
       <MemberSwitcher />
 
       {/* === TIP CARD === */}
-      <div className="bg-[#f5f0e8] px-5 pt-4 pb-2 grain-light">
+      <div className="bg-brand-cream px-5 pt-4 pb-2 grain-light">
         <div className="max-w-lg mx-auto">
-          <div className="rounded-xl bg-[#1a3a2a]/5 border border-[#1a3a2a]/10 px-4 py-3">
-            <p className="text-xs font-medium text-[#1a3a2a]/70 leading-relaxed">
+          <div className="rounded-xl bg-brand-dark/5 border border-brand-dark/10 px-4 py-3">
+            <p className="text-xs font-medium text-brand-dark/70 leading-relaxed">
               {tip}
             </p>
           </div>
@@ -147,7 +109,7 @@ export default function HomePage() {
       </div>
 
       {/* === HERO HEADER === */}
-      <section className="relative bg-[#1a3a2a] px-5 pt-6 pb-8 -mt-1 overflow-hidden grain">
+      <section className="relative bg-brand-dark px-5 pt-6 pb-8 -mt-1 overflow-hidden grain">
         {/* Botanical illustration — anchored right, subtle */}
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
@@ -162,17 +124,17 @@ export default function HomePage() {
 
         <div className="relative max-w-lg mx-auto">
           {/* Week label */}
-          <p className="text-[#f5f0e8]/40 text-xs font-medium tracking-widest uppercase mb-8">
+          <p className="text-brand-cream/40 text-xs font-medium tracking-widest uppercase mb-8">
             {getWeekLabel(weekStart)}
           </p>
 
           {/* Fill meter */}
-          <ProgressRing current={totalPoints} />
+          <ProgressBar current={totalPoints} />
 
           {/* Quick add CTA */}
           <Link
             href="/add"
-            className="mt-6 flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-[#22c55e] text-white font-semibold text-sm hover:bg-[#1ea34d] active:scale-[0.98] transition-all"
+            className="mt-6 flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-brand-green text-white font-semibold text-sm hover:bg-brand-green-hover active:scale-[0.98] transition-all"
           >
             <Plus size={18} strokeWidth={2.5} />
             Log a Plant
@@ -182,14 +144,14 @@ export default function HomePage() {
 
       {/* === CATEGORY BREAKDOWN MOSAIC === */}
       {categoriesUsed > 0 && (
-        <section className="bg-[#f5f0e8] px-5 py-5 grain-light">
+        <section className="bg-brand-cream px-5 py-5 grain-light">
           <div className="max-w-lg mx-auto">
             <div className="flex items-center gap-2 mb-3">
-              <TrendingUp size={14} className="text-[#6b7260]" />
-              <h3 className="text-xs font-semibold text-[#6b7260] tracking-widest uppercase">
+              <TrendingUp size={14} className="text-brand-muted" />
+              <h3 className="text-xs font-semibold text-brand-muted tracking-widest uppercase">
                 Categories Hit
               </h3>
-              <span className="text-xs text-[#6b7260]/60 ml-auto">
+              <span className="text-xs text-brand-muted/60 ml-auto">
                 {categoriesUsed} of 8
               </span>
             </div>
@@ -201,7 +163,7 @@ export default function HomePage() {
                 return (
                   <div
                     key={cat}
-                    className="relative overflow-hidden rounded-2xl border border-[#1a3a2a]/10"
+                    className="relative overflow-hidden rounded-2xl border border-brand-dark/10"
                   >
                     {/* Background illustration */}
                     {illustration && (
@@ -224,7 +186,7 @@ export default function HomePage() {
                         <Icon size={16} style={{ color }} strokeWidth={2} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-[#1a3a2a] truncate">
+                        <p className="text-xs font-semibold text-brand-dark truncate">
                           {cat}
                         </p>
                       </div>
@@ -247,7 +209,7 @@ export default function HomePage() {
       )}
 
       {/* === PLANT LOG === */}
-      <section className="relative bg-[#f8faf8] px-5 py-6 min-h-[40vh] overflow-hidden grain-light">
+      <section className="relative bg-brand-bg px-5 py-6 min-h-[40vh] overflow-hidden grain-light">
         {/* Botanical collage background - only when there are logs */}
         {!loading && logs.length > 0 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -284,19 +246,19 @@ export default function HomePage() {
         <div className="relative max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h2
-              className="text-xl font-bold text-[#1a3a2a]"
+              className="text-xl font-bold text-brand-dark"
               style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
             >
               This Week
             </h2>
-            <span className="text-xs font-medium text-[#6b7260]">
+            <span className="text-xs font-medium text-brand-muted">
               {logs.length} {logs.length === 1 ? "plant" : "plants"}
             </span>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center py-16">
-              <div className="w-8 h-8 border-2 border-[#22c55e]/20 border-t-[#22c55e] rounded-full animate-spin" />
+              <div className="w-8 h-8 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
             </div>
           ) : logs.length === 0 ? (
             <div className="relative text-center py-16">
@@ -311,20 +273,20 @@ export default function HomePage() {
                 />
               </div>
               <div className="relative">
-                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1a3a2a]/5 backdrop-blur-sm">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-dark/5 backdrop-blur-sm">
                   <Leaf
                     size={28}
-                    className="text-[#1a3a2a]/30"
+                    className="text-brand-dark/30"
                     strokeWidth={1.5}
                   />
                 </div>
                 <p
-                  className="text-lg font-semibold text-[#1a3a2a] mb-1"
+                  className="text-lg font-semibold text-brand-dark mb-1"
                   style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                 >
                   No plants yet
                 </p>
-                <p className="text-sm text-[#6b7260]">
+                <p className="text-sm text-brand-muted">
                   Tap the button above to log your first plant.
                 </p>
               </div>

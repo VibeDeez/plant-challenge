@@ -30,6 +30,12 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { image } = await req.json();
 
     if (!image || typeof image !== "string") {

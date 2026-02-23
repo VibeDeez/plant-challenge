@@ -7,20 +7,10 @@ import { useApp, type Member } from "@/components/ProtectedLayout";
 import AddKidModal from "@/components/AddKidModal";
 import EmojiPicker from "@/components/EmojiPicker";
 import { LogOut, Pencil, Plus, Trash2 } from "lucide-react";
+import { ALL_ILLUSTRATIONS } from "@/lib/constants";
 import Image from "next/image";
 
 const supabase = createClient();
-
-const ILLUSTRATIONS = [
-  "/illustrations/strawberry.png",
-  "/illustrations/vegetables.png",
-  "/illustrations/grains.png",
-  "/illustrations/legumes.png",
-  "/illustrations/nuts.png",
-  "/illustrations/seeds.png",
-  "/illustrations/herbs.png",
-  "/illustrations/spices.png",
-];
 
 export default function ProfilePage() {
   const { userId, members, refreshMembers } = useApp();
@@ -91,9 +81,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8faf8]">
+    <div className="min-h-screen bg-brand-bg">
       {/* Dark green header with botanical watermark */}
-      <div className="relative bg-[#1a3a2a] px-5 pt-6 pb-8 overflow-hidden grain">
+      <div className="relative bg-brand-dark px-5 pt-6 pb-8 overflow-hidden grain">
         <div className="absolute -right-6 -bottom-6 w-44 h-44 opacity-[0.10] pointer-events-none">
           <Image
             src="/illustrations/herbs.png"
@@ -104,7 +94,7 @@ export default function ProfilePage() {
           />
         </div>
         <h1
-          className="relative text-2xl text-[#f5f0e8]"
+          className="relative text-2xl text-brand-cream"
           style={{ fontFamily: "Georgia, serif" }}
         >
           Profile
@@ -126,25 +116,25 @@ export default function ProfilePage() {
               />
             </div>
             {/* Glassmorphic overlay */}
-            <div className="relative bg-white/30 backdrop-blur-sm border border-[#1a3a2a]/10 rounded-2xl p-5">
+            <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl p-5">
               <div className="flex items-center gap-4">
                 <span className="text-5xl">{owner.avatar_emoji}</span>
                 <div className="flex-1">
                   <p
-                    className="text-xl text-[#1a3a2a]"
+                    className="text-xl text-brand-dark"
                     style={{ fontFamily: "Georgia, serif" }}
                   >
                     {owner.display_name}
                   </p>
-                  <p className="text-sm text-[#6b7260] mt-0.5">
+                  <p className="text-sm text-brand-muted mt-0.5">
                     Account owner
                   </p>
                 </div>
                 <button
                   onClick={startEditOwner}
-                  className="p-2.5 rounded-xl bg-[#1a3a2a]/5 hover:bg-[#1a3a2a]/10 transition-colors"
+                  className="p-2.5 rounded-xl bg-brand-dark/5 hover:bg-brand-dark/10 transition-colors"
                 >
-                  <Pencil size={16} className="text-[#1a3a2a]/60" />
+                  <Pencil size={16} className="text-brand-dark/60" />
                 </button>
               </div>
             </div>
@@ -155,26 +145,26 @@ export default function ProfilePage() {
         {editingOwner && (
           <form
             onSubmit={saveOwner}
-            className="bg-[#f5f0e8] rounded-2xl border border-[#1a3a2a]/10 shadow-sm p-5 space-y-4"
+            className="bg-brand-cream rounded-2xl border border-brand-dark/10 shadow-sm p-5 space-y-4"
           >
             <input
               type="text"
               value={ownerName}
               onChange={(e) => setOwnerName(e.target.value)}
-              className="w-full bg-white rounded-xl border border-[#1a3a2a]/20 px-4 py-3 text-[#1a3a2a] focus:ring-2 focus:ring-[#22c55e] focus:border-transparent focus:outline-none transition-all"
+              className="w-full bg-white rounded-xl border border-brand-dark/20 px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-green focus:border-transparent focus:outline-none transition-all"
             />
             <EmojiPicker value={ownerEmoji} onChange={setOwnerEmoji} />
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="flex-1 rounded-xl bg-[#22c55e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1ea34e] transition-colors"
+                className="flex-1 rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover transition-colors"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={() => setEditingOwner(false)}
-                className="rounded-xl px-4 py-3 text-sm font-medium text-[#6b7260] hover:bg-[#1a3a2a]/5 transition-colors"
+                className="rounded-xl px-4 py-3 text-sm font-medium text-brand-muted hover:bg-brand-dark/5 transition-colors"
               >
                 Cancel
               </button>
@@ -186,14 +176,14 @@ export default function ProfilePage() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <h2
-              className="text-lg text-[#1a3a2a]"
+              className="text-lg text-brand-dark"
               style={{ fontFamily: "Georgia, serif" }}
             >
               Family
             </h2>
             <button
               onClick={() => setKidModal({ open: true })}
-              className="flex items-center gap-1.5 text-sm font-medium text-[#22c55e] hover:text-[#1ea34e] transition-colors"
+              className="flex items-center gap-1.5 text-sm font-medium text-brand-green hover:text-brand-green-hover transition-colors"
             >
               <Plus size={16} />
               Add Kid
@@ -211,14 +201,14 @@ export default function ProfilePage() {
                   className="object-contain"
                 />
               </div>
-              <div className="relative bg-white/30 backdrop-blur-sm border border-[#1a3a2a]/10 rounded-2xl py-10 px-6 text-center">
+              <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl py-10 px-6 text-center">
                 <p
-                  className="text-[#6b7260] text-base"
+                  className="text-brand-muted text-base"
                   style={{ fontFamily: "Georgia, serif" }}
                 >
                   No kids added yet
                 </p>
-                <p className="text-[#6b7260]/60 text-sm mt-1">
+                <p className="text-brand-muted/60 text-sm mt-1">
                   Add family members to track their progress too.
                 </p>
               </div>
@@ -233,7 +223,7 @@ export default function ProfilePage() {
                   {/* Rotating botanical background */}
                   <div className="absolute -right-4 -top-2 w-32 h-32 opacity-[0.2] pointer-events-none">
                     <Image
-                      src={ILLUSTRATIONS[index % 8]}
+                      src={ALL_ILLUSTRATIONS[index % ALL_ILLUSTRATIONS.length]}
                       alt=""
                       width={130}
                       height={130}
@@ -241,10 +231,10 @@ export default function ProfilePage() {
                     />
                   </div>
                   {/* Glassmorphic card */}
-                  <div className="relative bg-white/30 backdrop-blur-sm border border-[#1a3a2a]/10 rounded-2xl px-4 py-3.5 flex items-center gap-3">
+                  <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl px-4 py-3.5 flex items-center gap-3">
                     <span className="text-2xl">{kid.avatar_emoji}</span>
                     <p
-                      className="flex-1 text-[#1a3a2a] font-medium"
+                      className="flex-1 text-brand-dark font-medium"
                       style={{ fontFamily: "Georgia, serif" }}
                     >
                       {kid.display_name}
@@ -253,15 +243,15 @@ export default function ProfilePage() {
                       onClick={() =>
                         setKidModal({ open: true, editing: kid })
                       }
-                      className="p-2 rounded-xl hover:bg-[#1a3a2a]/5 transition-colors"
+                      className="p-2 rounded-xl hover:bg-brand-dark/5 transition-colors"
                     >
-                      <Pencil size={14} className="text-[#6b7260]" />
+                      <Pencil size={14} className="text-brand-muted" />
                     </button>
                     <button
                       onClick={() => deleteKid(kid.id)}
                       className="p-2 rounded-xl hover:bg-red-50 transition-colors"
                     >
-                      <Trash2 size={14} className="text-[#6b7260]/50 hover:text-red-500" />
+                      <Trash2 size={14} className="text-brand-muted/50 hover:text-red-500" />
                     </button>
                   </div>
                 </div>
@@ -273,7 +263,7 @@ export default function ProfilePage() {
         {/* Sign Out */}
         <button
           onClick={handleSignOut}
-          className="flex items-center gap-2 w-full justify-center rounded-xl border border-[#1a3a2a]/10 px-4 py-3.5 text-sm font-medium text-[#6b7260] hover:bg-[#1a3a2a]/5 transition-colors"
+          className="flex items-center gap-2 w-full justify-center rounded-xl border border-brand-dark/10 px-4 py-3.5 text-sm font-medium text-brand-muted hover:bg-brand-dark/5 transition-colors"
         >
           <LogOut size={16} />
           Sign Out

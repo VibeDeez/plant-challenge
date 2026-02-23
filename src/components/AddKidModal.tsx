@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EmojiPicker from "./EmojiPicker";
 import { X } from "lucide-react";
 
@@ -22,6 +22,12 @@ export default function AddKidModal({
   const [name, setName] = useState(initial?.display_name ?? "");
   const [emoji, setEmoji] = useState(initial?.avatar_emoji ?? "🌱");
 
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [onClose]);
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim()) return;
@@ -29,27 +35,27 @@ export default function AddKidModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end">
+    <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="relative w-full bg-[#f5f0e8] rounded-t-3xl p-5 pb-20">
+      <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20">
         <div className="flex items-center justify-between mb-5">
           <h3
-            className="text-lg text-[#1a3a2a]"
+            className="text-lg text-brand-dark"
             style={{ fontFamily: "Georgia, serif" }}
           >
             {initial ? "Edit Member" : "Add Kid"}
           </h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-xl hover:bg-[#1a3a2a]/5 transition-colors"
+            className="p-1 rounded-xl hover:bg-brand-dark/5 transition-colors"
           >
-            <X size={20} className="text-[#1a3a2a]/40 hover:text-[#1a3a2a] transition-colors" />
+            <X size={20} className="text-brand-dark/40 hover:text-brand-dark transition-colors" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[#6b7260] mb-1">
+            <label className="block text-sm font-medium text-brand-muted mb-1">
               Name
             </label>
             <input
@@ -58,12 +64,12 @@ export default function AddKidModal({
               onChange={(e) => setName(e.target.value)}
               placeholder="Kid's name"
               required
-              className="w-full bg-white rounded-xl px-4 py-3 text-[#1a3a2a] border border-[#1a3a2a]/10 focus:ring-2 focus:ring-[#22c55e] focus:border-transparent focus:outline-none transition-all"
+              className="w-full bg-white rounded-xl px-4 py-3 text-brand-dark border border-brand-dark/10 focus:ring-2 focus:ring-brand-green focus:border-transparent focus:outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[#6b7260] mb-2">
+            <label className="block text-sm font-medium text-brand-muted mb-2">
               Avatar
             </label>
             <EmojiPicker value={emoji} onChange={setEmoji} />
@@ -71,7 +77,7 @@ export default function AddKidModal({
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-[#22c55e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1ea34e] transition-colors"
+            className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover transition-colors"
           >
             {initial ? "Save Changes" : "Add Kid"}
           </button>

@@ -7,18 +7,18 @@ export default function LearnPage() {
   return (
     <>
       {/* === HEADER === */}
-      <div className="bg-[#1a3a2a] px-5 pt-6 pb-6 -mt-1 grain">
+      <div className="bg-brand-dark px-5 pt-6 pb-6 -mt-1 grain">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center gap-2.5 mb-2">
-            <BookOpen size={20} className="text-[#22c55e]" />
+            <BookOpen size={20} className="text-brand-green" />
             <h1
-              className="text-2xl font-bold text-[#f5f0e8]"
+              className="text-2xl font-bold text-brand-cream"
               style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
             >
               Learn
             </h1>
           </div>
-          <p className="text-sm text-[#f5f0e8]/50">
+          <p className="text-sm text-brand-cream/50">
             Everything you need to know about the 30 Plant Point Challenge,
             based on the work of Dr. Will Bulsiewicz.
           </p>
@@ -26,7 +26,7 @@ export default function LearnPage() {
       </div>
 
       {/* === CONTENT === */}
-      <div className="bg-[#f5f0e8] min-h-[60vh] grain-light">
+      <div className="bg-brand-cream min-h-[60vh] grain-light">
         <div className="relative max-w-lg mx-auto px-5 py-4">
           {/* Section 1: What Is the Challenge? */}
           <Accordion title="What Is the Challenge?" defaultOpen>
@@ -48,12 +48,12 @@ export default function LearnPage() {
           <Accordion title="How Scoring Works">
             <table className="w-full text-xs mb-3">
               <thead>
-                <tr className="text-left text-[#6b7260]">
+                <tr className="text-left text-brand-muted">
                   <th className="pb-1 font-medium">Category</th>
                   <th className="pb-1 font-medium">Points</th>
                 </tr>
               </thead>
-              <tbody className="text-[#1a3a2a]">
+              <tbody className="text-brand-dark">
                 <tr>
                   <td className="py-0.5">Fruits, Vegetables, Whole Grains</td>
                   <td>1 pt each</td>
@@ -69,7 +69,7 @@ export default function LearnPage() {
               </tbody>
             </table>
 
-            <p className="font-medium text-[#1a3a2a] mt-3 mb-1">Key Rules</p>
+            <p className="font-medium text-brand-dark mt-3 mb-1">Key Rules</p>
             <ul className="space-y-1.5 list-disc pl-4">
               <li>
                 <strong>Resets weekly:</strong> Your count resets every Monday.
@@ -101,10 +101,10 @@ export default function LearnPage() {
             <div className="space-y-2">
               {EDGE_CASES.map((item, i) => (
                 <details key={i} className="group">
-                  <summary className="cursor-pointer text-[#1a3a2a] font-medium text-xs py-1 group-open:text-[#22c55e]">
+                  <summary className="cursor-pointer text-brand-dark font-medium text-xs py-1 group-open:text-brand-green">
                     {item.q}
                   </summary>
-                  <p className="text-xs text-[#6b7260] mt-1 ml-1 pb-1">
+                  <p className="text-xs text-brand-muted mt-1 ml-1 pb-1">
                     {item.a}
                   </p>
                 </details>
@@ -117,10 +117,10 @@ export default function LearnPage() {
             <div className="space-y-3">
               {STRATEGIES.map((s, i) => (
                 <div key={i}>
-                  <p className="font-medium text-[#1a3a2a] text-xs">
+                  <p className="font-medium text-brand-dark text-xs">
                     {s.name}
                   </p>
-                  <p className="text-xs text-[#6b7260] mt-0.5">{s.desc}</p>
+                  <p className="text-xs text-brand-muted mt-0.5">{s.desc}</p>
                 </div>
               ))}
             </div>
@@ -131,14 +131,14 @@ export default function LearnPage() {
             <div className="space-y-3">
               {SAMPLE_WEEK.map((day, i) => (
                 <div key={i}>
-                  <p className="font-medium text-[#1a3a2a] text-xs">
+                  <p className="font-medium text-brand-dark text-xs">
                     {day.day}
                   </p>
-                  <p className="text-xs text-[#6b7260] mt-0.5">{day.meals}</p>
+                  <p className="text-xs text-brand-muted mt-0.5">{day.meals}</p>
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-xs text-[#6b7260]/70 italic">
+            <p className="mt-3 text-xs text-brand-muted/70 italic">
               This sample plan hits ~36 plant points with 68 unique plants
               including herbs/spices.
             </p>
@@ -194,10 +194,10 @@ export default function LearnPage() {
             <div className="space-y-2">
               {SPECIAL_SITUATIONS.map((item, i) => (
                 <details key={i} className="group">
-                  <summary className="cursor-pointer text-[#1a3a2a] font-medium text-xs py-1 group-open:text-[#22c55e]">
+                  <summary className="cursor-pointer text-brand-dark font-medium text-xs py-1 group-open:text-brand-green">
                     {item.q}
                   </summary>
-                  <p className="text-xs text-[#6b7260] mt-1 ml-1 pb-1">
+                  <p className="text-xs text-brand-muted mt-1 ml-1 pb-1">
                     {item.a}
                   </p>
                 </details>

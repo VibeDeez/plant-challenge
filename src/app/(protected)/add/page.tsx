@@ -1,64 +1,22 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart } from "@/lib/weekUtils";
-import { type Category, CATEGORY_COLORS } from "@/lib/constants";
+import {
+  type Category,
+  CATEGORY_COLORS,
+  CATEGORY_ICONS,
+  CATEGORY_ILLUSTRATIONS,
+  CATEGORY_ORDER,
+} from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
 import CategoryTabs from "@/components/CategoryTabs";
 import PlantListItem from "@/components/PlantListItem";
-import {
-  ArrowLeft,
-  Plus,
-  Search,
-  X,
-  Cherry,
-  LeafyGreen,
-  Wheat,
-  Bean,
-  Nut,
-  Sprout,
-  Leaf,
-  Flame,
-  Camera,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowLeft, Plus, Search, X, Leaf, Camera } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import PhotoRecognitionModal from "@/components/PhotoRecognitionModal";
-
-const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
-  Fruits: "/illustrations/strawberry.png",
-  Vegetables: "/illustrations/vegetables.png",
-  "Whole Grains": "/illustrations/grains.png",
-  Legumes: "/illustrations/legumes.png",
-  Nuts: "/illustrations/nuts.png",
-  Seeds: "/illustrations/seeds.png",
-  Herbs: "/illustrations/herbs.png",
-  Spices: "/illustrations/spices.png",
-};
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  Fruits: Cherry,
-  Vegetables: LeafyGreen,
-  "Whole Grains": Wheat,
-  Legumes: Bean,
-  Nuts: Nut,
-  Seeds: Sprout,
-  Herbs: Leaf,
-  Spices: Flame,
-};
-
-const CATEGORY_ORDER = [
-  "Fruits",
-  "Vegetables",
-  "Whole Grains",
-  "Legumes",
-  "Nuts",
-  "Seeds",
-  "Herbs",
-  "Spices",
-];
 
 type Plant = {
   id: number;
@@ -79,7 +37,15 @@ export default function AddPlantPage() {
   const [customCategory, setCustomCategory] = useState("Fruits");
   const [showCustom, setShowCustom] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
-  const weekStart = getWeekStart();
+  const weekStart = useMemo(() => getWeekStart(), []);
+
+  // Escape key closes custom plant modal
+  useEffect(() => {
+    if (!showCustom) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setShowCustom(false); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [showCustom]);
 
   const fetchData = useCallback(async () => {
     if (!activeMember) return;
@@ -134,10 +100,10 @@ export default function AddPlantPage() {
   }
 
   async function logRecognizedPlants(
-    plants: { name: string; category: string; points: number }[]
+    recognized: { name: string; category: string; points: number }[]
   ) {
     if (!activeMember) return;
-    const inserts = plants
+    const inserts = recognized
       .filter((p) => !loggedNames.has(p.name))
       .map((p) => ({
         member_id: activeMember.id,
@@ -157,21 +123,26 @@ export default function AddPlantPage() {
     }
   }
 
-  const filtered = plants.filter((p) => {
-    const matchCategory = category === "All" || p.category === category;
-    const matchSearch =
-      !search || p.name.toLowerCase().includes(search.toLowerCase());
-    return matchCategory && matchSearch;
-  });
+  const filtered = useMemo(
+    () =>
+      plants.filter((p) => {
+        const matchCategory = category === "All" || p.category === category;
+        const matchSearch =
+          !search || p.name.toLowerCase().includes(search.toLowerCase());
+        return matchCategory && matchSearch;
+      }),
+    [plants, category, search]
+  );
 
   // Group filtered plants by category for gallery view
-  const grouped = CATEGORY_ORDER.reduce<Record<string, Plant[]>>(
-    (acc, cat) => {
-      const items = filtered.filter((p) => p.category === cat);
-      if (items.length > 0) acc[cat] = items;
-      return acc;
-    },
-    {}
+  const grouped = useMemo(
+    () =>
+      CATEGORY_ORDER.reduce<Record<string, Plant[]>>((acc, cat) => {
+        const items = filtered.filter((p) => p.category === cat);
+        if (items.length > 0) acc[cat] = items;
+        return acc;
+      }, {}),
+    [filtered]
   );
 
   const isSearching = search.length > 0;
@@ -180,17 +151,17 @@ export default function AddPlantPage() {
   return (
     <>
       {/* === HEADER === */}
-      <div className="bg-[#1a3a2a] px-5 pt-4 pb-2 grain">
+      <div className="bg-brand-dark px-5 pt-4 pb-2 grain">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center gap-3 mb-4">
             <Link
               href="/"
-              className="p-1.5 rounded-xl text-[#f5f0e8]/60 hover:text-[#f5f0e8] hover:bg-[#f5f0e8]/10 transition-colors"
+              className="p-1.5 rounded-xl text-brand-cream/60 hover:text-brand-cream hover:bg-brand-cream/10 transition-colors"
             >
               <ArrowLeft size={22} />
             </Link>
             <h1
-              className="text-2xl font-bold text-[#f5f0e8]"
+              className="text-2xl font-bold text-brand-cream"
               style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
             >
               Log Plants
@@ -200,7 +171,7 @@ export default function AddPlantPage() {
           {/* Snap to Log banner */}
           <button
             onClick={() => setShowCamera(true)}
-            className="w-full mb-3 flex items-center gap-3 rounded-2xl bg-[#22c55e] px-4 py-3 text-left hover:bg-[#1ea34d] active:scale-[0.98] transition-all"
+            className="w-full mb-3 flex items-center gap-3 rounded-2xl bg-brand-green px-4 py-3 text-left hover:bg-brand-green-hover active:scale-[0.98] transition-all"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
               <Camera size={22} className="text-white" strokeWidth={2} />
@@ -217,19 +188,19 @@ export default function AddPlantPage() {
           <div className="relative mb-2">
             <Search
               size={16}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-cream/30"
             />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search plants..."
-              className="w-full rounded-xl bg-[#f5f0e8]/10 py-2.5 pl-10 pr-3 text-sm text-[#f5f0e8] placeholder:text-[#f5f0e8]/30 focus:bg-[#f5f0e8]/15 focus:outline-none transition-colors"
+              className="w-full rounded-xl bg-brand-cream/10 py-2.5 pl-10 pr-3 text-sm text-brand-cream placeholder:text-brand-cream/30 focus:bg-brand-cream/15 focus:outline-none transition-colors"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f5f0e8]/30 hover:text-[#f5f0e8]"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-cream/30 hover:text-brand-cream"
               >
                 <X size={16} />
               </button>
@@ -239,14 +210,14 @@ export default function AddPlantPage() {
       </div>
 
       {/* === CATEGORY TABS === */}
-      <div className="sticky top-0 z-30 bg-[#f5f0e8] shadow-sm">
+      <div className="sticky top-0 z-30 bg-brand-cream shadow-sm">
         <div className="max-w-lg mx-auto">
           <CategoryTabs active={category} onChange={setCategory} />
         </div>
       </div>
 
       {/* === GALLERY / LIST === */}
-      <div className="bg-[#f8faf8] min-h-[60vh] grain-light">
+      <div className="bg-brand-bg min-h-[60vh] grain-light">
         <div className="max-w-lg mx-auto px-5 py-4">
           {showGallery ? (
             // Gallery view: grouped by category with big section headers
@@ -274,7 +245,7 @@ export default function AddPlantPage() {
                         </div>
                         <div>
                           <h2
-                            className="text-lg font-bold text-[#1a3a2a]"
+                            className="text-lg font-bold text-brand-dark"
                             style={{
                               fontFamily:
                                 "Georgia, 'Times New Roman', serif",
@@ -282,7 +253,7 @@ export default function AddPlantPage() {
                           >
                             {cat}
                           </h2>
-                          <p className="text-[11px] text-[#6b7260]">
+                          <p className="text-[11px] text-brand-muted">
                             {items.length}{" "}
                             {items.length === 1 ? "plant" : "plants"} ·{" "}
                             {cat === "Herbs" || cat === "Spices"
@@ -316,12 +287,12 @@ export default function AddPlantPage() {
                             disabled={logged}
                             className={`relative rounded-full px-3.5 py-1.5 text-left transition-all backdrop-blur-sm border ${
                               logged
-                                ? "bg-[#1a3a2a]/5 opacity-50 border-[#1a3a2a]/10"
-                                : "bg-white/30 hover:bg-white/50 hover:shadow-md active:scale-[0.97] border-[#1a3a2a]/10"
+                                ? "bg-brand-dark/5 opacity-50 border-brand-dark/10"
+                                : "bg-white/30 hover:bg-white/50 hover:shadow-md active:scale-[0.97] border-brand-dark/10"
                             }`}
                           >
                             <span className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-semibold text-[#1a3a2a]">
+                              <span className="text-[13px] font-semibold text-brand-dark">
                                 {plant.name}
                               </span>
                               {logged && (
@@ -365,14 +336,14 @@ export default function AddPlantPage() {
 
               {filtered.length === 0 && (
                 <div className="text-center py-16">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1a3a2a]/5">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-dark/5">
                     <Search
                       size={24}
-                      className="text-[#1a3a2a]/30"
+                      className="text-brand-dark/30"
                       strokeWidth={1.5}
                     />
                   </div>
-                  <p className="text-sm text-[#6b7260]">
+                  <p className="text-sm text-brand-muted">
                     No plants found. Try a custom entry.
                   </p>
                 </div>
@@ -384,22 +355,22 @@ export default function AddPlantPage() {
 
       {/* === CUSTOM PLANT MODAL === */}
       {showCustom ? (
-        <div className="fixed inset-0 z-50 flex items-end">
+        <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setShowCustom(false)}
           />
-          <div className="relative w-full bg-[#f5f0e8] rounded-t-3xl p-5 pb-20">
+          <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20">
             <div className="flex items-center justify-between mb-4">
               <h3
-                className="text-lg font-bold text-[#1a3a2a]"
+                className="text-lg font-bold text-brand-dark"
                 style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
               >
                 Custom Plant
               </h3>
               <button
                 onClick={() => setShowCustom(false)}
-                className="p-1.5 rounded-xl text-[#1a3a2a]/40 hover:text-[#1a3a2a] hover:bg-[#1a3a2a]/5 transition-colors"
+                className="p-1.5 rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
               >
                 <X size={20} />
               </button>
@@ -412,12 +383,12 @@ export default function AddPlantPage() {
                 placeholder="Plant name"
                 required
                 autoFocus
-                className="w-full rounded-xl bg-white px-4 py-3 text-sm text-[#1a3a2a] placeholder:text-[#6b7260] focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
+                className="w-full rounded-xl bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-green"
               />
               <select
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
-                className="w-full rounded-xl bg-white px-4 py-3 text-sm text-[#1a3a2a] focus:outline-none focus:ring-2 focus:ring-[#22c55e] appearance-none"
+                className="w-full rounded-xl bg-white px-4 py-3 text-sm text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-green appearance-none"
               >
                 {CATEGORY_ORDER.map((c) => (
                   <option key={c} value={c}>
@@ -428,7 +399,7 @@ export default function AddPlantPage() {
               </select>
               <button
                 type="submit"
-                className="w-full rounded-xl bg-[#22c55e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1ea34d] transition-colors"
+                className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover transition-colors"
               >
                 Log Plant
               </button>
@@ -438,7 +409,7 @@ export default function AddPlantPage() {
       ) : (
         <button
           onClick={() => setShowCustom(true)}
-          className="fixed bottom-24 right-5 z-40 flex h-12 items-center gap-2 rounded-2xl bg-[#1a3a2a] px-5 text-white shadow-lg hover:bg-[#1a3a2a]/90 active:scale-95 transition-all"
+          className="fixed bottom-24 right-5 z-40 flex h-12 items-center gap-2 rounded-2xl bg-brand-dark px-5 text-white shadow-lg hover:bg-brand-dark/90 active:scale-95 transition-all"
         >
           <Plus size={18} strokeWidth={2.5} />
           <span className="text-sm font-semibold">Custom</span>

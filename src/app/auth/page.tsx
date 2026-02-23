@@ -3,42 +3,10 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import {
-  Cherry,
-  LeafyGreen,
-  Wheat,
-  Bean,
-  Nut,
-  Sprout,
-  Leaf,
-  Flame,
-  type LucideIcon,
-} from "lucide-react";
+import { CATEGORY_COLORS, CATEGORY_ICONS, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import Image from "next/image";
 
 const supabase = createClient();
-
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  Fruits: Cherry,
-  Vegetables: LeafyGreen,
-  "Whole Grains": Wheat,
-  Legumes: Bean,
-  Nuts: Nut,
-  Seeds: Sprout,
-  Herbs: Leaf,
-  Spices: Flame,
-};
-
-const CATEGORY_ACCENT: Record<string, string> = {
-  Fruits: "#ef4444",
-  Vegetables: "#22c55e",
-  "Whole Grains": "#f59e0b",
-  Legumes: "#a855f7",
-  Nuts: "#f97316",
-  Seeds: "#06b6d4",
-  Herbs: "#10b981",
-  Spices: "#e11d48",
-};
 
 const STEPS = [
   {
@@ -58,18 +26,7 @@ const STEPS = [
   },
 ];
 
-const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
-  Fruits: "/illustrations/strawberry.png",
-  Vegetables: "/illustrations/vegetables.png",
-  "Whole Grains": "/illustrations/grains.png",
-  Legumes: "/illustrations/legumes.png",
-  Nuts: "/illustrations/nuts.png",
-  Seeds: "/illustrations/seeds.png",
-  Herbs: "/illustrations/herbs.png",
-  Spices: "/illustrations/spices.png",
-};
-
-const CATEGORIES = [
+const CATEGORY_DISPLAY = [
   { name: "Fruits", examples: "Apple, Banana, Mango, Blueberry", pts: "1 pt each" },
   { name: "Vegetables", examples: "Broccoli, Spinach, Carrot, Kale", pts: "1 pt each" },
   { name: "Whole Grains", examples: "Oats, Quinoa, Brown Rice, Barley", pts: "1 pt each" },
@@ -97,20 +54,20 @@ export default function AuthPage() {
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { error: authError } = await supabase.auth.signUp({
           email,
           password,
           options: {
             data: { display_name: displayName || "Me" },
           },
         });
-        if (error) throw error;
+        if (authError) throw authError;
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error: authError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
-        if (error) throw error;
+        if (authError) throw authError;
       }
       router.push("/");
       router.refresh();
@@ -124,7 +81,7 @@ export default function AuthPage() {
   return (
     <main className="min-h-screen">
       {/* ===== HERO ===== */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#1a3a2a] grain">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain">
         {/* Floating botanical illustrations */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
           <div className="absolute -top-4 -left-6 w-48 h-48 opacity-[0.15] rotate-[-15deg]">
@@ -151,7 +108,7 @@ export default function AuthPage() {
           {/* 3D headline */}
           <h1 className="mb-6">
             <span
-              className="block text-[clamp(4rem,15vw,10rem)] font-black leading-[0.85] tracking-tight text-[#22c55e]"
+              className="block text-[clamp(4rem,15vw,10rem)] font-black leading-[0.85] tracking-tight text-brand-green"
               style={{
                 fontFamily: "Georgia, 'Times New Roman', serif",
                 textShadow: "0 4px 0 #166534, 0 8px 0 #14532d, 0 12px 24px rgba(0,0,0,0.4)",
@@ -160,7 +117,7 @@ export default function AuthPage() {
               30 Plants.
             </span>
             <span
-              className="block text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-tight text-[#f5f0e8] mt-2"
+              className="block text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-tight text-brand-cream mt-2"
               style={{
                 fontFamily: "Georgia, 'Times New Roman', serif",
               }}
@@ -169,20 +126,20 @@ export default function AuthPage() {
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-[#f5f0e8]/60 max-w-md mx-auto mb-12 leading-relaxed">
+          <p className="text-lg sm:text-xl text-brand-cream/60 max-w-md mx-auto mb-12 leading-relaxed">
             Track your weekly plant diversity. Feed your gut. Transform your health.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
               href="#start"
-              className="px-8 py-3.5 bg-[#22c55e] text-white font-semibold rounded-lg hover:bg-[#1ea34d] transition-colors text-lg"
+              className="px-8 py-3.5 bg-brand-green text-white font-semibold rounded-lg hover:bg-brand-green-hover transition-colors text-lg"
             >
               Get Started
             </a>
             <a
               href="#start"
-              className="px-8 py-3.5 text-[#f5f0e8]/50 font-medium hover:text-[#f5f0e8] transition-colors text-lg"
+              className="px-8 py-3.5 text-brand-cream/50 font-medium hover:text-brand-cream transition-colors text-lg"
             >
               Sign In
             </a>
@@ -190,14 +147,14 @@ export default function AuthPage() {
         </div>
 
         {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f5f0e8] to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-brand-cream to-transparent" />
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section className="bg-[#f5f0e8] py-20 sm:py-28 px-6 grain-light">
+      <section className="bg-brand-cream py-20 sm:py-28 px-6 grain-light">
         <div className="max-w-4xl mx-auto">
           <h2
-            className="text-3xl sm:text-4xl font-bold text-[#1a3a2a] text-center mb-16"
+            className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-16"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
             How It Works
@@ -211,7 +168,7 @@ export default function AuthPage() {
                 "/illustrations/herbs.png",
               ];
               return (
-                <div key={step.num} className="relative rounded-2xl overflow-hidden border border-[#1a3a2a]/10">
+                <div key={step.num} className="relative rounded-2xl overflow-hidden border border-brand-dark/10">
                   {/* Botanical background */}
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <Image
@@ -224,13 +181,13 @@ export default function AuthPage() {
                   </div>
                   <div className="relative bg-white/40 backdrop-blur-sm p-6 text-center sm:text-left">
                     <div
-                      className="text-5xl font-bold text-[#22c55e]/20 mb-3"
+                      className="text-5xl font-bold text-brand-green/20 mb-3"
                       style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
                     >
                       {step.num}
                     </div>
-                    <h3 className="text-xl font-bold text-[#1a3a2a] mb-2">{step.title}</h3>
-                    <p className="text-[#6b7260] leading-relaxed">{step.desc}</p>
+                    <h3 className="text-xl font-bold text-brand-dark mb-2">{step.title}</h3>
+                    <p className="text-brand-muted leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
               );
@@ -240,27 +197,27 @@ export default function AuthPage() {
       </section>
 
       {/* ===== CATEGORY SHOWCASE ===== */}
-      <section className="bg-[#f8faf8] py-20 sm:py-28 px-6 grain-light">
+      <section className="bg-brand-bg py-20 sm:py-28 px-6 grain-light">
         <div className="max-w-5xl mx-auto">
           <h2
-            className="text-3xl sm:text-4xl font-bold text-[#1a3a2a] text-center mb-4"
+            className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
             8 Categories. Endless Variety.
           </h2>
-          <p className="text-center text-[#6b7260] mb-14 max-w-lg mx-auto">
+          <p className="text-center text-brand-muted mb-14 max-w-lg mx-auto">
             Every unique plant you eat earns points. The more diverse your plate, the healthier your gut.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {CATEGORIES.map((cat) => {
+            {CATEGORY_DISPLAY.map((cat) => {
               const Icon = CATEGORY_ICONS[cat.name];
-              const accent = CATEGORY_ACCENT[cat.name];
+              const accent = CATEGORY_COLORS[cat.name];
               const illustration = CATEGORY_ILLUSTRATIONS[cat.name];
               return (
                 <div
                   key={cat.name}
-                  className="group relative rounded-2xl overflow-hidden border border-[#1a3a2a]/10 transition-all hover:shadow-lg hover:scale-[1.02]"
+                  className="group relative rounded-2xl overflow-hidden border border-brand-dark/10 transition-all hover:shadow-lg hover:scale-[1.02]"
                 >
                   {/* Full botanical illustration background */}
                   {illustration && (
@@ -276,8 +233,8 @@ export default function AuthPage() {
                     >
                       <Icon size={24} style={{ color: accent }} strokeWidth={1.75} />
                     </div>
-                    <h3 className="font-bold text-[#1a3a2a] text-sm sm:text-base mb-1">{cat.name}</h3>
-                    <p className="text-xs text-[#6b7260] leading-snug mb-2">{cat.examples}</p>
+                    <h3 className="font-bold text-brand-dark text-sm sm:text-base mb-1">{cat.name}</h3>
+                    <p className="text-xs text-brand-muted leading-snug mb-2">{cat.examples}</p>
                     <span
                       className="inline-block text-[11px] font-semibold tracking-wide uppercase"
                       style={{ color: accent }}
@@ -293,7 +250,7 @@ export default function AuthPage() {
       </section>
 
       {/* ===== THE SCIENCE ===== */}
-      <section className="relative bg-[#1a3a2a] py-20 sm:py-28 px-6 overflow-hidden grain">
+      <section className="relative bg-brand-dark py-20 sm:py-28 px-6 overflow-hidden grain">
         {/* Botanical watermarks */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div className="absolute -left-12 top-8 w-64 h-64 rotate-[-12deg]">
@@ -306,23 +263,23 @@ export default function AuthPage() {
 
         <div className="relative max-w-3xl mx-auto text-center">
           <h2
-            className="text-3xl sm:text-4xl font-bold text-[#f5f0e8] mb-8"
+            className="text-3xl sm:text-4xl font-bold text-brand-cream mb-8"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
             Backed by the Largest Gut Study Ever Published
           </h2>
-          <p className="text-lg sm:text-xl text-[#f5f0e8]/70 leading-relaxed mb-8">
+          <p className="text-lg sm:text-xl text-brand-cream/70 leading-relaxed mb-8">
             People who ate 30+ plants per week had significantly more diverse gut bacteria
             — regardless of whether they were vegan, vegetarian, or omnivore.
           </p>
-          <p className="text-sm text-[#f5f0e8]/40">
+          <p className="text-sm text-brand-cream/40">
             Based on the American Gut Project &amp; the work of Dr. Will Bulsiewicz
           </p>
         </div>
       </section>
 
       {/* ===== AUTH ===== */}
-      <section id="start" className="relative bg-[#f5f0e8] py-20 sm:py-28 px-6 overflow-hidden grain-light">
+      <section id="start" className="relative bg-brand-cream py-20 sm:py-28 px-6 overflow-hidden grain-light">
         {/* Background botanical watermarks */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div className="absolute -left-16 top-1/4 w-56 h-56 rotate-[10deg]">
@@ -335,20 +292,20 @@ export default function AuthPage() {
 
         <div className="relative max-w-sm mx-auto">
           <h2
-            className="text-3xl sm:text-4xl font-bold text-[#1a3a2a] text-center mb-10"
+            className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-10"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
             Start Your Challenge
           </h2>
 
           {/* Glassmorphic form card */}
-          <div className="rounded-2xl border border-[#1a3a2a]/10 bg-white/40 backdrop-blur-sm p-6">
+          <div className="rounded-2xl border border-brand-dark/10 bg-white/40 backdrop-blur-sm p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {isSignUp && (
                 <div>
                   <label
                     htmlFor="displayName"
-                    className="block text-sm font-medium text-[#6b7260] mb-1"
+                    className="block text-sm font-medium text-brand-muted mb-1"
                   >
                     Display Name
                   </label>
@@ -358,7 +315,7 @@ export default function AuthPage() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     placeholder="Your name"
-                    className="w-full rounded-xl border border-[#1a3a2a]/10 bg-white px-4 py-3 text-sm text-[#1a3a2a] placeholder:text-[#6b7260]/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
+                    className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
                   />
                 </div>
               )}
@@ -366,7 +323,7 @@ export default function AuthPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-[#6b7260] mb-1"
+                  className="block text-sm font-medium text-brand-muted mb-1"
                 >
                   Email
                 </label>
@@ -377,14 +334,14 @@ export default function AuthPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-[#1a3a2a]/10 bg-white px-4 py-3 text-sm text-[#1a3a2a] placeholder:text-[#6b7260]/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
+                  className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-[#6b7260] mb-1"
+                  className="block text-sm font-medium text-brand-muted mb-1"
                 >
                   Password
                 </label>
@@ -396,7 +353,7 @@ export default function AuthPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 6 characters"
-                  className="w-full rounded-xl border border-[#1a3a2a]/10 bg-white px-4 py-3 text-sm text-[#1a3a2a] placeholder:text-[#6b7260]/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#22c55e]"
+                  className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
                 />
               </div>
 
@@ -409,7 +366,7 @@ export default function AuthPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-xl bg-[#22c55e] px-4 py-3 text-sm font-semibold text-white hover:bg-[#1ea34d] disabled:opacity-50 transition-colors"
+                className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover disabled:opacity-50 transition-colors"
               >
                 {loading
                   ? "..."
@@ -419,14 +376,14 @@ export default function AuthPage() {
               </button>
             </form>
 
-            <p className="mt-5 text-center text-sm text-[#6b7260]">
+            <p className="mt-5 text-center text-sm text-brand-muted">
               {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
               <button
                 onClick={() => {
                   setIsSignUp(!isSignUp);
                   setError("");
                 }}
-                className="font-semibold text-[#1a3a2a] hover:text-[#22c55e] transition-colors"
+                className="font-semibold text-brand-dark hover:text-brand-green transition-colors"
               >
                 {isSignUp ? "Sign in" : "Sign up"}
               </button>
@@ -436,12 +393,12 @@ export default function AuthPage() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="relative bg-[#1a3a2a] py-10 px-6 overflow-hidden grain">
+      <footer className="relative bg-brand-dark py-10 px-6 overflow-hidden grain">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <Image src="/illustrations/legumes.png" alt="" width={360} height={360} className="object-contain opacity-[0.1]" />
         </div>
         <div className="relative max-w-4xl mx-auto text-center">
-          <p className="text-sm text-[#f5f0e8]/40">
+          <p className="text-sm text-brand-cream/40">
             30 Plant Point Challenge &middot; Based on the principles of Dr. Will Bulsiewicz &middot; {new Date().getFullYear()}
           </p>
         </div>

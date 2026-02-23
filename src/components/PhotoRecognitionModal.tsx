@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { X, Camera, Loader2, Check } from "lucide-react";
 import { CATEGORY_COLORS } from "@/lib/constants";
 import { compressImage } from "@/lib/imageUtils";
@@ -97,24 +97,31 @@ export default function PhotoRecognitionModal({
     handleClose();
   }
 
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") handleClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [open]);
+
   if (!open) return null;
 
   const selectedCount = selected.size;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end">
+    <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
-      <div className="relative w-full max-h-[85vh] bg-[#f5f0e8] rounded-t-3xl overflow-y-auto pb-20">
-        <div className="sticky top-0 bg-[#f5f0e8] z-10 flex items-center justify-between p-5 pb-3 border-b border-[#1a3a2a]/10">
+      <div className="relative w-full max-h-[85vh] bg-brand-cream rounded-t-3xl overflow-y-auto pb-20">
+        <div className="sticky top-0 bg-brand-cream z-10 flex items-center justify-between p-5 pb-3 border-b border-brand-dark/10">
           <h3
-            className="text-lg font-bold text-[#1a3a2a]"
+            className="text-lg font-bold text-brand-dark"
             style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
           >
             Snap to Log
           </h3>
           <button
             onClick={handleClose}
-            className="p-1.5 rounded-xl text-[#1a3a2a]/40 hover:text-[#1a3a2a] hover:bg-[#1a3a2a]/5 transition-colors"
+            className="p-1.5 rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
           >
             <X size={20} />
           </button>
@@ -124,16 +131,16 @@ export default function PhotoRecognitionModal({
           {!preview ? (
             <button
               onClick={() => fileRef.current?.click()}
-              className="w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-[#1a3a2a]/20 flex flex-col items-center justify-center gap-3 hover:border-[#22c55e]/50 hover:bg-[#22c55e]/5 transition-colors"
+              className="w-full aspect-[4/3] rounded-2xl border-2 border-dashed border-brand-dark/20 flex flex-col items-center justify-center gap-3 hover:border-brand-green/50 hover:bg-brand-green/5 transition-colors"
             >
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1a3a2a]/5">
-                <Camera size={28} className="text-[#1a3a2a]/40" strokeWidth={1.5} />
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-dark/5">
+                <Camera size={28} className="text-brand-dark/40" strokeWidth={1.5} />
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-[#1a3a2a]">
+                <p className="text-sm font-semibold text-brand-dark">
                   Take or upload a photo
                 </p>
-                <p className="text-xs text-[#6b7260] mt-1">
+                <p className="text-xs text-brand-muted mt-1">
                   We&apos;ll identify the plants on your plate
                 </p>
               </div>
@@ -149,8 +156,8 @@ export default function PhotoRecognitionModal({
               {loading && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                   <div className="flex items-center gap-2 bg-white/90 rounded-xl px-4 py-2.5">
-                    <Loader2 size={18} className="animate-spin text-[#22c55e]" />
-                    <span className="text-sm font-medium text-[#1a3a2a]">
+                    <Loader2 size={18} className="animate-spin text-brand-green" />
+                    <span className="text-sm font-medium text-brand-dark">
                       Identifying plants...
                     </span>
                   </div>
@@ -184,7 +191,7 @@ export default function PhotoRecognitionModal({
           {results.length > 0 && !loading && (
             <>
               <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-[#1a3a2a]">
+                <p className="text-sm font-semibold text-brand-dark">
                   Found {results.length} plant{results.length !== 1 ? "s" : ""}
                 </p>
                 <button
@@ -199,7 +206,7 @@ export default function PhotoRecognitionModal({
                       setSelected(all);
                     }
                   }}
-                  className="text-xs font-medium text-[#22c55e]"
+                  className="text-xs font-medium text-brand-green"
                 >
                   {selectedCount > 0 ? "Deselect all" : "Select all"}
                 </button>
@@ -218,19 +225,19 @@ export default function PhotoRecognitionModal({
                       disabled={alreadyLogged}
                       className={`w-full flex items-center gap-3 rounded-xl p-3 text-left transition-all ${
                         alreadyLogged
-                          ? "bg-[#1a3a2a]/5 opacity-50"
+                          ? "bg-brand-dark/5 opacity-50"
                           : isSelected
-                          ? "bg-white shadow-sm ring-1 ring-[#22c55e]/30"
+                          ? "bg-white shadow-sm ring-1 ring-brand-green/30"
                           : "bg-white/50"
                       }`}
                     >
                       <div
                         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors ${
                           alreadyLogged
-                            ? "bg-[#22c55e]/20 border-[#22c55e]/30"
+                            ? "bg-brand-green/20 border-brand-green/30"
                             : isSelected
-                            ? "bg-[#22c55e] border-[#22c55e]"
-                            : "border-[#1a3a2a]/20"
+                            ? "bg-brand-green border-brand-green"
+                            : "border-brand-dark/20"
                         }`}
                       >
                         {(isSelected || alreadyLogged) && (
@@ -239,10 +246,10 @@ export default function PhotoRecognitionModal({
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-[#1a3a2a] truncate">
+                        <p className="text-sm font-semibold text-brand-dark truncate">
                           {plant.name}
                           {alreadyLogged && (
-                            <span className="font-normal text-[#6b7260] ml-1">
+                            <span className="font-normal text-brand-muted ml-1">
                               (already logged)
                             </span>
                           )}
@@ -254,11 +261,11 @@ export default function PhotoRecognitionModal({
                           >
                             {plant.category}
                           </span>
-                          <span className="text-[11px] text-[#6b7260]">
+                          <span className="text-[11px] text-brand-muted">
                             {plant.points === 0.25 ? "\u00BCpt" : `${plant.points}pt`}
                           </span>
                           {!plant.matched && (
-                            <span className="text-[10px] text-[#6b7260]/60 italic">
+                            <span className="text-[10px] text-brand-muted/60 italic">
                               custom
                             </span>
                           )}
@@ -274,8 +281,8 @@ export default function PhotoRecognitionModal({
                 disabled={selectedCount === 0}
                 className={`w-full rounded-xl px-4 py-3 text-sm font-semibold text-white transition-colors ${
                   selectedCount > 0
-                    ? "bg-[#22c55e] hover:bg-[#1ea34d]"
-                    : "bg-[#22c55e]/30 cursor-not-allowed"
+                    ? "bg-brand-green hover:bg-brand-green-hover"
+                    : "bg-brand-green/30 cursor-not-allowed"
                 }`}
               >
                 {selectedCount > 0
@@ -287,7 +294,7 @@ export default function PhotoRecognitionModal({
 
           {results.length === 0 && !loading && preview && !error && (
             <div className="text-center py-6">
-              <p className="text-sm text-[#6b7260]">
+              <p className="text-sm text-brand-muted">
                 No plant-based foods detected. Try a different photo.
               </p>
             </div>

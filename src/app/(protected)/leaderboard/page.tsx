@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/client";
 import { getWeekStart, getWeekLabel } from "@/lib/weekUtils";
 import { useApp } from "@/components/ProtectedLayout";
 import LeaderboardRow from "@/components/LeaderboardRow";
+import { Trophy } from "lucide-react";
+import Image from "next/image";
 
 type LeaderboardEntry = {
   member_id: string;
@@ -71,35 +73,111 @@ export default function LeaderboardPage() {
   }, [fetchLeaderboard]);
 
   return (
-    <div className="px-4 pt-4">
-      <h1 className="text-lg font-bold text-gray-900 mb-1">Leaderboard</h1>
-      <p className="text-xs text-gray-500 mb-4">{getWeekLabel(weekStart)}</p>
+    <>
+      {/* === DARK GREEN HEADER === */}
+      <div className="relative bg-[#1a3a2a] overflow-hidden grain">
+        {/* Background botanical watermark */}
+        <div className="absolute -right-6 -bottom-6 pointer-events-none">
+          <Image
+            src="/illustrations/strawberry.png"
+            alt=""
+            width={160}
+            height={160}
+            className="object-contain opacity-[0.10]"
+            priority
+          />
+        </div>
 
-      {loading ? (
-        <div className="text-center text-gray-400 py-8 text-sm">
-          Loading...
+        <div className="relative px-5 pt-6 pb-5">
+          <div className="max-w-lg mx-auto">
+            {/* Trophy icon + title */}
+            <div className="flex items-center gap-3 mb-1">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#f5f0e8]/10">
+                <Trophy size={20} className="text-[#f5f0e8]/60" strokeWidth={1.75} />
+              </div>
+              <div>
+                <h1
+                  className="text-2xl font-bold text-[#f5f0e8]"
+                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                >
+                  Leaderboard
+                </h1>
+                <p className="text-xs text-[#f5f0e8]/40 mt-0.5">
+                  {getWeekLabel(weekStart)}
+                </p>
+              </div>
+            </div>
+
+            {/* Summary line */}
+            {!loading && entries.length > 0 && (
+              <p className="text-[13px] text-[#f5f0e8]/30 mt-3">
+                {entries.length} {entries.length === 1 ? "participant" : "participants"} this week
+              </p>
+            )}
+          </div>
         </div>
-      ) : entries.length === 0 ? (
-        <div className="text-center py-8">
-          <div className="text-4xl mb-2">🏆</div>
-          <p className="text-sm text-gray-500">
-            No entries yet this week. Start logging plants!
-          </p>
+      </div>
+
+      {/* === CONTENT === */}
+      <div className="bg-[#f8faf8] min-h-[60vh] grain-light">
+        <div className="max-w-lg mx-auto px-5 py-4">
+          {loading ? (
+            /* --- Loading spinner --- */
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="h-8 w-8 rounded-full border-2 border-[#22c55e]/20 border-t-[#22c55e] animate-spin" />
+              <p className="mt-4 text-sm text-[#6b7260]">Loading leaderboard...</p>
+            </div>
+          ) : entries.length === 0 ? (
+            /* --- Empty state with botanical accent --- */
+            <div className="relative py-16">
+              {/* Subtle botanical illustration */}
+              <div className="absolute -right-4 -bottom-2 pointer-events-none">
+                <Image
+                  src="/illustrations/nuts.png"
+                  alt=""
+                  width={180}
+                  height={180}
+                  className="object-contain opacity-[0.12]"
+                />
+              </div>
+
+              {/* Empty message */}
+              <div className="relative text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#1a3a2a]/[0.04]">
+                  <Trophy
+                    size={28}
+                    className="text-[#1a3a2a]/20"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                <h2
+                  className="text-lg font-bold text-[#1a3a2a] mb-1.5"
+                  style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+                >
+                  No entries yet
+                </h2>
+                <p className="text-sm text-[#6b7260]">
+                  Start logging plants to see the leaderboard come alive!
+                </p>
+              </div>
+            </div>
+          ) : (
+            /* --- Leaderboard entries --- */
+            <div className="space-y-2.5">
+              {entries.map((entry, i) => (
+                <LeaderboardRow
+                  key={entry.member_id}
+                  rank={i + 1}
+                  displayName={entry.display_name}
+                  emoji={entry.avatar_emoji}
+                  points={entry.total_points}
+                  isFamily={entry.user_id === userId}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="space-y-2">
-          {entries.map((entry, i) => (
-            <LeaderboardRow
-              key={entry.member_id}
-              rank={i + 1}
-              displayName={entry.display_name}
-              emoji={entry.avatar_emoji}
-              points={entry.total_points}
-              isFamily={entry.user_id === userId}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+      </div>
+    </>
   );
 }

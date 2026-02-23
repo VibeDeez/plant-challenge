@@ -1,9 +1,9 @@
-/** Get the Monday (ISO week start) for a given date, using local timezone */
+/** Get the Sunday (week start) for a given date, using local timezone.
+ *  Weeks run Sunday → Saturday. */
 export function getWeekStart(date: Date = new Date()): string {
   const d = new Date(date);
-  const day = d.getDay();
-  const diff = day === 0 ? -6 : 1 - day;
-  d.setDate(d.getDate() + diff);
+  const day = d.getDay(); // 0=Sun, 1=Mon, …, 6=Sat
+  d.setDate(d.getDate() - day); // go back to Sunday
   // Use local date parts to avoid UTC timezone mismatch
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");

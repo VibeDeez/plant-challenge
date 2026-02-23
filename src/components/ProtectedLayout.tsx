@@ -84,8 +84,8 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <main className="flex items-center justify-center min-h-screen">
-        <div className="text-4xl animate-pulse">🌱</div>
+      <main className="flex items-center justify-center min-h-screen bg-[#1a3a2a]">
+        <div className="w-8 h-8 border-2 border-[#22c55e]/20 border-t-[#22c55e] rounded-full animate-spin" />
       </main>
     );
   }
@@ -104,7 +104,7 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
         refreshMembers: () => fetchMembers(userId),
       }}
     >
-      <div className="min-h-screen pb-20">
+      <div className="min-h-screen pb-24 bg-[#f8faf8]">
         {children}
       </div>
       <BottomNav />

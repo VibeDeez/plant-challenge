@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useApp } from "./ProtectedLayout";
 import { ChevronDown } from "lucide-react";
+import PlantAvatar from "./PlantAvatar";
 
 export default function MemberSwitcher() {
   const { members, activeMember, setActiveMemberId } = useApp();
@@ -30,7 +31,7 @@ export default function MemberSwitcher() {
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-2 w-full py-2.5 text-left"
         >
-          <span className="text-lg">{activeMember?.avatar_emoji}</span>
+          <PlantAvatar plantKey={activeMember?.avatar_emoji ?? "sunflower"} size="sm" />
           <span className="text-sm font-semibold text-brand-cream/90 flex-1 truncate">
             {activeMember?.display_name}
           </span>
@@ -58,7 +59,7 @@ export default function MemberSwitcher() {
                       : "text-brand-cream/60 hover:bg-brand-cream/10"
                   }`}
                 >
-                  <span className="text-base">{m.avatar_emoji}</span>
+                  <PlantAvatar plantKey={m.avatar_emoji} size="sm" />
                   <span className="truncate">{m.display_name}</span>
                   {active && (
                     <span className="ml-auto text-[10px] font-bold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-full">

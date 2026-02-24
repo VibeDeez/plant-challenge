@@ -29,6 +29,7 @@ import {
   Check,
   ChevronLeft,
 } from "lucide-react";
+import PlantAvatar from "@/components/PlantAvatar";
 
 const supabase = createClient();
 
@@ -91,7 +92,7 @@ function HeroCard({
             </div>
             <div className="flex-1 min-w-0 pt-0.5">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">{entry.avatar_emoji}</span>
+                <PlantAvatar plantKey={entry.avatar_emoji} size="lg" />
                 <div className="min-w-0">
                   <p className="text-lg font-bold text-brand-dark truncate font-display">
                     {entry.display_name}
@@ -150,7 +151,7 @@ function PodiumCard({
                 {rank}
               </span>
             </div>
-            <span className="text-xl">{entry.avatar_emoji}</span>
+            <PlantAvatar plantKey={entry.avatar_emoji} size="lg" />
             <div className="flex-1 min-w-0">
               <p className="text-[15px] font-semibold text-brand-dark truncate">
                 {entry.display_name}
@@ -197,7 +198,7 @@ function StandardRow({
         <div className="w-8 text-center">
           <span className="text-sm font-medium text-brand-muted">{rank}</span>
         </div>
-        <span className="text-xl">{entry.avatar_emoji}</span>
+        <PlantAvatar plantKey={entry.avatar_emoji} size="md" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-brand-dark truncate">{entry.display_name}</p>
           {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
@@ -740,7 +741,7 @@ export default function CircleDetailPage() {
                         <div className="flex items-start gap-3">
                           <div className="flex items-center gap-2 shrink-0 pt-0.5">
                             <span className="text-lg">{getActivityIcon(act.event_type)}</span>
-                            <span className="text-lg">{act.avatar_emoji}</span>
+                            <PlantAvatar plantKey={act.avatar_emoji ?? "sunflower"} size="sm" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm text-brand-dark">

@@ -7,6 +7,7 @@ import { useApp } from "@/components/ProtectedLayout";
 import { getShareUrl, generateInviteCode } from "@/lib/circles";
 import type { Circle } from "@/lib/types/circle";
 import Link from "next/link";
+import PlantAvatar from "@/components/PlantAvatar";
 import {
   ArrowLeft,
   Copy,
@@ -329,7 +330,7 @@ export default function CircleSettingsPage() {
                   key={m.id}
                   className="flex items-center gap-3 rounded-xl bg-white/30 backdrop-blur-sm border border-brand-dark/10 px-4 py-3"
                 >
-                  <span className="text-2xl">{m.member.avatar_emoji}</span>
+                  <PlantAvatar plantKey={m.member.avatar_emoji} size="lg" />
                   <span className="flex-1 text-sm font-medium text-brand-dark">
                     {m.member.display_name}
                   </span>
@@ -380,7 +381,7 @@ export default function CircleSettingsPage() {
                   <option value="">Select a member</option>
                   {nonAdminMembers.map((m) => (
                     <option key={m.member_id} value={m.member_id}>
-                      {m.member.avatar_emoji} {m.member.display_name}
+                      {m.member.display_name}
                     </option>
                   ))}
                 </select>

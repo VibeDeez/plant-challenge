@@ -125,7 +125,7 @@ export default function HomePage() {
         {/* Botanical illustration — anchored right, subtle */}
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
-            src="/illustrations/strawberry.png"
+            src={heroIllustration}
             alt=""
             width={180}
             height={180}
@@ -346,7 +346,7 @@ export default function HomePage() {
               {/* Botanical illustration for empty state */}
               <div className="absolute -right-6 -bottom-4 pointer-events-none">
                 <Image
-                  src="/illustrations/strawberry.png"
+                  src="/illustrations/library/strawberry.png"
                   alt=""
                   width={200}
                   height={200}

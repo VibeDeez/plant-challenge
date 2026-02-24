@@ -128,7 +128,7 @@ export default function CirclesPage() {
         {/* Background botanical watermark */}
         <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
-            src="/illustrations/seeds.png"
+            src="/illustrations/library/sunflower.png"
             alt=""
             width={160}
             height={160}
@@ -198,7 +198,7 @@ export default function CirclesPage() {
             <div className="relative py-16">
               <div className="absolute -right-4 -bottom-2 pointer-events-none">
                 <Image
-                  src="/illustrations/nuts.png"
+                  src="/illustrations/library/walnut.png"
                   alt=""
                   width={180}
                   height={180}

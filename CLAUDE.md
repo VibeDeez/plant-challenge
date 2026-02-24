@@ -25,6 +25,10 @@ This app is primarily used as a PWA on mobile phones (~375px viewport). **Every 
 - Supabase (auth, database, RLS, RPC functions)
 - Deployed on Render (Node.js runtime — no edge runtime)
 
+### Workflow
+- **No git worktrees.** Use regular branches off main. Keep it simple.
+- Always work on a named branch, not directly on main.
+
 ### Code Quality
 - Run `npx tsc --noEmit` before committing
 - No `edge` runtime in any route (Render incompatible)

@@ -86,7 +86,7 @@ export default function ProfilePage() {
       <div className="relative bg-brand-dark px-5 pt-6 pb-8 overflow-hidden grain">
         <div className="absolute -right-6 -bottom-6 w-44 h-44 illo-accent pointer-events-none">
           <Image
-            src="/illustrations/herbs.png"
+            src="/illustrations/library/rosemary.png"
             alt=""
             width={180}
             height={180}
@@ -107,7 +107,7 @@ export default function ProfilePage() {
             {/* Botanical background */}
             <div className="absolute -right-4 -top-2 w-36 h-36 illo-accent pointer-events-none">
               <Image
-                src="/illustrations/vegetables.png"
+                src="/illustrations/library/fennel.png"
                 alt=""
                 width={150}
                 height={150}
@@ -191,7 +191,7 @@ export default function ProfilePage() {
             <div className="relative rounded-2xl overflow-hidden">
               <div className="absolute right-4 top-2 w-36 h-36 illo-accent pointer-events-none">
                 <Image
-                  src="/illustrations/seeds.png"
+                  src="/illustrations/library/pumpkin.png"
                   alt=""
                   width={150}
                   height={150}

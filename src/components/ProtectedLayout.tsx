@@ -116,9 +116,13 @@ export default function ProtectedLayout({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider value={contextValue}>
-      <MemberSwitcher />
-      <div className="min-h-screen pb-24 bg-brand-bg">
-        {children}
+      {/* PWA safe area cover — dark bar behind iOS status bar in standalone mode */}
+      <div className="fixed top-0 left-0 right-0 z-[60] bg-brand-dark h-safe-top" />
+      <div className="mt-safe">
+        <MemberSwitcher />
+        <div className="min-h-screen pb-24 bg-brand-bg">
+          {children}
+        </div>
       </div>
       <BottomNav />
       <AddToHomeScreen />

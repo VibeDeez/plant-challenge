@@ -3,9 +3,9 @@
 import Image from "next/image";
 
 const PODIUM_ILLUSTRATIONS = [
-  "/illustrations/strawberry.png",
-  "/illustrations/vegetables.png",
-  "/illustrations/legumes.png",
+  "/illustrations/library/strawberry.png",
+  "/illustrations/library/beetroot.png",
+  "/illustrations/library/broad-bean.png",
 ];
 
 const RANK_COLORS: Record<number, { text: string; bg: string; accent: string }> = {

@@ -113,7 +113,7 @@ export default function PhotoRecognitionModal({
       <div className="absolute inset-0 bg-black/40 animate-fadeIn" onClick={handleClose} />
       <div className="relative w-full max-h-[85vh] bg-brand-cream rounded-t-3xl overflow-y-auto pb-20 animate-slideUp">
         <div className="flex justify-center pt-2 pb-0"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
-        <div className="sticky top-0 bg-brand-cream z-10 flex items-center justify-between p-5 pb-3 border-b border-brand-dark/10">
+        <div className="sticky top-safe bg-brand-cream z-10 flex items-center justify-between p-5 pb-3 border-b border-brand-dark/10">
           <h3
             className="text-lg font-bold text-brand-dark font-display"
           >

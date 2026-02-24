@@ -209,7 +209,7 @@ export default function AddPlantPage() {
       </div>
 
       {/* === CATEGORY TABS === */}
-      <div className="sticky top-0 z-30 bg-brand-cream shadow-sm">
+      <div className="sticky top-safe z-30 bg-brand-cream shadow-sm">
         <div className="max-w-lg mx-auto">
           <CategoryTabs active={category} onChange={setCategory} />
         </div>

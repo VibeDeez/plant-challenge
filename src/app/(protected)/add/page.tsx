@@ -316,6 +316,22 @@ export default function AddPlantPage() {
                   </section>
                 );
               })}
+
+              {/* Don't see your plant? CTA */}
+              <button
+                onClick={() => setShowCustom(true)}
+                className="w-full rounded-2xl border-2 border-dashed border-brand-dark/15 bg-brand-dark/[0.03] p-5 text-center transition-colors hover:border-brand-dark/25 hover:bg-brand-dark/[0.06] active:scale-[0.99]"
+              >
+                <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-green/10">
+                  <Plus size={20} className="text-brand-green" strokeWidth={2} />
+                </div>
+                <p className="text-sm font-bold text-brand-dark font-display">
+                  Don&apos;t see your plant?
+                </p>
+                <p className="text-[12px] text-brand-muted mt-0.5">
+                  Add any plant — everything counts toward your 30
+                </p>
+              </button>
             </div>
           ) : (
             // Flat list view (when category filter or search is active)
@@ -338,9 +354,16 @@ export default function AddPlantPage() {
                       strokeWidth={1.5}
                     />
                   </div>
-                  <p className="text-sm text-brand-muted">
-                    No plants found. Try a custom entry.
+                  <p className="text-sm text-brand-muted mb-3">
+                    No plants found for &ldquo;{search || category}&rdquo;
                   </p>
+                  <button
+                    onClick={() => setShowCustom(true)}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-green-hover active:scale-[0.97] transition-all"
+                  >
+                    <Plus size={16} strokeWidth={2.5} />
+                    Add as Custom Plant
+                  </button>
                 </div>
               )}
             </div>

@@ -381,7 +381,7 @@ export default function CircleSettingsPage() {
                   <option value="">Select a member</option>
                   {nonAdminMembers.map((m) => (
                     <option key={m.member_id} value={m.member_id}>
-                      <span className="inline-flex items-center gap-1"><PlantAvatar plantKey={m.member.avatar_emoji} size="sm" /> {m.member.display_name}</span>
+                      {m.member.display_name}
                     </option>
                   ))}
                 </select>

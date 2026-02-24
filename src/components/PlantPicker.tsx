@@ -17,13 +17,13 @@ export default function PlantPicker({
           key={plant.key}
           type="button"
           onClick={() => onChange(plant.key)}
-          className={`rounded-full transition-all ${
+          className={`w-11 h-11 flex items-center justify-center rounded-full transition-all ${
             value === plant.key
               ? "ring-2 ring-brand-green scale-110"
               : "hover:scale-105 opacity-70 hover:opacity-100"
           }`}
         >
-          <PlantAvatar plantKey={plant.key} size="md" />
+          <PlantAvatar plantKey={plant.key} size="lg" />
         </button>
       ))}
     </div>

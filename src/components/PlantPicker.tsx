@@ -1,6 +1,6 @@
 "use client";
 
-import { AVATAR_PLANTS } from "@/lib/constants";
+import { AVATAR_ICONS } from "@/lib/constants";
 import PlantAvatar from "./PlantAvatar";
 
 export default function PlantPicker({
@@ -8,22 +8,22 @@ export default function PlantPicker({
   onChange,
 }: {
   value: string;
-  onChange: (plantKey: string) => void;
+  onChange: (key: string) => void;
 }) {
   return (
     <div className="flex flex-wrap gap-2">
-      {AVATAR_PLANTS.map((plant) => (
+      {AVATAR_ICONS.map((avatar) => (
         <button
-          key={plant.key}
+          key={avatar.key}
           type="button"
-          onClick={() => onChange(plant.key)}
+          onClick={() => onChange(avatar.key)}
           className={`w-11 h-11 flex items-center justify-center rounded-full transition-all ${
-            value === plant.key
+            value === avatar.key
               ? "ring-2 ring-brand-green scale-110"
               : "hover:scale-105 opacity-70 hover:opacity-100"
           }`}
         >
-          <PlantAvatar plantKey={plant.key} size="lg" />
+          <PlantAvatar plantKey={avatar.key} size="lg" />
         </button>
       ))}
     </div>

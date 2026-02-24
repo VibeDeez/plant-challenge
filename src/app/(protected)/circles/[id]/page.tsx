@@ -741,7 +741,7 @@ export default function CircleDetailPage() {
                         <div className="flex items-start gap-3">
                           <div className="flex items-center gap-2 shrink-0 pt-0.5">
                             <span className="text-lg">{getActivityIcon(act.event_type)}</span>
-                            <PlantAvatar plantKey={act.avatar_emoji ?? "sunflower"} size="sm" />
+                            <PlantAvatar plantKey={act.avatar_emoji ?? "sprout"} size="sm" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-sm text-brand-dark">

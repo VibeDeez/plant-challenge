@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import PlantPicker from "./PlantPicker";
-import { getRandomPlantKey } from "@/lib/constants";
+import { getRandomAvatarKey } from "@/lib/constants";
 import { X } from "lucide-react";
 
 type KidData = {
@@ -21,7 +21,7 @@ export default function AddKidModal({
   onClose: () => void;
 }) {
   const [name, setName] = useState(initial?.display_name ?? "");
-  const [emoji, setEmoji] = useState(initial?.avatar_emoji ?? getRandomPlantKey());
+  const [emoji, setEmoji] = useState(initial?.avatar_emoji ?? getRandomAvatarKey());
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };

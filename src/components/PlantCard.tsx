@@ -1,7 +1,6 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
-import { Leaf } from "lucide-react";
+import { Trash2, Info, Leaf } from "lucide-react";
 import { CATEGORY_COLORS, CATEGORY_ICONS } from "@/lib/constants";
 
 type PlantLog = {
@@ -14,9 +13,13 @@ type PlantLog = {
 export default function PlantCard({
   log,
   onDelete,
+  gutHealthBlurb,
+  onInfoTap,
 }: {
   log: PlantLog;
   onDelete: (id: string) => void;
+  gutHealthBlurb?: string;
+  onInfoTap?: () => void;
 }) {
   const color = CATEGORY_COLORS[log.category] ?? "#6b7260";
   const Icon = CATEGORY_ICONS[log.category] ?? Leaf;
@@ -37,6 +40,16 @@ export default function PlantCard({
           {log.category} · {log.points === 0.25 ? "¼" : log.points} pt
         </p>
       </div>
+      {gutHealthBlurb && onInfoTap && (
+        <button
+          onClick={onInfoTap}
+          className="p-2 rounded-xl transition-all"
+          style={{ color: `${color}80` }}
+          aria-label="Gut health info"
+        >
+          <Info size={16} />
+        </button>
+      )}
       <button
         onClick={() => onDelete(log.id)}
         className="p-2 rounded-xl text-brand-dark/20 sm:opacity-0 sm:group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"

@@ -9,6 +9,7 @@ import PlantPicker from "@/components/PlantPicker";
 import { LogOut, Pencil, Plus, Trash2 } from "lucide-react";
 import { ALL_ILLUSTRATIONS } from "@/lib/constants";
 import Image from "next/image";
+import PlantAvatar from "@/components/PlantAvatar";
 
 const supabase = createClient();
 
@@ -117,7 +118,7 @@ export default function ProfilePage() {
             {/* Glassmorphic overlay */}
             <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl p-5">
               <div className="flex items-center gap-4">
-                <span className="text-5xl">{owner.avatar_emoji}</span>
+                <PlantAvatar plantKey={owner.avatar_emoji} size="xl" />
                 <div className="flex-1">
                   <p
                     className="text-xl text-brand-dark font-display"
@@ -228,7 +229,7 @@ export default function ProfilePage() {
                   </div>
                   {/* Glassmorphic card */}
                   <div className="relative bg-white/30 backdrop-blur-sm border border-brand-dark/10 rounded-2xl px-4 py-3.5 flex items-center gap-3">
-                    <span className="text-2xl">{kid.avatar_emoji}</span>
+                    <PlantAvatar plantKey={kid.avatar_emoji} size="lg" />
                     <p
                       className="flex-1 text-brand-dark font-medium font-display"
                     >

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import PlantAvatar from "./PlantAvatar";
 
 const PODIUM_ILLUSTRATIONS = [
   "/illustrations/library/strawberry.png",
@@ -74,7 +75,7 @@ export default function LeaderboardRow({
             {/* Name and emoji */}
             <div className="flex-1 min-w-0 pt-0.5">
               <div className="flex items-center gap-2">
-                <span className="text-2xl">{emoji}</span>
+                <PlantAvatar plantKey={emoji} size="lg" />
                 <div className="min-w-0">
                   <p
                     className="text-lg font-bold text-brand-dark truncate font-display"
@@ -164,7 +165,7 @@ export default function LeaderboardRow({
             </div>
 
             {/* Avatar */}
-            <span className="text-xl">{emoji}</span>
+            <PlantAvatar plantKey={emoji} size="lg" />
 
             {/* Name */}
             <div className="flex-1 min-w-0">
@@ -214,7 +215,7 @@ export default function LeaderboardRow({
       </div>
 
       {/* Avatar */}
-      <span className="text-xl">{emoji}</span>
+      <PlantAvatar plantKey={emoji} size="md" />
 
       {/* Name */}
       <div className="flex-1 min-w-0">

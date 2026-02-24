@@ -13,6 +13,7 @@ import {
 import { useApp } from "@/components/ProtectedLayout";
 import ProgressBar from "@/components/ProgressBar";
 import PlantCard from "@/components/PlantCard";
+import GutHealthPopover from "@/components/GutHealthPopover";
 import Link from "next/link";
 import Image from "next/image";
 import { Plus, Leaf, TrendingUp, X } from "lucide-react";
@@ -54,6 +55,13 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const weekStart = useMemo(() => getWeekStart(), []);
 
+  const [blurbMap, setBlurbMap] = useState<Map<string, string>>(new Map());
+  const [activePopover, setActivePopover] = useState<{
+    plantName: string;
+    category: string;
+    blurb: string;
+  } | null>(null);
+
   const fetchLogs = useCallback(async () => {
     if (!activeMember) return;
     setLoading(true);
@@ -70,6 +78,23 @@ export default function HomePage() {
   useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
+
+  // Fetch gut health blurbs for logged plants
+  useEffect(() => {
+    if (logs.length === 0) return;
+    const uniqueNames = Array.from(new Set(logs.map((l) => l.plant_name)));
+    supabase
+      .from("plant")
+      .select("name, gut_health_blurb")
+      .in("name", uniqueNames)
+      .then(({ data }) => {
+        const map = new Map<string, string>();
+        data?.forEach((row: { name: string; gut_health_blurb: string | null }) => {
+          if (row.gut_health_blurb) map.set(row.name, row.gut_health_blurb);
+        });
+        setBlurbMap(map);
+      });
+  }, [logs]);
 
   const handleDelete = useCallback(async (id: string) => {
     const { error } = await supabase.from("plant_log").delete().eq("id", id);
@@ -373,15 +398,37 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {logs.map((log, i) => (
-                <div key={log.id} className="animate-fadeInUp" style={{ animationDelay: `${Math.min(i * 0.05, 0.75)}s` }}>
-                  <PlantCard log={log} onDelete={handleDelete} />
-                </div>
-              ))}
+              {logs.map((log, i) => {
+                const blurb = blurbMap.get(log.plant_name);
+                return (
+                  <div key={log.id} className="animate-fadeInUp" style={{ animationDelay: `${Math.min(i * 0.05, 0.75)}s` }}>
+                    <PlantCard
+                      log={log}
+                      onDelete={handleDelete}
+                      gutHealthBlurb={blurb}
+                      onInfoTap={blurb ? () => setActivePopover({
+                        plantName: log.plant_name,
+                        category: log.category,
+                        blurb,
+                      }) : undefined}
+                    />
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
       </section>
+
+      {/* Gut Health Popover */}
+      {activePopover && (
+        <GutHealthPopover
+          plantName={activePopover.plantName}
+          category={activePopover.category}
+          blurb={activePopover.blurb}
+          onClose={() => setActivePopover(null)}
+        />
+      )}
     </>
   );
 }

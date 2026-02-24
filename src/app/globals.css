@@ -119,6 +119,10 @@ body {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
 
 @utility animate-fadeInUp {
   animation: fadeInUp 0.6s ease-out both;
@@ -140,6 +144,9 @@ body {
 }
 @utility animate-botanicalScroll {
   animation: botanicalScroll 40s linear infinite;
+}
+@utility animate-popIn {
+  animation: popIn 0.2s ease-out both;
 }
 
 /* ---- Reduced motion ---- */

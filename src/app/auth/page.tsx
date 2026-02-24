@@ -114,7 +114,7 @@ const EDGE_CASES = [
   { q: "Red, green, yellow bell pepper?", a: "1 point TOTAL. Same species, just different ripeness stages." },
   { q: "Tofu, tempeh, edamame?", a: "1 point TOTAL (soy). All derived from soybeans." },
   { q: "White rice?", a: "0 points. It's a refined grain. Switch to brown rice for 1 point." },
-  { q: "Coffee and tea?", a: "1 point EACH. Distinct plant species." },
+  { q: "Coffee and tea?", a: "¼ point EACH (like herbs/spices). Distinct plant species." },
   { q: "Dark chocolate (>70%)?", a: "1 point. Minimally processed cacao bean counts." },
   { q: "Frozen vegetables?", a: "Full points. Flash-freezing retains nutrients." },
   { q: "Nut butters and tahini?", a: "Yes — ground but not chemically processed. PB = 1 peanut point." },

@@ -282,7 +282,7 @@ export const TIPS = [
   "Different lentil types (red, green, brown) count separately — they have distinct nutritional profiles.",
   "Red, green, and yellow bell peppers are the same species at different ripeness stages — they count as 1 point total.",
   "Tofu, tempeh, and edamame all come from soybeans — that's 1 soy point total, not 3.",
-  "Coffee and tea each count as 1 point — they come from distinct plant species.",
+  "Coffee and tea each count as ¼ point (like herbs & spices) — they come from distinct plant species.",
   "Dark chocolate (>70% cacao) counts as 1 point. The cacao bean is a minimally processed plant.",
   "Frozen vegetables fully count — flash-freezing retains nutrients. Stock your freezer for easy variety.",
   "A single well-designed breakfast can deliver 5-8 plant points. Try overnight oats with fruit, seeds, and nuts.",

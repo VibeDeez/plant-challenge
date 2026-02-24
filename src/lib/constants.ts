@@ -8,6 +8,33 @@ import {
   Leaf,
   Flame,
   LayoutGrid,
+  Flower,
+  Flower2,
+  Clover,
+  TreePine,
+  TreeDeciduous,
+  TreePalm,
+  Apple,
+  Citrus,
+  Grape,
+  Banana,
+  Carrot,
+  Bird,
+  Cat,
+  Dog,
+  Rabbit,
+  Squirrel,
+  Turtle,
+  Fish,
+  Snail,
+  Sun,
+  Moon,
+  Star,
+  Snowflake,
+  Mountain,
+  Feather,
+  Shell,
+  Hop,
   type LucideIcon,
 } from "lucide-react";
 
@@ -184,50 +211,69 @@ export const CATEGORY_ORDER = CATEGORIES.filter(
   (c): c is Exclude<Category, "All"> => c !== "All"
 );
 
-export type AvatarPlant = {
+export type AvatarIcon = {
   key: string;
   label: string;
-  path: string;
+  icon: LucideIcon;
+  color: string;
 };
 
-export const AVATAR_PLANTS: AvatarPlant[] = [
-  { key: "strawberry", label: "Strawberry", path: "/illustrations/library/strawberry.png" },
-  { key: "cherries", label: "Cherries", path: "/illustrations/library/cherries.png" },
-  { key: "apples", label: "Apples", path: "/illustrations/library/apples.png" },
-  { key: "oranges", label: "Oranges", path: "/illustrations/library/oranges.png" },
-  { key: "blackberries", label: "Blackberries", path: "/illustrations/library/blackberries.png" },
-  { key: "pears", label: "Pears", path: "/illustrations/library/pears.png" },
-  { key: "beetroot", label: "Beetroot", path: "/illustrations/library/beetroot.png" },
-  { key: "carrot", label: "Carrot", path: "/illustrations/library/carrot.png" },
-  { key: "radishes", label: "Radishes", path: "/illustrations/library/radishes.png" },
-  { key: "peas", label: "Peas", path: "/illustrations/library/peas.png" },
-  { key: "mushrooms", label: "Mushrooms", path: "/illustrations/library/mushrooms.png" },
-  { key: "basil", label: "Basil", path: "/illustrations/library/basil.png" },
-  { key: "rosemary", label: "Rosemary", path: "/illustrations/library/rosemary.png" },
-  { key: "lavender", label: "Lavender", path: "/illustrations/library/lavender.png" },
-  { key: "chamomile", label: "Chamomile", path: "/illustrations/library/chamomile.png" },
-  { key: "ginger", label: "Ginger", path: "/illustrations/library/ginger.png" },
-  { key: "turmeric", label: "Turmeric", path: "/illustrations/library/turmeric.png" },
-  { key: "cinnamon", label: "Cinnamon", path: "/illustrations/library/cinnamon.png" },
-  { key: "walnut", label: "Walnut", path: "/illustrations/library/walnut.png" },
-  { key: "almond", label: "Almond", path: "/illustrations/library/almond.png" },
-  { key: "chestnut", label: "Chestnut", path: "/illustrations/library/chestnut.png" },
-  { key: "hazelnut", label: "Hazelnut", path: "/illustrations/library/hazelnut.png" },
-  { key: "sunflower", label: "Sunflower", path: "/illustrations/library/sunflower.png" },
-  { key: "pumpkin", label: "Pumpkin", path: "/illustrations/library/pumpkin.png" },
-  { key: "poppy", label: "Poppy", path: "/illustrations/library/poppy.png" },
-  { key: "wheat", label: "Wheat", path: "/illustrations/library/wheat.png" },
-  { key: "corn", label: "Corn", path: "/illustrations/library/corn.png" },
-  { key: "oats", label: "Oats", path: "/illustrations/library/oats.png" },
+export const AVATAR_ICONS: AvatarIcon[] = [
+  // Nature / Plants
+  { key: "sprout", label: "Sprout", icon: Sprout, color: "#16a34a" },
+  { key: "leaf", label: "Leaf", icon: Leaf, color: "#15803d" },
+  { key: "clover", label: "Clover", icon: Clover, color: "#059669" },
+  { key: "flower", label: "Flower", icon: Flower, color: "#e11d48" },
+  { key: "flower2", label: "Tulip", icon: Flower2, color: "#db2777" },
+  { key: "tree-pine", label: "Pine", icon: TreePine, color: "#166534" },
+  { key: "tree-deciduous", label: "Tree", icon: TreeDeciduous, color: "#65a30d" },
+  { key: "tree-palm", label: "Palm", icon: TreePalm, color: "#ca8a04" },
+  { key: "hop", label: "Hop", icon: Hop, color: "#4d7c0f" },
+  { key: "wheat", label: "Wheat", icon: Wheat, color: "#b45309" },
+  // Fruits
+  { key: "apple", label: "Apple", icon: Apple, color: "#dc2626" },
+  { key: "cherry", label: "Cherry", icon: Cherry, color: "#be123c" },
+  { key: "citrus", label: "Citrus", icon: Citrus, color: "#ea580c" },
+  { key: "grape", label: "Grape", icon: Grape, color: "#7c3aed" },
+  { key: "banana", label: "Banana", icon: Banana, color: "#ca8a04" },
+  // Vegetables / Food
+  { key: "carrot", label: "Carrot", icon: Carrot, color: "#ea580c" },
+  { key: "bean", label: "Bean", icon: Bean, color: "#a855f7" },
+  { key: "nut", label: "Nut", icon: Nut, color: "#92400e" },
+  // Animals
+  { key: "bird", label: "Bird", icon: Bird, color: "#0284c7" },
+  { key: "cat", label: "Cat", icon: Cat, color: "#d97706" },
+  { key: "dog", label: "Dog", icon: Dog, color: "#78716c" },
+  { key: "rabbit", label: "Rabbit", icon: Rabbit, color: "#ec4899" },
+  { key: "squirrel", label: "Squirrel", icon: Squirrel, color: "#b45309" },
+  { key: "turtle", label: "Turtle", icon: Turtle, color: "#0d9488" },
+  { key: "fish", label: "Fish", icon: Fish, color: "#2563eb" },
+  { key: "snail", label: "Snail", icon: Snail, color: "#a16207" },
+  // Celestial / Nature
+  { key: "sun", label: "Sun", icon: Sun, color: "#f59e0b" },
+  { key: "moon", label: "Moon", icon: Moon, color: "#6366f1" },
+  { key: "star", label: "Star", icon: Star, color: "#eab308" },
+  { key: "snowflake", label: "Snowflake", icon: Snowflake, color: "#0ea5e9" },
+  { key: "mountain", label: "Mountain", icon: Mountain, color: "#475569" },
+  // Misc
+  { key: "feather", label: "Feather", icon: Feather, color: "#6d28d9" },
+  { key: "shell", label: "Shell", icon: Shell, color: "#0891b2" },
 ];
 
-export function getPlantByKey(key: string): AvatarPlant {
-  return AVATAR_PLANTS.find((p) => p.key === key) ?? AVATAR_PLANTS[22]; // fallback: sunflower
+export function getAvatarByKey(key: string): AvatarIcon {
+  return AVATAR_ICONS.find((a) => a.key === key) ?? AVATAR_ICONS[0]; // fallback: sprout
 }
 
-export function getRandomPlantKey(): string {
-  return AVATAR_PLANTS[Math.floor(Math.random() * AVATAR_PLANTS.length)].key;
+export function getRandomAvatarKey(): string {
+  return AVATAR_ICONS[Math.floor(Math.random() * AVATAR_ICONS.length)].key;
 }
+
+/** @deprecated Use getAvatarByKey */
+export const getPlantByKey = getAvatarByKey;
+/** @deprecated Use getRandomAvatarKey */
+export const getRandomPlantKey = getRandomAvatarKey;
+/** @deprecated Use AVATAR_ICONS */
+export const AVATAR_PLANTS = AVATAR_ICONS;
 
 export const TIPS = [
   "Each unique plant species you eat in a week earns points — fruits, veggies, grains, legumes, nuts, and seeds earn 1 point each.",

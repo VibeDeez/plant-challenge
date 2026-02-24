@@ -31,7 +31,7 @@ export default function MemberSwitcher() {
           onClick={() => setOpen((o) => !o)}
           className="flex items-center gap-2 w-full py-2.5 text-left"
         >
-          <PlantAvatar plantKey={activeMember?.avatar_emoji ?? "sunflower"} size="sm" />
+          <PlantAvatar plantKey={activeMember?.avatar_emoji ?? "sprout"} size="sm" />
           <span className="text-sm font-semibold text-brand-cream/90 flex-1 truncate">
             {activeMember?.display_name}
           </span>

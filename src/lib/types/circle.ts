@@ -12,7 +12,6 @@ export type CircleMember = {
   circle_id: string;
   member_id: string;
   joined_at: string;
-  last_active_at: string | null;
 };
 
 export type CircleWeeklyScore = {

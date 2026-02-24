@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { CATEGORY_COLORS, CATEGORY_ICONS, CATEGORY_ILLUSTRATIONS, ALL_ILLUSTRATIONS } from "@/lib/constants";
+import {
+  CATEGORY_COLORS,
+  CATEGORY_ICONS,
+  CATEGORY_ILLUSTRATIONS,
+  ALL_ILLUSTRATIONS,
+  PARADE_ILLUSTRATIONS,
+} from "@/lib/constants";
 import Accordion from "@/components/Accordion";
 import Image from "next/image";
 import {
@@ -18,21 +24,57 @@ import {
 
 const supabase = createClient();
 
+/* -------------------------------------------------------
+   useReveal — IntersectionObserver scroll-trigger hook
+------------------------------------------------------- */
+function useReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.12 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return { ref, visible };
+}
+
+/* -------------------------------------------------------
+   Content data
+------------------------------------------------------- */
 const STEPS = [
   {
     num: "01",
     title: "Log Your Plants",
     desc: "Ate an apple? A handful of walnuts? Log each unique plant species you eat throughout the week.",
+    illo: "/illustrations/library/strawberry.png",
   },
   {
     num: "02",
     title: "Watch Your Week Build",
     desc: "Track your progress toward 30 points with your weekly ring. Herbs and spices count too.",
+    illo: "/illustrations/library/wheat-hero.png",
   },
   {
     num: "03",
     title: "Compete & Share",
     desc: "See how you stack up on the family leaderboard. Get the whole household involved.",
+    illo: "/illustrations/library/rosemary-hero.png",
   },
 ];
 
@@ -104,6 +146,12 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const stepsReveal = useReveal();
+  const categoriesReveal = useReveal();
+  const scienceReveal = useReveal();
+  const tipsReveal = useReveal();
+  const faqReveal = useReveal();
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -140,18 +188,62 @@ export default function AuthPage() {
     <main className="min-h-screen">
       {/* PWA safe area cover */}
       <div className="fixed top-0 left-0 right-0 z-[60] bg-brand-dark h-safe-top" />
+
       {/* ===== HERO ===== */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain mt-safe">
-        {/* Floating botanical illustrations — kept sparse to avoid overlap */}
+        {/* Floating botanical specimens — larger and more prominent with new clean PNGs */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          <div className="absolute -top-6 -left-8 w-44 h-44 rotate-[-15deg] animate-gentleFloat">
-            <Image src="/illustrations/strawberry.png" alt="" width={180} height={180} className="object-contain illo-accent" />
+          {/* Top-left: sunflower */}
+          <div className="absolute -top-2 -left-6 w-44 h-44 rotate-[-12deg] animate-gentleFloat">
+            <Image
+              src="/illustrations/library/sunflower-hero.png"
+              alt=""
+              width={180}
+              height={180}
+              className="object-contain illo-hero"
+              priority
+            />
           </div>
-          <div className="absolute top-20 -right-10 w-40 h-40 rotate-[12deg] animate-gentleFloat" style={{ animationDelay: "1.2s" }}>
-            <Image src="/illustrations/herbs.png" alt="" width={160} height={160} className="object-contain illo-accent" />
+          {/* Top-right: strawberry */}
+          <div className="absolute top-12 -right-6 w-32 h-48 rotate-[8deg] animate-gentleFloat" style={{ animationDelay: "1.5s" }}>
+            <Image
+              src="/illustrations/library/strawberry.png"
+              alt=""
+              width={130}
+              height={200}
+              className="object-contain illo-hero"
+              priority
+            />
           </div>
-          <div className="absolute bottom-28 -left-6 w-36 h-36 rotate-[8deg] animate-gentleFloat" style={{ animationDelay: "2.4s" }}>
-            <Image src="/illustrations/grains.png" alt="" width={150} height={150} className="object-contain illo-accent" />
+          {/* Mid-left: wheat */}
+          <div className="absolute top-1/2 -left-3 w-24 h-48 rotate-[5deg] animate-gentleFloat" style={{ animationDelay: "3s" }}>
+            <Image
+              src="/illustrations/library/wheat-hero.png"
+              alt=""
+              width={100}
+              height={200}
+              className="object-contain illo-accent"
+            />
+          </div>
+          {/* Bottom-right: cherries */}
+          <div className="absolute bottom-36 -right-4 w-36 h-36 rotate-[-10deg] animate-gentleFloat" style={{ animationDelay: "2s" }}>
+            <Image
+              src="/illustrations/library/cherries.png"
+              alt=""
+              width={150}
+              height={150}
+              className="object-contain illo-hero"
+            />
+          </div>
+          {/* Bottom-left: rosemary */}
+          <div className="absolute bottom-20 left-6 w-28 h-28 rotate-[15deg] animate-gentleFloat" style={{ animationDelay: "4s" }}>
+            <Image
+              src="/illustrations/library/rosemary-hero.png"
+              alt=""
+              width={110}
+              height={110}
+              className="object-contain illo-accent"
+            />
           </div>
         </div>
 
@@ -199,150 +291,212 @@ export default function AuthPage() {
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-brand-cream to-transparent" />
       </section>
 
+      {/* ===== BOTANICAL PARADE — auto-scrolling specimen strip ===== */}
+      <section className="bg-brand-cream py-8 overflow-hidden grain-light">
+        <p className="text-center text-[10px] font-medium text-brand-muted tracking-[0.2em] uppercase mb-5">
+          51 Botanical Specimens &middot; 8 Categories
+        </p>
+        <div className="relative">
+          {/* Fade edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-brand-cream to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-brand-cream to-transparent z-10 pointer-events-none" />
+          <div className="flex animate-botanicalScroll" style={{ width: "max-content" }}>
+            {[...PARADE_ILLUSTRATIONS, ...PARADE_ILLUSTRATIONS].map((src, i) => (
+              <div key={i} className="flex-shrink-0 mx-4">
+                <Image
+                  src={src}
+                  alt=""
+                  width={64}
+                  height={64}
+                  className="object-contain w-16 h-16 illo-showcase"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ===== HOW IT WORKS ===== */}
-      <section className="bg-brand-cream py-20 sm:py-28 px-6 grain-light">
+      <section ref={stepsReveal.ref} className="bg-brand-cream py-20 sm:py-28 px-6 grain-light">
         <div className="max-w-4xl mx-auto">
           <h2
-            className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-16 font-display animate-fadeInUp"
+            className={`text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-16 font-display transition-all duration-700 ${
+              stepsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
           >
             How It Works
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-5">
-            {STEPS.map((step, i) => {
-              const stepIllustrations = [
-                "/illustrations/strawberry.png",
-                "/illustrations/grains.png",
-                "/illustrations/herbs.png",
-              ];
-              return (
-                <div key={step.num} className="relative rounded-2xl overflow-hidden border border-brand-dark/10 animate-fadeInUp" style={{ animationDelay: `${0.1 + i * 0.15}s` }}>
-                  {/* Botanical background */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <Image
-                      src={stepIllustrations[i]}
-                      alt=""
-                      width={240}
-                      height={240}
-                      className="object-contain illo-accent"
-                    />
-                  </div>
-                  <div className="relative bg-white/30 backdrop-blur-sm p-6 text-center sm:text-left">
-                    <div
-                      className="text-5xl font-bold text-brand-green/20 mb-3 font-display"
-                    >
-                      {step.num}
-                    </div>
-                    <h3 className="text-xl font-bold text-brand-dark mb-2">{step.title}</h3>
-                    <p className="text-brand-muted leading-relaxed">{step.desc}</p>
-                  </div>
+            {STEPS.map((step, i) => (
+              <div
+                key={step.num}
+                className={`relative rounded-2xl overflow-hidden border border-brand-dark/10 transition-all duration-700 ${
+                  stepsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                }`}
+                style={{ transitionDelay: stepsReveal.visible ? `${100 + i * 150}ms` : "0ms" }}
+              >
+                {/* Botanical background — new clean illustrations */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <Image
+                    src={step.illo}
+                    alt=""
+                    width={200}
+                    height={200}
+                    className="object-contain illo-accent"
+                  />
                 </div>
-              );
-            })}
+                <div className="relative bg-white/30 backdrop-blur-sm p-6 text-center sm:text-left">
+                  <div className="text-5xl font-bold text-brand-green/20 mb-3 font-display">
+                    {step.num}
+                  </div>
+                  <h3 className="text-xl font-bold text-brand-dark mb-2">{step.title}</h3>
+                  <p className="text-brand-muted leading-relaxed">{step.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ===== CATEGORY SHOWCASE ===== */}
-      <section className="bg-brand-bg py-20 sm:py-28 px-6 grain-light">
+      {/* ===== CATEGORY SHOWCASE — horizontal scroll of botanical plates ===== */}
+      <section ref={categoriesReveal.ref} className="bg-brand-bg py-20 sm:py-28 grain-light">
         <div className="max-w-5xl mx-auto">
-          <h2
-            className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display"
-          >
-            8 Categories. Endless Variety.
-          </h2>
-          <p className="text-center text-brand-muted mb-14 max-w-lg mx-auto">
-            Every unique plant you eat earns points. The more diverse your plate, the healthier your gut.
-          </p>
+          <div className="px-6">
+            <h2
+              className={`text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display transition-all duration-700 ${
+                categoriesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+            >
+              8 Categories. Endless Variety.
+            </h2>
+            <p
+              className={`text-center text-brand-muted mb-12 max-w-lg mx-auto transition-all duration-700 delay-100 ${
+                categoriesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+              }`}
+            >
+              Every unique plant you eat earns points. The more diverse your plate, the healthier your gut.
+            </p>
+          </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {CATEGORY_DISPLAY.map((cat, i) => {
-              const Icon = CATEGORY_ICONS[cat.name];
-              const accent = CATEGORY_COLORS[cat.name];
-              const illustration = CATEGORY_ILLUSTRATIONS[cat.name];
-              return (
-                <div
-                  key={cat.name}
-                  className="group relative rounded-2xl overflow-hidden border border-brand-dark/10 transition-all hover:shadow-lg hover:scale-[1.02] animate-fadeIn"
-                  style={{ animationDelay: `${i * 0.06}s` }}
-                >
-                  {/* Full botanical illustration background */}
-                  {illustration && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <Image src={illustration} alt="" width={200} height={200} className="object-contain illo-accent" />
-                    </div>
-                  )}
-                  {/* Glassmorphic overlay */}
-                  <div className="relative bg-white/30 backdrop-blur-sm p-5 sm:p-6 text-center">
+          {/* Horizontal scroll with fade edges */}
+          <div
+            className={`relative transition-all duration-700 delay-200 ${
+              categoriesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
+            <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-brand-bg to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-brand-bg to-transparent z-10 pointer-events-none" />
+
+            <div className="overflow-x-auto no-scrollbar px-6">
+              <div className="flex gap-4" style={{ width: "max-content" }}>
+                {CATEGORY_DISPLAY.map((cat) => {
+                  const color = CATEGORY_COLORS[cat.name];
+                  const illustration = CATEGORY_ILLUSTRATIONS[cat.name];
+                  return (
                     <div
-                      className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
-                      style={{ backgroundColor: `${accent}18` }}
+                      key={cat.name}
+                      className="w-52 flex-shrink-0 rounded-2xl border border-brand-dark/8 bg-white/60 overflow-hidden hover:shadow-lg hover:scale-[1.02] transition-all"
                     >
-                      <Icon size={24} style={{ color: accent }} strokeWidth={1.75} />
+                      {/* Illustration showcase — the star of each card */}
+                      <div className="h-40 flex items-center justify-center p-4 bg-white/30">
+                        {illustration && (
+                          <Image
+                            src={illustration}
+                            alt={cat.name}
+                            width={140}
+                            height={140}
+                            className="object-contain max-h-full illo-showcase"
+                          />
+                        )}
+                      </div>
+                      {/* Info panel */}
+                      <div className="p-4 text-center border-t border-brand-dark/5">
+                        <h3 className="font-bold text-brand-dark text-sm mb-1 font-display">{cat.name}</h3>
+                        <p className="text-xs text-brand-muted leading-snug mb-2">{cat.examples}</p>
+                        <span
+                          className="inline-block text-[11px] font-semibold tracking-wide uppercase"
+                          style={{ color }}
+                        >
+                          {cat.pts}
+                        </span>
+                      </div>
                     </div>
-                    <h3 className="font-bold text-brand-dark text-sm sm:text-base mb-1">{cat.name}</h3>
-                    <p className="text-xs text-brand-muted leading-snug mb-2">{cat.examples}</p>
-                    <span
-                      className="inline-block text-[11px] font-semibold tracking-wide uppercase"
-                      style={{ color: accent }}
-                    >
-                      {cat.pts}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ===== THE SCIENCE ===== */}
-      <section className="relative bg-brand-dark py-20 sm:py-28 px-6 overflow-hidden grain">
-        {/* Botanical watermarks */}
+      <section ref={scienceReveal.ref} className="relative bg-brand-dark py-20 sm:py-28 px-6 overflow-hidden grain">
+        {/* Botanical watermarks — new clean specimens */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-          <div className="absolute -left-12 top-8 w-64 h-64 rotate-[-12deg]">
-            <Image src="/illustrations/vegetables.png" alt="" width={260} height={260} className="object-contain illo-accent" />
+          <div className="absolute -left-8 top-12 w-52 h-72 rotate-[-8deg]">
+            <Image src="/illustrations/library/asparagus.png" alt="" width={200} height={280} className="object-contain illo-accent" />
           </div>
-          <div className="absolute -right-8 bottom-4 w-56 h-56 rotate-[15deg]">
-            <Image src="/illustrations/nuts.png" alt="" width={230} height={230} className="object-contain illo-accent" />
+          <div className="absolute -right-6 bottom-8 w-48 h-48 rotate-[12deg]">
+            <Image src="/illustrations/library/walnut.png" alt="" width={200} height={200} className="object-contain illo-accent" />
           </div>
         </div>
 
         <div className="relative max-w-3xl mx-auto text-center">
           <h2
-            className="text-3xl sm:text-4xl font-bold text-brand-cream mb-8 font-display animate-fadeIn"
+            className={`text-3xl sm:text-4xl font-bold text-brand-cream mb-8 font-display transition-all duration-700 ${
+              scienceReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
           >
             Backed by the Largest Gut Study Ever Published
           </h2>
-          <p className="text-lg sm:text-xl text-brand-cream/70 leading-relaxed mb-8">
+          <p
+            className={`text-lg sm:text-xl text-brand-cream/70 leading-relaxed mb-8 transition-all duration-700 delay-100 ${
+              scienceReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             People who ate 30+ plants per week had significantly more diverse gut bacteria
             — regardless of whether they were vegan, vegetarian, or omnivore.
           </p>
-          <p className="text-sm text-brand-cream/40">
+          <p
+            className={`text-sm text-brand-cream/40 transition-all duration-700 delay-200 ${
+              scienceReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             Based on the American Gut Project &amp; the work of Dr. Will Bulsiewicz
           </p>
         </div>
       </section>
 
       {/* ===== TIPS ===== */}
-      <section className="bg-brand-bg py-20 sm:py-28 px-6 grain-light">
+      <section ref={tipsReveal.ref} className="bg-brand-bg py-20 sm:py-28 px-6 grain-light">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display">
+          <h2
+            className={`text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display transition-all duration-700 ${
+              tipsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             Tips for Hitting 30
           </h2>
-          <p className="text-center text-brand-muted mb-14 max-w-lg mx-auto">
+          <p
+            className={`text-center text-brand-muted mb-14 max-w-lg mx-auto transition-all duration-700 delay-100 ${
+              tipsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             Simple strategies to build plant diversity into every meal.
           </p>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {STRATEGIES.map((s, i) => {
               const Icon = STRATEGY_ICONS[s.icon];
               const illo = ALL_ILLUSTRATIONS[i % ALL_ILLUSTRATIONS.length];
               return (
                 <div
                   key={s.name}
-                  className="relative overflow-hidden rounded-2xl border border-brand-dark/10 animate-fadeIn"
-                  style={{ animationDelay: `${i * 0.08}s` }}
+                  className={`relative overflow-hidden rounded-2xl border border-brand-dark/10 transition-all duration-700 ${
+                    tipsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+                  }`}
+                  style={{ transitionDelay: tipsReveal.visible ? `${100 + i * 80}ms` : "0ms" }}
                 >
                   <div className="absolute -bottom-4 -right-4 w-24 h-24 pointer-events-none">
                     <Image src={illo} alt="" width={96} height={96} className="object-contain illo-ghost" />
@@ -362,16 +516,28 @@ export default function AuthPage() {
       </section>
 
       {/* ===== FAQ ===== */}
-      <section className="bg-brand-cream py-20 sm:py-28 px-6 grain-light">
+      <section ref={faqReveal.ref} className="bg-brand-cream py-20 sm:py-28 px-6 grain-light">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display">
+          <h2
+            className={`text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-4 font-display transition-all duration-700 ${
+              faqReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             Common Questions
           </h2>
-          <p className="text-center text-brand-muted mb-14 max-w-lg mx-auto">
+          <p
+            className={`text-center text-brand-muted mb-14 max-w-lg mx-auto transition-all duration-700 delay-100 ${
+              faqReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             Edge cases, common mistakes, and special situations.
           </p>
 
-          <div className="bg-white/40 backdrop-blur-sm rounded-2xl border border-brand-dark/10 divide-y divide-brand-dark/5 overflow-hidden">
+          <div
+            className={`bg-white/40 backdrop-blur-sm rounded-2xl border border-brand-dark/10 divide-y divide-brand-dark/5 overflow-hidden transition-all duration-700 delay-200 ${
+              faqReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+          >
             <div className="px-4">
               <Accordion title="What Counts? (Edge Cases)" defaultOpen>
                 <div className="space-y-2">
@@ -418,22 +584,20 @@ export default function AuthPage() {
         </div>
       </section>
 
-      {/* ===== AUTH ===== */}
+      {/* ===== AUTH FORM ===== */}
       <section id="start" className="relative bg-brand-cream py-20 sm:py-28 px-6 overflow-hidden grain-light">
-        {/* Background botanical watermarks */}
+        {/* Botanical accents */}
         <div className="absolute inset-0 pointer-events-none hidden sm:block" aria-hidden="true">
-          <div className="absolute -left-24 top-1/4 w-56 h-56 rotate-[10deg]">
-            <Image src="/illustrations/seeds.png" alt="" width={230} height={230} className="object-contain illo-accent" />
+          <div className="absolute -left-20 top-1/4 w-48 h-64 rotate-[6deg]">
+            <Image src="/illustrations/library/lavender.png" alt="" width={190} height={260} className="object-contain illo-accent" />
           </div>
-          <div className="absolute -right-20 bottom-1/4 w-52 h-52 rotate-[-8deg]">
-            <Image src="/illustrations/spices.png" alt="" width={210} height={210} className="object-contain illo-accent" />
+          <div className="absolute -right-16 bottom-1/4 w-44 h-44 rotate-[-12deg]">
+            <Image src="/illustrations/library/turmeric.png" alt="" width={180} height={180} className="object-contain illo-accent" />
           </div>
         </div>
 
         <div className="relative max-w-sm mx-auto">
-          <h2
-            className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-10 font-display"
-          >
+          <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-10 font-display">
             Start Your Challenge
           </h2>
 
@@ -534,7 +698,7 @@ export default function AuthPage() {
       {/* ===== FOOTER ===== */}
       <footer className="relative bg-brand-dark py-10 px-6 overflow-hidden grain">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <Image src="/illustrations/legumes.png" alt="" width={360} height={360} className="object-contain illo-ghost" />
+          <Image src="/illustrations/library/legume-hero.png" alt="" width={300} height={300} className="object-contain illo-ghost" />
         </div>
         <div className="relative max-w-4xl mx-auto text-center">
           <p className="text-sm text-brand-cream/40">

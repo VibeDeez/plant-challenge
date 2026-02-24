@@ -16,6 +16,6 @@ export async function cleanup(
   });
   if (!res.ok()) {
     const body = await res.text();
-    console.warn(`Cleanup failed (${res.status()}): ${body}`);
+    throw new Error(`Cleanup failed (${res.status()}): ${body}`);
   }
 }

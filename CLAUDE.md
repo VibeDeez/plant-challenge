@@ -45,6 +45,6 @@ This app is primarily used as a PWA on mobile phones (~375px viewport). **Every 
 3. After redirect, the session is active and all pages work (Playwright can now interact with the full app)
 
 **How it works:**
-- `NEXT_PUBLIC_E2E_TEST=true` enables the `/api/e2e/login` route and exempts it from auth middleware
+- `E2E_TEST=true` enables the `/api/e2e/login` route and exempts it from auth middleware
 - The route signs in with `E2E_TEST_EMAIL` / `E2E_TEST_PASSWORD` using Supabase server client, setting auth cookies
 - The test user gets a `member` record automatically via the `handle_new_user` trigger

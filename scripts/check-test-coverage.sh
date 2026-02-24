@@ -69,19 +69,40 @@ main_branch="main"
 changed_files=$(git diff "$main_branch"...HEAD --name-only 2>/dev/null || echo "")
 
 if [ -n "$changed_files" ]; then
+  # Get list of modified spec files once
+  changed_specs=$(git diff "$main_branch"...HEAD --name-only -- "$SPEC_DIR" 2>/dev/null || echo "")
+
   for changed in $changed_files; do
     # Only check src/app files
     if [[ "$changed" == src/app/* ]] && [[ "$changed" == *page.tsx || "$changed" == *layout.tsx ]]; then
-      # Check if a related spec was also modified
-      spec_modified=false
-      for spec in $(git diff "$main_branch"...HEAD --name-only -- "$SPEC_DIR" 2>/dev/null); do
-        spec_modified=true
-        break
-      done
+      # Look up the expected spec file from the coverage map
+      route=$(echo "$changed" \
+        | sed 's|src/app||' \
+        | sed 's|/(protected)||' \
+        | sed 's|/page\.tsx||' \
+        | sed 's|/layout\.tsx||' \
+        | sed 's|^$|/|')
+      [ -z "$route" ] && route="/"
 
-      if [ "$spec_modified" = false ]; then
+      expected_spec=""
+      if [ -f "$COVERAGE_MAP" ]; then
+        expected_spec=$(python3 -c "
+import json, sys
+with open('$COVERAGE_MAP') as f:
+    m = json.load(f)
+r = '$route'
+if r in m and m[r]:
+    print(m[r])
+" 2>/dev/null || echo "")
+      fi
+
+      if [ -z "$expected_spec" ]; then
         echo -e "  ${YELLOW}⚠ CHANGED WITHOUT TESTS:${NC} $changed"
-        echo "    → Consider updating related spec files"
+        echo "    → No spec mapped for route $route — add it to $COVERAGE_MAP"
+        gaps=$((gaps + 1))
+      elif ! echo "$changed_specs" | grep -q "$expected_spec"; then
+        echo -e "  ${YELLOW}⚠ CHANGED WITHOUT TESTS:${NC} $changed"
+        echo "    → Expected $SPEC_DIR/$expected_spec to be updated"
         gaps=$((gaps + 1))
       fi
     fi

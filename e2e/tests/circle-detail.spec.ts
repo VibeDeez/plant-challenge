@@ -4,9 +4,10 @@ import { uniqueName } from "../helpers/constants";
 
 test.describe("Circle Detail page", () => {
   let circleUrl: string;
-  const circleName = uniqueName("Detail Circle");
+  let circleName: string;
 
   test.beforeEach(async ({ authedPage: page }) => {
+    circleName = uniqueName("Detail Circle");
     // Create a circle to test with
     await page.goto("/circles/create");
     await page.locator("#circle-name").fill(circleName);
@@ -43,17 +44,11 @@ test.describe("Circle Detail page", () => {
     await expect(weekBtn).toHaveClass(/bg-brand-green/);
   });
 
-  test("shows leaderboard content or empty state", async ({
+  test("shows empty leaderboard for new circle", async ({
     authedPage: page,
   }) => {
-    // Either show scores or "No scores yet"
-    const hasScores = await page.getByText("No scores yet").isVisible().catch(() => false);
-    if (hasScores) {
-      await expect(page.getByText("No scores yet")).toBeVisible();
-    } else {
-      // Test user should appear on leaderboard
-      await expect(page.getByText("points")).toBeVisible();
-    }
+    // A freshly created circle should have no scores
+    await expect(page.getByText("No scores yet")).toBeVisible();
   });
 
   test("leaderboard updates after logging a plant", async ({

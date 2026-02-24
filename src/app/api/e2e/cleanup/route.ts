@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  if (process.env.NEXT_PUBLIC_E2E_TEST !== "true") {
+  if (process.env.E2E_TEST !== "true") {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

@@ -33,7 +33,7 @@ export async function updateSession(request: NextRequest) {
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/auth") &&
-    !(process.env.NEXT_PUBLIC_E2E_TEST === "true" && request.nextUrl.pathname.startsWith("/api/e2e"))
+    !(process.env.E2E_TEST === "true" && request.nextUrl.pathname.startsWith("/api/e2e"))
   ) {
     const url = request.nextUrl.clone();
     if (request.nextUrl.pathname.startsWith("/join/")) {

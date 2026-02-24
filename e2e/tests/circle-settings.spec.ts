@@ -84,15 +84,9 @@ test.describe("Circle Settings page", () => {
     // Click "New Code" button
     await page.getByRole("button", { name: "New Code" }).click();
 
-    // Wait for regeneration
-    await page.waitForTimeout(1000);
-
-    // Code should have changed
-    const codeAfter = await page
-      .locator(".font-mono.tracking-widest")
-      .first()
-      .textContent();
-    expect(codeAfter?.trim()).not.toBe(codeBefore?.trim());
+    // Wait for the code to actually change in the DOM
+    const codeLocator = page.locator(".font-mono.tracking-widest").first();
+    await expect(codeLocator).not.toHaveText(codeBefore?.trim() ?? "", { timeout: 5000 });
   });
 
   test("delete circle — type name to confirm, redirect", async ({

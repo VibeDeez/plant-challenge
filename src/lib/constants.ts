@@ -184,10 +184,50 @@ export const CATEGORY_ORDER = CATEGORIES.filter(
   (c): c is Exclude<Category, "All"> => c !== "All"
 );
 
-export const MEMBER_EMOJIS = [
-  "🌱", "🌿", "🍀", "🌻", "🌸", "🌺", "🍄", "🌈",
-  "⭐", "🦋", "🐢", "🦊", "🐻", "🐰", "🦁", "🐸",
+export type AvatarPlant = {
+  key: string;
+  label: string;
+  path: string;
+};
+
+export const AVATAR_PLANTS: AvatarPlant[] = [
+  { key: "strawberry", label: "Strawberry", path: "/illustrations/library/strawberry.png" },
+  { key: "cherries", label: "Cherries", path: "/illustrations/library/cherries.png" },
+  { key: "apples", label: "Apples", path: "/illustrations/library/apples.png" },
+  { key: "oranges", label: "Oranges", path: "/illustrations/library/oranges.png" },
+  { key: "blackberries", label: "Blackberries", path: "/illustrations/library/blackberries.png" },
+  { key: "pears", label: "Pears", path: "/illustrations/library/pears.png" },
+  { key: "beetroot", label: "Beetroot", path: "/illustrations/library/beetroot.png" },
+  { key: "carrot", label: "Carrot", path: "/illustrations/library/carrot.png" },
+  { key: "radishes", label: "Radishes", path: "/illustrations/library/radishes.png" },
+  { key: "peas", label: "Peas", path: "/illustrations/library/peas.png" },
+  { key: "mushrooms", label: "Mushrooms", path: "/illustrations/library/mushrooms.png" },
+  { key: "basil", label: "Basil", path: "/illustrations/library/basil.png" },
+  { key: "rosemary", label: "Rosemary", path: "/illustrations/library/rosemary.png" },
+  { key: "lavender", label: "Lavender", path: "/illustrations/library/lavender.png" },
+  { key: "chamomile", label: "Chamomile", path: "/illustrations/library/chamomile.png" },
+  { key: "ginger", label: "Ginger", path: "/illustrations/library/ginger.png" },
+  { key: "turmeric", label: "Turmeric", path: "/illustrations/library/turmeric.png" },
+  { key: "cinnamon", label: "Cinnamon", path: "/illustrations/library/cinnamon.png" },
+  { key: "walnut", label: "Walnut", path: "/illustrations/library/walnut.png" },
+  { key: "almond", label: "Almond", path: "/illustrations/library/almond.png" },
+  { key: "chestnut", label: "Chestnut", path: "/illustrations/library/chestnut.png" },
+  { key: "hazelnut", label: "Hazelnut", path: "/illustrations/library/hazelnut.png" },
+  { key: "sunflower", label: "Sunflower", path: "/illustrations/library/sunflower.png" },
+  { key: "pumpkin", label: "Pumpkin", path: "/illustrations/library/pumpkin.png" },
+  { key: "poppy", label: "Poppy", path: "/illustrations/library/poppy.png" },
+  { key: "wheat", label: "Wheat", path: "/illustrations/library/wheat.png" },
+  { key: "corn", label: "Corn", path: "/illustrations/library/corn.png" },
+  { key: "oats", label: "Oats", path: "/illustrations/library/oats.png" },
 ];
+
+export function getPlantByKey(key: string): AvatarPlant {
+  return AVATAR_PLANTS.find((p) => p.key === key) ?? AVATAR_PLANTS[22]; // fallback: sunflower
+}
+
+export function getRandomPlantKey(): string {
+  return AVATAR_PLANTS[Math.floor(Math.random() * AVATAR_PLANTS.length)].key;
+}
 
 export const TIPS = [
   "Each unique plant species you eat in a week earns points — fruits, veggies, grains, legumes, nuts, and seeds earn 1 point each.",

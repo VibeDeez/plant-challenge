@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import EmojiPicker from "./EmojiPicker";
+import PlantPicker from "./PlantPicker";
 import { X } from "lucide-react";
 
 type KidData = {
@@ -72,7 +72,7 @@ export default function AddKidModal({
             <label className="block text-sm font-medium text-brand-muted mb-2">
               Avatar
             </label>
-            <EmojiPicker value={emoji} onChange={setEmoji} />
+            <PlantPicker value={emoji} onChange={setEmoji} />
           </div>
 
           <button

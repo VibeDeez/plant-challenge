@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useApp, type Member } from "@/components/ProtectedLayout";
 import AddKidModal from "@/components/AddKidModal";
-import EmojiPicker from "@/components/EmojiPicker";
+import PlantPicker from "@/components/PlantPicker";
 import { LogOut, Pencil, Plus, Trash2 } from "lucide-react";
 import { ALL_ILLUSTRATIONS } from "@/lib/constants";
 import Image from "next/image";
@@ -151,7 +151,7 @@ export default function ProfilePage() {
               onChange={(e) => setOwnerName(e.target.value)}
               className="w-full bg-white rounded-xl border border-brand-dark/20 px-4 py-3 text-brand-dark focus:ring-2 focus:ring-brand-green focus:border-transparent focus:outline-none transition-all"
             />
-            <EmojiPicker value={ownerEmoji} onChange={setOwnerEmoji} />
+            <PlantPicker value={ownerEmoji} onChange={setOwnerEmoji} />
             <div className="flex gap-2">
               <button
                 type="submit"

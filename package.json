@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "echo 'Seed via Supabase migration'"
+    "seed": "echo 'Seed via Supabase migration'",
+    "test:e2e": "playwright test --config=e2e/playwright.config.ts",
+    "test:e2e:headed": "playwright test --config=e2e/playwright.config.ts --headed",
+    "test:coverage-check": "bash scripts/check-test-coverage.sh",
+    "prepare": "[ -d .git ] && cp scripts/pre-push.sh .git/hooks/pre-push && chmod +x .git/hooks/pre-push || true"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
@@ -19,6 +23,7 @@
     "sharp": "^0.34.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.2.0",
     "@types/node": "^25.3.0",
     "@types/react": "^19.2.14",

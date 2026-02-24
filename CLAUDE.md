@@ -33,3 +33,18 @@ This app is primarily used as a PWA on mobile phones (~375px viewport). **Every 
 - Run `npx tsc --noEmit` before committing
 - No `edge` runtime in any route (Render incompatible)
 - Use `@supabase/ssr` for auth middleware
+
+### Local E2E Testing
+**Prerequisites:**
+1. Create a test user in the Supabase dashboard (Authentication > Users) with email `e2e@test.local` and a password
+2. Set `E2E_TEST_PASSWORD` in `.env.local` to the password you chose
+
+**How to test:**
+1. Start the dev server: `npm run dev`
+2. Authenticate by navigating to `http://localhost:3000/api/e2e/login` — this signs in with the test user and redirects to `/`
+3. After redirect, the session is active and all pages work (Playwright can now interact with the full app)
+
+**How it works:**
+- `NEXT_PUBLIC_E2E_TEST=true` enables the `/api/e2e/login` route and exempts it from auth middleware
+- The route signs in with `E2E_TEST_EMAIL` / `E2E_TEST_PASSWORD` using Supabase server client, setting auth cookies
+- The test user gets a `member` record automatically via the `handle_new_user` trigger

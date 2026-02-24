@@ -29,10 +29,11 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Redirect unauthenticated users to /auth (except for /auth itself)
+  // Redirect unauthenticated users to /auth (except for /auth itself and e2e routes)
   if (
     !user &&
-    !request.nextUrl.pathname.startsWith("/auth")
+    !request.nextUrl.pathname.startsWith("/auth") &&
+    !(process.env.NEXT_PUBLIC_E2E_TEST === "true" && request.nextUrl.pathname.startsWith("/api/e2e"))
   ) {
     const url = request.nextUrl.clone();
     if (request.nextUrl.pathname.startsWith("/join/")) {

@@ -20,15 +20,15 @@ export default function PlantAvatar({
 
   return (
     <div
-      className="rounded-full bg-brand-cream overflow-hidden shrink-0"
+      className="relative rounded-full bg-brand-cream overflow-hidden shrink-0"
       style={{ width: px, height: px }}
     >
       <Image
         src={plant.path}
         alt={plant.label}
-        width={px}
-        height={px}
-        className="object-cover w-full h-full"
+        fill
+        sizes={`${px}px`}
+        className="object-cover"
       />
     </div>
   );

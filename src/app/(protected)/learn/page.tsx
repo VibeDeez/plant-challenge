@@ -287,7 +287,7 @@ export default function LearnPage() {
                 <span className="mt-1.5 h-2 w-2 rounded-full bg-green-500 shrink-0" />
                 <span>
                   <strong className="text-brand-dark">Resets weekly:</strong>{" "}
-                  Your count resets every Monday. Same plant twice in a week = 1
+                  Your count resets every Sunday. Same plant twice in a week = 1
                   point.
                 </span>
               </li>
@@ -680,7 +680,7 @@ const EDGE_CASES = [
   { q: "White rice?", a: "0 points. It's a refined grain. Switch to brown rice for 1 point." },
   { q: "White potato vs sweet potato?", a: "1 point EACH. Completely different species." },
   { q: "Peanuts?", a: "1 point under legumes. Botanically a legume, not a nut." },
-  { q: "Coffee and tea?", a: "1 point EACH. They come from distinct plant species." },
+  { q: "Coffee and tea?", a: "¼ point EACH (counted like herbs/spices). They come from distinct plant species." },
   { q: "Dark chocolate (>70%)?", a: "1 point. Minimally processed cacao bean counts." },
   { q: "Wine or beer?", a: "0 points. Alcohol processing negates the microbiome benefit." },
   { q: "Olive oil?", a: "0 points. It's an extracted oil. Eat whole olives for the point." },

@@ -1,0 +1,15 @@
+{
+  "/": "home.spec.ts",
+  "/add": "add-plant.spec.ts",
+  "/circles": "circles.spec.ts",
+  "/circles/create": "circles.spec.ts",
+  "/circles/[id]": "circle-detail.spec.ts",
+  "/circles/[id]/settings": "circle-settings.spec.ts",
+  "/join/[code]": "circles.spec.ts",
+  "/learn": "learn.spec.ts",
+  "/profile": "profile.spec.ts",
+  "/auth": "navigation.spec.ts",
+  "/api/recognize": null,
+  "/api/e2e/login": null,
+  "/api/e2e/cleanup": null
+}

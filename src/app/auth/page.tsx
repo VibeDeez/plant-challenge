@@ -139,11 +139,13 @@ const SPECIAL_SITUATIONS = [
 
 export default function AuthPage() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
   const router = useRouter();
 
   const stepsReveal = useReveal();
@@ -158,7 +160,16 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      if (isSignUp) {
+      if (isForgotPassword) {
+        const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+          email,
+          {
+            redirectTo: `${window.location.origin}/auth/callback?next=/auth/reset-password`,
+          }
+        );
+        if (resetError) throw resetError;
+        setResetEmailSent(true);
+      } else if (isSignUp) {
         const { error: authError } = await supabase.auth.signUp({
           email,
           password,
@@ -167,16 +178,19 @@ export default function AuthPage() {
           },
         });
         if (authError) throw authError;
+        const joinCode = new URLSearchParams(window.location.search).get("join");
+        router.push(joinCode ? `/join/${joinCode}` : "/");
+        router.refresh();
       } else {
         const { error: authError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (authError) throw authError;
+        const joinCode = new URLSearchParams(window.location.search).get("join");
+        router.push(joinCode ? `/join/${joinCode}` : "/");
+        router.refresh();
       }
-      const joinCode = new URLSearchParams(window.location.search).get("join");
-      router.push(joinCode ? `/join/${joinCode}` : "/");
-      router.refresh();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -561,94 +575,149 @@ export default function AuthPage() {
 
           {/* Glassmorphic form card */}
           <div className="rounded-2xl border border-brand-dark/10 bg-white/30 backdrop-blur-sm p-6">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {isSignUp && (
-                <div>
-                  <label
-                    htmlFor="displayName"
-                    className="block text-sm font-medium text-brand-muted mb-1"
-                  >
-                    Display Name
-                  </label>
-                  <input
-                    id="displayName"
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Your name"
-                    className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
-                  />
-                </div>
-              )}
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-brand-muted mb-1"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-brand-muted mb-1"
-                >
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  minLength={6}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="At least 6 characters"
-                  className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
-                />
-              </div>
-
-              {error && (
-                <p className="text-sm text-red-700 bg-red-50 rounded-xl px-4 py-2.5">
-                  {error}
+            {resetEmailSent ? (
+              <div className="text-center py-4">
+                <p className="text-sm font-semibold text-brand-green mb-1">
+                  Check your email!
                 </p>
-              )}
+                <p className="text-sm text-brand-muted">
+                  We sent a password reset link to <strong>{email}</strong>.
+                </p>
+                <button
+                  onClick={() => {
+                    setResetEmailSent(false);
+                    setIsForgotPassword(false);
+                    setError("");
+                  }}
+                  className="mt-4 text-sm font-semibold text-brand-dark hover:text-brand-green transition-colors"
+                >
+                  Back to sign in
+                </button>
+              </div>
+            ) : (
+              <>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  {isSignUp && !isForgotPassword && (
+                    <div>
+                      <label
+                        htmlFor="displayName"
+                        className="block text-sm font-medium text-brand-muted mb-1"
+                      >
+                        Display Name
+                      </label>
+                      <input
+                        id="displayName"
+                        type="text"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        placeholder="Your name"
+                        className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
+                      />
+                    </div>
+                  )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover disabled:opacity-50 transition-colors"
-              >
-                {loading
-                  ? "..."
-                  : isSignUp
-                    ? "Create Account"
-                    : "Sign In"}
-              </button>
-            </form>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-brand-muted mb-1"
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
+                    />
+                  </div>
 
-            <p className="mt-5 text-center text-sm text-brand-muted">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-              <button
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setError("");
-                }}
-                className="font-semibold text-brand-dark hover:text-brand-green transition-colors"
-              >
-                {isSignUp ? "Sign in" : "Sign up"}
-              </button>
-            </p>
+                  {!isForgotPassword && (
+                    <div>
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-medium text-brand-muted mb-1"
+                      >
+                        Password
+                      </label>
+                      <input
+                        id="password"
+                        type="password"
+                        required
+                        minLength={6}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="At least 6 characters"
+                        className="w-full rounded-xl border border-brand-dark/10 bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted/50 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-brand-green"
+                      />
+                    </div>
+                  )}
+
+                  {error && (
+                    <p className="text-sm text-red-700 bg-red-50 rounded-xl px-4 py-2.5">
+                      {error}
+                    </p>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover disabled:opacity-50 transition-colors"
+                  >
+                    {loading
+                      ? "..."
+                      : isForgotPassword
+                        ? "Send Reset Link"
+                        : isSignUp
+                          ? "Create Account"
+                          : "Sign In"}
+                  </button>
+                </form>
+
+                {!isSignUp && !isForgotPassword && (
+                  <p className="mt-3 text-center">
+                    <button
+                      onClick={() => {
+                        setIsForgotPassword(true);
+                        setError("");
+                      }}
+                      className="text-sm text-brand-muted hover:text-brand-green transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  </p>
+                )}
+
+                <p className="mt-3 text-center text-sm text-brand-muted">
+                  {isForgotPassword ? (
+                    <button
+                      onClick={() => {
+                        setIsForgotPassword(false);
+                        setError("");
+                      }}
+                      className="font-semibold text-brand-dark hover:text-brand-green transition-colors"
+                    >
+                      Back to sign in
+                    </button>
+                  ) : (
+                    <>
+                      {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
+                      <button
+                        onClick={() => {
+                          setIsSignUp(!isSignUp);
+                          setError("");
+                        }}
+                        className="font-semibold text-brand-dark hover:text-brand-green transition-colors"
+                      >
+                        {isSignUp ? "Sign in" : "Sign up"}
+                      </button>
+                    </>
+                  )}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </section>

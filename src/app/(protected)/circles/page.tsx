@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart } from "@/lib/weekUtils";
+import { validateJoinCirclePayload } from "@/lib/circles";
 import { useApp } from "@/components/ProtectedLayout";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -110,15 +111,15 @@ export default function CirclesPage() {
       return;
     }
 
-    const result = data as { success?: boolean; error?: string; circle_id?: string };
-    if (result.error) {
-      setJoinError(result.error);
+    const validated = validateJoinCirclePayload(data);
+    if (!validated.ok) {
+      setJoinError(validated.message);
       setJoining(false);
       return;
     }
     setJoining(false);
     setJoinOpen(false);
-    router.push(`/circles/${result.circle_id}`);
+    router.push(`/circles/${validated.circleId}`);
   }
 
   return (
@@ -235,7 +236,7 @@ export default function CirclesPage() {
                   <div className="bg-white/30 backdrop-blur-sm rounded-2xl border border-brand-dark/10 p-4 hover:bg-white/50 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-semibold text-brand-dark font-display truncate">
+                        <h3 className="text-base font-semibold text-brand-dark font-display whitespace-normal break-words leading-snug">
                           {circle.name}
                         </h3>
                         <div className="flex items-center gap-3 mt-1">
@@ -278,7 +279,7 @@ export default function CirclesPage() {
               </h2>
               <button
                 onClick={() => setJoinOpen(false)}
-                className="p-2 rounded-xl hover:bg-brand-dark/5 transition-colors"
+                className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-dark/5 transition-colors"
               >
                 <X size={20} className="text-brand-muted" />
               </button>

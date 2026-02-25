@@ -44,7 +44,7 @@ export default function GutHealthPopover({
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 p-1.5 rounded-full text-brand-muted hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
+          className="absolute top-2 right-2 flex h-11 w-11 items-center justify-center rounded-full text-brand-muted hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
           aria-label="Close"
         >
           <X size={16} />

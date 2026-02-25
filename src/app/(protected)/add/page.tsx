@@ -156,7 +156,7 @@ export default function AddPlantPage() {
           <div className="flex items-center gap-3 mb-4">
             <Link
               href="/"
-              className="p-1.5 rounded-xl text-brand-cream/60 hover:text-brand-cream hover:bg-brand-cream/10 transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-cream/60 hover:text-brand-cream hover:bg-brand-cream/10 transition-colors"
             >
               <ArrowLeft size={22} />
             </Link>
@@ -199,7 +199,7 @@ export default function AddPlantPage() {
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-cream/30 hover:text-brand-cream"
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex h-11 w-11 items-center justify-center text-brand-cream/30 hover:text-brand-cream"
               >
                 <X size={16} />
               </button>
@@ -280,7 +280,7 @@ export default function AddPlantPage() {
                             key={plant.id}
                             onClick={() => !logged && logPlant(plant)}
                             disabled={logged}
-                            className={`relative rounded-full px-3.5 py-1.5 text-left transition-all backdrop-blur-sm border ${
+                            className={`relative min-h-11 rounded-full px-4 py-1.5 text-left transition-all backdrop-blur-sm border ${
                               logged
                                 ? "bg-brand-dark/5 opacity-50 border-brand-dark/10"
                                 : "bg-white/30 hover:bg-white/50 hover:shadow-md active:scale-[0.97] border-brand-dark/10"
@@ -359,7 +359,7 @@ export default function AddPlantPage() {
                   </p>
                   <button
                     onClick={() => setShowCustom(true)}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-green-hover active:scale-[0.97] transition-all"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-green-hover active:scale-[0.97] transition-all"
                   >
                     <Plus size={16} strokeWidth={2.5} />
                     Add as Custom Plant
@@ -388,7 +388,7 @@ export default function AddPlantPage() {
               </h3>
               <button
                 onClick={() => setShowCustom(false)}
-                className="p-1.5 rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
               >
                 <X size={20} />
               </button>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useApp } from "@/components/ProtectedLayout";
 import { createClient } from "@/lib/supabase/client";
+import { validateJoinCirclePayload } from "@/lib/circles";
 import Link from "next/link";
 
 const supabase = createClient();
@@ -16,14 +17,15 @@ export default function JoinCirclePage() {
   const [circleId, setCircleId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!activeMember || !code) return;
+    const memberId = activeMember?.id;
+    if (!memberId || !code) return;
 
     let cancelled = false;
 
     async function joinCircle() {
       const result = await supabase.rpc("join_circle", {
         p_invite_code: code,
-        p_member_id: activeMember!.id,
+        p_member_id: memberId,
       });
 
       if (cancelled) return;
@@ -33,15 +35,16 @@ export default function JoinCirclePage() {
         return;
       }
 
-      const data = result.data as { success: boolean; circle_id?: string; message?: string };
+      const validated = validateJoinCirclePayload(result.data);
 
-      if (data.success) {
-        router.push(`/circles/${data.circle_id}`);
-      } else {
-        setError(data.message ?? "Unable to join circle");
-        if (data.circle_id) {
-          setCircleId(data.circle_id);
-        }
+      if (validated.ok) {
+        router.push(`/circles/${validated.circleId}`);
+        return;
+      }
+
+      setError(validated.message);
+      if (validated.circleId) {
+        setCircleId(validated.circleId);
       }
     }
 

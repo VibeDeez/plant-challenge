@@ -20,7 +20,7 @@ export default function CategoryTabs({
           <button
             key={cat}
             onClick={() => onChange(cat)}
-            className={`shrink-0 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-all ${
+            className={`shrink-0 flex min-h-11 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-all ${
               isActive
                 ? "text-white shadow-sm"
                 : "bg-brand-dark/5 text-brand-dark/60 hover:bg-brand-dark/10"

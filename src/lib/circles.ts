@@ -1,5 +1,16 @@
 const INVITE_CHARSET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
+type JoinCircleRpcPayload = {
+  success?: boolean;
+  circle_id?: unknown;
+  message?: unknown;
+  error?: unknown;
+};
+
+export type JoinCircleValidationResult =
+  | { ok: true; circleId: string }
+  | { ok: false; message: string; circleId?: string };
+
 export function generateInviteCode(): string {
   let code = "";
   for (let i = 0; i < 6; i++) {
@@ -12,6 +23,55 @@ export function getShareUrl(inviteCode: string): string {
   const base =
     process.env.NEXT_PUBLIC_SITE_URL || "https://plant-challenge.onrender.com";
   return `${base}/join/${inviteCode}`;
+}
+
+export function isValidCircleId(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  const trimmed = value.trim();
+  if (!trimmed) return false;
+  const lowered = trimmed.toLowerCase();
+  return lowered !== "undefined" && lowered !== "null";
+}
+
+export function validateJoinCirclePayload(
+  payload: unknown
+): JoinCircleValidationResult {
+  if (!payload || typeof payload !== "object") {
+    return { ok: false, message: "Unexpected response from server. Please try again." };
+  }
+
+  const data = payload as JoinCircleRpcPayload;
+  const safeCircleId = isValidCircleId(data.circle_id) ? data.circle_id : undefined;
+  const message =
+    typeof data.message === "string" && data.message.trim()
+      ? data.message
+      : typeof data.error === "string" && data.error.trim()
+      ? data.error
+      : "Unable to join circle";
+
+  if (data.success === true) {
+    if (safeCircleId) {
+      return { ok: true, circleId: safeCircleId };
+    }
+    return {
+      ok: false,
+      message: "Circle was joined, but we could not open it. Please refresh and try again.",
+    };
+  }
+
+  if (data.success === false) {
+    return safeCircleId
+      ? { ok: false, message, circleId: safeCircleId }
+      : { ok: false, message };
+  }
+
+  if (safeCircleId && !data.error) {
+    return { ok: true, circleId: safeCircleId };
+  }
+
+  return safeCircleId
+    ? { ok: false, message, circleId: safeCircleId }
+    : { ok: false, message };
 }
 
 export function formatActivityEvent(

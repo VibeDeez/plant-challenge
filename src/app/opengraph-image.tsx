@@ -1,10 +1,15 @@
 import { ImageResponse } from "next/og";
+import { headers } from "next/headers";
 
-export const alt = "Plantmaxxing";
+export const alt = "Plantmaxxing — Become unmoggable";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
+  const host = headers().get("host") ?? "plantmaxxing.com";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const mascotUrl = `${protocol}://${host}/illustrations/character-carrot.png`;
+
   return new ImageResponse(
     (
       <div
@@ -13,58 +18,47 @@ export default async function Image() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           alignItems: "center",
-          backgroundColor: "#1a3a2a",
-          padding: "60px 80px",
+          background:
+            "radial-gradient(circle at 50% 36%, #1c6f4f 0%, #114735 46%, #0a201a 100%)",
+          padding: "40px 64px",
+          position: "relative",
         }}
       >
-        {/* Headline */}
         <div
           style={{
+            width: "100%",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
-            gap: "4px",
+            justifyContent: "center",
           }}
         >
           <span
             style={{
-              fontSize: 96,
+              fontSize: 120,
               fontWeight: 900,
               color: "#22c55e",
-              lineHeight: 0.9,
-              letterSpacing: "-2px",
+              lineHeight: 1,
+              letterSpacing: "-1px",
+              textShadow:
+                "0 6px 0 #15914f, 0 12px 0 #118347, 0 18px 0 #0e6f3d, 0 24px 18px rgba(3, 35, 22, 0.75)",
             }}
           >
-            Plantmaxxing.
-          </span>
-          <span
-            style={{
-              fontSize: 80,
-              fontWeight: 700,
-              color: "#f5f0e8",
-              lineHeight: 1.1,
-            }}
-          >
-            Level up your gut.
+            Plantmaxxing
           </span>
         </div>
 
-        {/* Subtitle */}
-        <span
+        <img
+          src={mascotUrl}
+          alt="Buff carrot mascot flexing"
           style={{
-            fontSize: 28,
-            color: "rgba(245, 240, 232, 0.5)",
-            marginTop: 40,
-            textAlign: "center",
-            maxWidth: 700,
-            lineHeight: 1.5,
+            width: 470,
+            height: 470,
+            objectFit: "contain",
+            marginTop: 8,
           }}
-        >
-          Track your weekly plant diversity. Feed your gut. Transform your
-          health.
-        </span>
+        />
       </div>
     ),
     { ...size }

@@ -16,7 +16,7 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://plant-challenge.onrender.com"
+    process.env.NEXT_PUBLIC_SITE_URL || "https://plantmaxxing.com"
   ),
   title: "Plantmaxxing",
   description: "Track your weekly plant diversity and compete with family and friends",
@@ -29,11 +29,20 @@ export const metadata: Metadata = {
     title: "Plantmaxxing",
     description: "Track your weekly plant diversity. Feed your gut. Transform your health.",
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image?v=20260225",
+        width: 1200,
+        height: 630,
+        alt: "Plantmaxxing — Become unmoggable",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Plantmaxxing",
     description: "Track your weekly plant diversity. Feed your gut. Transform your health.",
+    images: ["/opengraph-image?v=20260225"],
   },
 };
 

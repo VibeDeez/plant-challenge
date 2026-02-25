@@ -1,9 +1,14 @@
 import { ImageResponse } from "next/og";
+import { headers } from "next/headers";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-export default function AppleIcon() {
+export default async function AppleIcon() {
+  const host = headers().get("host") ?? "plantmaxxing.com";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const mascotUrl = `${protocol}://${host}/illustrations/character-carrot.png`;
+
   return new ImageResponse(
     (
       <div
@@ -18,28 +23,27 @@ export default function AppleIcon() {
           borderRadius: "40px",
         }}
       >
+        <img
+          src={mascotUrl}
+          alt=""
+          style={{
+            width: 130,
+            height: 130,
+            objectFit: "contain",
+            marginTop: -4,
+          }}
+        />
         <span
           style={{
-            fontSize: "72px",
+            fontSize: "18px",
             fontWeight: 900,
             color: "#22c55e",
             lineHeight: 1,
-            letterSpacing: "-2px",
+            marginTop: -8,
+            textShadow: "0 2px 0 #15914f",
           }}
         >
-          30
-        </span>
-        <span
-          style={{
-            fontSize: "24px",
-            fontWeight: 700,
-            color: "#f5f0e8",
-            marginTop: "-2px",
-            letterSpacing: "3px",
-            textTransform: "uppercase",
-          }}
-        >
-          Plants
+          Plantmaxxing
         </span>
       </div>
     ),

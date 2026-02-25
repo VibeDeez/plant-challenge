@@ -18,16 +18,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Plus, Leaf, TrendingUp, X } from "lucide-react";
 
-// Deterministic selection based on the day of the year
-function getDailyIllustration(): string {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
-  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-  return ALL_ILLUSTRATIONS[dayOfYear % ALL_ILLUSTRATIONS.length];
-}
-
-// Get 2-3 illustrations for the background collage, offset from the hero one
+// Get 2-3 illustrations for the background collage
 function getCollageIllustrations(): string[] {
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
@@ -139,7 +130,6 @@ export default function HomePage() {
 
   const categoriesUsed = Object.keys(categoryBreakdown).length;
 
-  const heroIllustration = useMemo(() => getDailyIllustration(), []);
   const collageIllustrations = useMemo(() => getCollageIllustrations(), []);
   const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
 
@@ -147,15 +137,16 @@ export default function HomePage() {
     <>
       {/* === HERO HEADER === */}
       <section className="relative bg-brand-dark px-5 pt-5 pb-14 overflow-hidden grain">
-        {/* Botanical illustration — anchored right, subtle */}
+        {/* Character mascot — anchored right, subtle */}
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
-            src={heroIllustration}
+            src="/illustrations/character-carrot.png"
             alt=""
             width={180}
             height={180}
             className="object-contain illo-accent"
             priority
+            unoptimized
           />
         </div>
 

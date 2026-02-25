@@ -48,23 +48,6 @@ function useReveal() {
   return { ref, visible };
 }
 
-/* -------------------------------------------------------
-   getHeroIllustrations — deterministic daily 3-pick
-------------------------------------------------------- */
-function getHeroIllustrations(): string[] {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const dayOfYear = Math.floor(
-    (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
-  );
-  const len = ALL_ILLUSTRATIONS.length;
-  return [
-    ALL_ILLUSTRATIONS[dayOfYear % len],
-    ALL_ILLUSTRATIONS[(dayOfYear + 1) % len],
-    ALL_ILLUSTRATIONS[(dayOfYear + 4) % len],
-  ];
-}
-
 /* =======================================================
    LEARN PAGE — Editorial magazine layout
 ======================================================= */
@@ -75,8 +58,6 @@ export default function LearnPage() {
   const scienceReveal = useReveal();
   const faqReveal = useReveal();
 
-  const [heroIllos] = useState(() => getHeroIllustrations());
-
   return (
     <>
       {/* ===================================================
@@ -86,33 +67,15 @@ export default function LearnPage() {
         ref={heroReveal.ref}
         className="relative bg-brand-dark grain overflow-hidden"
       >
-        {/* Botanical overlays */}
-        <div className="absolute -top-8 -left-10 w-56 h-56 rotate-[-12deg] pointer-events-none">
+        {/* Character mascot watermark */}
+        <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
-            src={heroIllos[0]}
+            src="/illustrations/character-sunflower.png"
             alt=""
-            width={220}
-            height={220}
+            width={180}
+            height={180}
             className="object-contain illo-accent"
-            priority
-          />
-        </div>
-        <div className="absolute -bottom-10 -right-8 w-60 h-60 rotate-[15deg] pointer-events-none">
-          <Image
-            src={heroIllos[1]}
-            alt=""
-            width={240}
-            height={240}
-            className="object-contain illo-ghost"
-          />
-        </div>
-        <div className="absolute top-1/3 right-4 w-40 h-40 rotate-[5deg] pointer-events-none">
-          <Image
-            src={heroIllos[2]}
-            alt=""
-            width={160}
-            height={160}
-            className="object-contain illo-ghost"
+            unoptimized
           />
         </div>
 

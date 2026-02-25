@@ -85,13 +85,14 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-brand-bg">
       {/* Dark green header with botanical watermark */}
       <div className="relative bg-brand-dark px-5 pt-6 pb-8 overflow-hidden grain">
-        <div className="absolute -right-6 -bottom-6 w-44 h-44 illo-accent pointer-events-none">
+        <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
-            src="/illustrations/library/rosemary.png"
+            src="/illustrations/character-radish.png"
             alt=""
             width={180}
             height={180}
-            className="object-contain"
+            className="object-contain illo-accent"
+            unoptimized
           />
         </div>
         <h1

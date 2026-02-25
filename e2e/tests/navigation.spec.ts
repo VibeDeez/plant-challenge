@@ -30,7 +30,7 @@ test.describe("Navigation", () => {
     await page.locator('nav a[href="/learn"]').click();
     await expect(page).toHaveURL(/\/learn/);
     await expect(
-      page.locator("h1").filter({ hasText: "The 30 Plant Challenge" })
+      page.locator("h1").filter({ hasText: "The Plantmaxxing Challenge" })
     ).toBeVisible();
   });
 

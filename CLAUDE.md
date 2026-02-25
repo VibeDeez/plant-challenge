@@ -1,4 +1,4 @@
-# Placeholder — 30 Plant Point Challenge
+# Placeholder — Plantmaxxing
 
 ## Project Overview
 Next.js 14 PWA (mobile-first), hosted on Render, using Supabase for database and auth.

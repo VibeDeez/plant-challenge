@@ -125,15 +125,16 @@ export default function CirclesPage() {
     <>
       {/* === DARK GREEN HEADER === */}
       <div className="relative bg-brand-dark overflow-hidden grain border-b border-[#b8860b]/15">
-        {/* Background botanical watermark */}
+        {/* Character mascot watermark */}
         <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
-            src="/illustrations/library/sunflower.png"
+            src="/illustrations/character-tomato.png"
             alt=""
             width={160}
             height={160}
             className="object-contain illo-accent"
             priority
+            unoptimized
           />
         </div>
 

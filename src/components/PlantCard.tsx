@@ -33,7 +33,7 @@ export default function PlantCard({
         <Icon size={20} style={{ color }} strokeWidth={1.75} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[15px] font-semibold text-brand-dark truncate">
+        <p className="text-[15px] font-semibold text-brand-dark break-words leading-tight">
           {log.plant_name}
         </p>
         <p className="text-xs font-medium" style={{ color }}>
@@ -43,7 +43,7 @@ export default function PlantCard({
       {gutHealthBlurb && onInfoTap && (
         <button
           onClick={onInfoTap}
-          className="p-2 rounded-xl transition-all"
+          className="flex h-11 w-11 items-center justify-center rounded-xl transition-all"
           style={{ color: `${color}80` }}
           aria-label="Gut health info"
         >
@@ -52,7 +52,7 @@ export default function PlantCard({
       )}
       <button
         onClick={() => onDelete(log.id)}
-        className="p-2 rounded-xl text-brand-dark/20 sm:opacity-0 sm:group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"
+        className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/20 sm:opacity-0 sm:group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"
       >
         <Trash2 size={16} />
       </button>

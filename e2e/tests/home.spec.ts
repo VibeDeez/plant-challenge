@@ -87,6 +87,24 @@ test.describe("Home page", () => {
 
     // Category breakdown should show both categories
     await expect(page.getByText("Categories Hit")).toBeVisible();
+    const grid = page.getByTestId("category-breakdown-grid");
+    await expect(grid).toBeVisible();
+
+    const columnCount = await grid.evaluate((el) => {
+      const columns = getComputedStyle(el).gridTemplateColumns;
+      return columns.split(" ").filter(Boolean).length;
+    });
+    expect(columnCount).toBe(1);
+
+    const cards = grid.locator(":scope > div");
+    await expect(cards).toHaveCount(2);
+
+    const firstCard = await cards.nth(0).boundingBox();
+    const secondCard = await cards.nth(1).boundingBox();
+    expect(firstCard).not.toBeNull();
+    expect(secondCard).not.toBeNull();
+    expect(Math.abs((firstCard?.x ?? 0) - (secondCard?.x ?? 0))).toBeLessThan(2);
+    expect((secondCard?.y ?? 0)).toBeGreaterThan((firstCard?.y ?? 0) + (firstCard?.height ?? 0) - 1);
   });
 
   test("Start a Crop Circle banner visible", async ({

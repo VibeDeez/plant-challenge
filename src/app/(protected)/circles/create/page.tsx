@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/ProtectedLayout";
-import { generateInviteCode, getShareUrl } from "@/lib/circles";
+import { generateInviteCode, getShareUrl, isValidCircleId } from "@/lib/circles";
 import Link from "next/link";
 import { ArrowLeft, Copy, Share2, ArrowRight, Check } from "lucide-react";
 
@@ -14,6 +14,18 @@ type CreatedCircle = {
   name: string;
   invite_code: string;
 };
+
+function isCreatedCirclePayload(data: unknown): data is CreatedCircle {
+  if (!data || typeof data !== "object") return false;
+  const maybe = data as Partial<CreatedCircle>;
+  return (
+    isValidCircleId(maybe.id) &&
+    typeof maybe.name === "string" &&
+    maybe.name.trim().length > 0 &&
+    typeof maybe.invite_code === "string" &&
+    maybe.invite_code.trim().length > 0
+  );
+}
 
 export default function CircleCreatePage() {
   const { activeMember } = useApp();
@@ -56,6 +68,12 @@ export default function CircleCreatePage() {
           continue;
         }
         setError(insertError.message || "Failed to create circle");
+        setCreating(false);
+        return;
+      }
+
+      if (!isCreatedCirclePayload(data)) {
+        setError("Circle was created, but the response was invalid. Please try again.");
         setCreating(false);
         return;
       }

@@ -78,7 +78,7 @@ export default function LeaderboardRow({
                 <PlantAvatar plantKey={emoji} size="lg" />
                 <div className="min-w-0">
                   <p
-                    className="text-lg font-bold text-brand-dark truncate font-display"
+                    className="text-lg font-bold text-brand-dark whitespace-normal break-words leading-snug font-display"
                   >
                     {displayName}
                   </p>
@@ -169,7 +169,7 @@ export default function LeaderboardRow({
 
             {/* Name */}
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-semibold text-brand-dark truncate">
+              <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
                 {displayName}
               </p>
               {isFamily && (
@@ -219,7 +219,9 @@ export default function LeaderboardRow({
 
       {/* Name */}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-brand-dark truncate">{displayName}</p>
+        <p className="text-sm font-medium text-brand-dark whitespace-normal break-words leading-snug">
+          {displayName}
+        </p>
         {isFamily && (
           <p className="text-[11px] font-medium text-brand-green">Your family</p>
         )}

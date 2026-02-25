@@ -25,6 +25,34 @@ test.describe("Add Plant page", () => {
     ).toBeVisible();
   });
 
+  test("mobile controls meet 44px targets and plant names are wrapping-friendly", async ({
+    authedPage: page,
+  }) => {
+    const allTab = page.getByRole("button", { name: "All" }).first();
+    const backButton = page.locator('a[href="/"]').first();
+
+    const allTabBox = await allTab.boundingBox();
+    const backButtonBox = await backButton.boundingBox();
+
+    expect(allTabBox).not.toBeNull();
+    expect(backButtonBox).not.toBeNull();
+    expect(allTabBox!.height).toBeGreaterThanOrEqual(44);
+    expect(backButtonBox!.height).toBeGreaterThanOrEqual(44);
+    expect(backButtonBox!.width).toBeGreaterThanOrEqual(44);
+
+    await page.fill('input[placeholder="Search plants..."]', "Apple");
+    const appleName = page
+      .getByRole("button", { name: /^Apple \d/ })
+      .locator("p")
+      .first();
+    await expect(appleName).toBeVisible();
+
+    const whiteSpace = await appleName.evaluate((el) =>
+      window.getComputedStyle(el).whiteSpace
+    );
+    expect(whiteSpace).not.toBe("nowrap");
+  });
+
   test("gallery view shows categories grouped", async ({
     authedPage: page,
   }) => {

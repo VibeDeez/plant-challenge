@@ -4,6 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const VISION_MODEL = "google/gemini-2.0-flash-lite-001";
+const REQUEST_TIMEOUT_MS = 15_000;
+const MAX_REQUEST_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_DATA_URL_LENGTH = 4 * 1024 * 1024;
 
 const SYSTEM_PROMPT = `You are a food recognition assistant for a plant diversity tracking app. Analyze the photo and identify all visible plant-based whole foods.
 
@@ -21,6 +24,10 @@ Respond with ONLY a JSON array, no other text:
 
 If no plant foods are visible, respond with: []`;
 
+function isValidImageDataUrl(value: string): boolean {
+  return /^data:image\/[a-zA-Z0-9.+-]+;base64,[a-zA-Z0-9+/=\s]+$/.test(value);
+}
+
 export async function POST(req: NextRequest) {
   if (!OPENROUTER_API_KEY) {
     return NextResponse.json(
@@ -30,13 +37,40 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const supabaseAuth = await createClient();
-    const { data: { user } } = await supabaseAuth.auth.getUser();
+    const contentLength = Number(req.headers.get("content-length") ?? 0);
+    if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
+      return NextResponse.json(
+        { error: "Image payload is too large. Please use a smaller image." },
+        { status: 413 }
+      );
+    }
+
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { image } = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid JSON body" },
+        { status: 400 }
+      );
+    }
+
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      return NextResponse.json(
+        { error: "Request body must be an object with an image field" },
+        { status: 400 }
+      );
+    }
+
+    const { image } = body as { image?: unknown };
 
     if (!image || typeof image !== "string") {
       return NextResponse.json(
@@ -45,28 +79,62 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const orResponse = await fetch(OPENROUTER_URL, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: VISION_MODEL,
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "Identify the plant-based foods in this photo." },
-              { type: "image_url", image_url: { url: image } },
-            ],
-          },
-        ],
-        temperature: 0.1,
-        max_tokens: 1024,
-      }),
-    });
+    if (image.length > MAX_IMAGE_DATA_URL_LENGTH) {
+      return NextResponse.json(
+        { error: "Image payload is too large. Please use a smaller image." },
+        { status: 413 }
+      );
+    }
+
+    if (!isValidImageDataUrl(image)) {
+      return NextResponse.json(
+        { error: "Image must be a base64 data URL in data:image/... format" },
+        { status: 400 }
+      );
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    let orResponse: Response;
+
+    try {
+      orResponse = await fetch(OPENROUTER_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: VISION_MODEL,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            {
+              role: "user",
+              content: [
+                {
+                  type: "text",
+                  text: "Identify the plant-based foods in this photo.",
+                },
+                { type: "image_url", image_url: { url: image } },
+              ],
+            },
+          ],
+          temperature: 0.1,
+          max_tokens: 1024,
+        }),
+        signal: controller.signal,
+      });
+    } catch (error) {
+      if ((error as Error).name === "AbortError") {
+        return NextResponse.json(
+          { error: "Recognition request timed out. Please try again." },
+          { status: 504 }
+        );
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeout);
+    }
 
     if (!orResponse.ok) {
       const errText = await orResponse.text();
@@ -104,10 +172,11 @@ export async function POST(req: NextRequest) {
         validCategories.has(item.category)
     );
 
-    const supabase = await createClient();
-    const { data: dbPlants } = await supabase
-      .from("plant")
-      .select("name, category, points");
+    if (identified.length === 0) {
+      return NextResponse.json({ plants: [] });
+    }
+
+    const { data: dbPlants } = await supabase.from("plant").select("name, category, points");
 
     const plantMap = new Map(
       (dbPlants ?? []).map((p) => [p.name.toLowerCase(), p])

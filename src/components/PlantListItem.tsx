@@ -39,7 +39,7 @@ export default function PlantListItem({
         <Icon size={20} style={{ color }} strokeWidth={1.75} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[15px] font-semibold text-brand-dark truncate">
+        <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
           {plant.name}
         </p>
         <p className="text-xs font-medium" style={{ color }}>

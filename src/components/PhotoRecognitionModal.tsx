@@ -121,7 +121,7 @@ export default function PhotoRecognitionModal({
           </h3>
           <button
             onClick={handleClose}
-            className="p-1.5 rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
+            className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
           >
             <X size={20} />
           </button>
@@ -166,7 +166,7 @@ export default function PhotoRecognitionModal({
               {!loading && (
                 <button
                   onClick={() => { reset(); fileRef.current?.click(); }}
-                  className="absolute top-3 right-3 bg-black/40 text-white rounded-xl px-3 py-1.5 text-xs font-medium hover:bg-black/60 transition-colors"
+                  className="absolute top-3 right-3 flex min-h-11 items-center bg-black/40 text-white rounded-xl px-4 py-1.5 text-xs font-medium hover:bg-black/60 transition-colors"
                 >
                   Retake
                 </button>
@@ -206,7 +206,7 @@ export default function PhotoRecognitionModal({
                       setSelected(all);
                     }
                   }}
-                  className="text-xs font-medium text-brand-green"
+                  className="min-h-11 rounded-lg px-2 text-xs font-medium text-brand-green"
                 >
                   {selectedCount > 0 ? "Deselect all" : "Select all"}
                 </button>
@@ -246,7 +246,7 @@ export default function PhotoRecognitionModal({
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-brand-dark truncate">
+                        <p className="text-sm font-semibold text-brand-dark whitespace-normal break-words leading-snug">
                           {plant.name}
                           {alreadyLogged && (
                             <span className="font-normal text-brand-muted ml-1">

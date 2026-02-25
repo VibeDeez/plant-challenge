@@ -216,7 +216,7 @@ export default function HomePage() {
                 {categoriesUsed} of 8
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div data-testid="category-breakdown-grid" className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               {Object.entries(categoryBreakdown).map(([cat, count]) => {
                 const Icon = CATEGORY_ICONS[cat] ?? Leaf;
                 const color = CATEGORY_COLORS[cat] ?? "#6b7260";
@@ -247,7 +247,7 @@ export default function HomePage() {
                         <Icon size={16} style={{ color }} strokeWidth={2} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-brand-dark truncate">
+                        <p className="text-xs font-semibold text-brand-dark break-words leading-tight">
                           {cat}
                         </p>
                       </div>
@@ -276,7 +276,7 @@ export default function HomePage() {
             <div className="relative bg-brand-green/10 border border-brand-green/20 rounded-2xl p-5 animate-fadeInUp">
               <button
                 onClick={dismissCircleBanner}
-                className="absolute top-3 right-3 text-brand-muted hover:text-brand-dark transition-colors"
+                className="absolute top-2 right-2 flex h-11 w-11 items-center justify-center rounded-xl text-brand-muted hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
                 aria-label="Dismiss"
               >
                 <X size={18} />
@@ -290,13 +290,13 @@ export default function HomePage() {
               <div className="flex gap-2 mt-4">
                 <Link
                   href="/circles/create"
-                  className="px-4 py-2 rounded-xl bg-brand-green text-white text-sm font-semibold hover:bg-brand-green-hover active:scale-[0.98] transition-all"
+                  className="inline-flex min-h-11 items-center justify-center px-4 py-2 rounded-xl bg-brand-green text-white text-sm font-semibold hover:bg-brand-green-hover active:scale-[0.98] transition-all"
                 >
                   Create
                 </Link>
                 <Link
                   href="/circles"
-                  className="px-4 py-2 rounded-xl border border-brand-dark/15 text-brand-dark text-sm font-semibold hover:bg-brand-dark/5 active:scale-[0.98] transition-all"
+                  className="inline-flex min-h-11 items-center justify-center px-4 py-2 rounded-xl border border-brand-dark/15 text-brand-dark text-sm font-semibold hover:bg-brand-dark/5 active:scale-[0.98] transition-all"
                 >
                   Join
                 </Link>

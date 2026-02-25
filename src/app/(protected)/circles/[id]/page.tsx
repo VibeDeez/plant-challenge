@@ -94,7 +94,7 @@ function HeroCard({
               <div className="flex items-center gap-2">
                 <PlantAvatar plantKey={entry.avatar_emoji} size="lg" />
                 <div className="min-w-0">
-                  <p className="text-lg font-bold text-brand-dark truncate font-display">
+                  <p className="text-lg font-bold text-brand-dark whitespace-normal break-words leading-snug font-display">
                     {entry.display_name}
                   </p>
                   {isMe && <p className="text-xs font-medium text-brand-green">You</p>}
@@ -153,7 +153,7 @@ function PodiumCard({
             </div>
             <PlantAvatar plantKey={entry.avatar_emoji} size="lg" />
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-semibold text-brand-dark truncate">
+              <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
                 {entry.display_name}
               </p>
               {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
@@ -200,7 +200,9 @@ function StandardRow({
         </div>
         <PlantAvatar plantKey={entry.avatar_emoji} size="md" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-brand-dark truncate">{entry.display_name}</p>
+          <p className="text-sm font-medium text-brand-dark whitespace-normal break-words leading-snug">
+            {entry.display_name}
+          </p>
           {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
           {entry.is_ghost && (
             <p className="text-[11px] text-brand-muted">inactive</p>
@@ -512,7 +514,7 @@ export default function CircleDetailPage() {
             <div className="flex items-center justify-between mb-3">
               <Link
                 href="/circles"
-                className="flex items-center gap-1.5 text-brand-cream/60 hover:text-brand-cream transition-colors"
+                className="flex min-h-11 items-center gap-1.5 rounded-xl px-1 text-brand-cream/60 hover:text-brand-cream hover:bg-brand-cream/10 transition-colors"
               >
                 <ChevronLeft size={18} />
                 <span className="text-sm">Circles</span>
@@ -520,7 +522,7 @@ export default function CircleDetailPage() {
               {isAdmin && (
                 <Link
                   href={`/circles/${circleId}/settings`}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-cream/10 hover:bg-brand-cream/20 transition-colors"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-cream/10 hover:bg-brand-cream/20 transition-colors"
                 >
                   <Settings size={16} className="text-brand-cream/60" />
                 </Link>
@@ -541,7 +543,7 @@ export default function CircleDetailPage() {
 
               <button
                 onClick={handleCopy}
-                className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-medium transition-all ${
+                className={`flex min-h-11 items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-medium transition-all ${
                   copied
                     ? "bg-brand-green/20 text-brand-green"
                     : "bg-brand-cream/10 text-brand-cream/60 hover:bg-brand-cream/15 hover:text-brand-cream/80"
@@ -568,7 +570,7 @@ export default function CircleDetailPage() {
           <div className="flex gap-6">
             <button
               onClick={() => setTab("leaderboard")}
-              className={`pb-3 text-sm font-medium transition-colors ${
+              className={`min-h-11 pb-3 text-sm font-medium transition-colors ${
                 tab === "leaderboard"
                   ? "border-b-2 border-brand-green text-brand-green font-semibold"
                   : "text-brand-cream/40 hover:text-brand-cream/60"
@@ -578,7 +580,7 @@ export default function CircleDetailPage() {
             </button>
             <button
               onClick={() => setTab("activity")}
-              className={`pb-3 text-sm font-medium transition-colors ${
+              className={`min-h-11 pb-3 text-sm font-medium transition-colors ${
                 tab === "activity"
                   ? "border-b-2 border-brand-green text-brand-green font-semibold"
                   : "text-brand-cream/40 hover:text-brand-cream/60"
@@ -599,7 +601,7 @@ export default function CircleDetailPage() {
               <div className="flex gap-2 mb-5">
                 <button
                   onClick={() => setLbView("weekly")}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  className={`min-h-11 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     lbView === "weekly"
                       ? "bg-brand-green text-white"
                       : "bg-brand-dark/[0.06] text-brand-muted hover:bg-brand-dark/10"
@@ -609,7 +611,7 @@ export default function CircleDetailPage() {
                 </button>
                 <button
                   onClick={() => setLbView("alltime")}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  className={`min-h-11 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     lbView === "alltime"
                       ? "bg-brand-green text-white"
                       : "bg-brand-dark/[0.06] text-brand-muted hover:bg-brand-dark/10"
@@ -766,7 +768,7 @@ export default function CircleDetailPage() {
                               <button
                                 key={re.key}
                                 onClick={() => handleReaction(act.id, re.key)}
-                                className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition-colors ${
+                                className={`flex min-h-11 items-center gap-1 px-3 py-1 rounded-full text-xs transition-colors ${
                                   data.userReacted
                                     ? "bg-brand-green/20 border border-brand-green"
                                     : "bg-brand-dark/[0.04] border border-brand-dark/10"
@@ -781,7 +783,7 @@ export default function CircleDetailPage() {
                           {/* + button to open picker */}
                           <button
                             onClick={() => setOpenPicker(pickerOpen ? null : act.id)}
-                            className="flex items-center justify-center h-7 w-7 rounded-full bg-brand-dark/[0.04] border border-brand-dark/10 text-brand-muted hover:bg-brand-dark/10 transition-colors text-sm"
+                            className="flex items-center justify-center h-11 w-11 rounded-full bg-brand-dark/[0.04] border border-brand-dark/10 text-brand-muted hover:bg-brand-dark/10 transition-colors text-sm"
                           >
                             +
                           </button>
@@ -794,7 +796,7 @@ export default function CircleDetailPage() {
                               <button
                                 key={re.key}
                                 onClick={() => handleReaction(act.id, re.key)}
-                                className="flex items-center justify-center h-9 w-9 rounded-xl hover:bg-brand-dark/[0.06] transition-colors text-lg"
+                                className="flex items-center justify-center h-11 w-11 rounded-xl hover:bg-brand-dark/[0.06] transition-colors text-lg"
                               >
                                 {re.display}
                               </button>

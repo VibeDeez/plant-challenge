@@ -29,10 +29,10 @@ export default function MemberSwitcher() {
       <div className="max-w-lg mx-auto px-5">
         <button
           onClick={() => setOpen((o) => !o)}
-          className="flex items-center gap-2 w-full py-2.5 text-left"
+          className="flex min-h-11 items-center gap-2 w-full py-2.5 text-left"
         >
           <PlantAvatar plantKey={activeMember?.avatar_emoji ?? "sprout"} size="sm" />
-          <span className="text-sm font-semibold text-brand-cream/90 flex-1 truncate">
+          <span className="text-sm font-semibold text-brand-cream/90 flex-1 whitespace-normal break-words leading-snug">
             {activeMember?.display_name}
           </span>
           <ChevronDown
@@ -53,16 +53,18 @@ export default function MemberSwitcher() {
                     setActiveMemberId(m.id);
                     setOpen(false);
                   }}
-                  className={`flex items-center gap-2.5 w-full rounded-xl px-3 py-2 text-sm transition-colors ${
+                  className={`flex min-h-11 items-start gap-2.5 w-full rounded-xl px-3 py-2 text-sm transition-colors ${
                     active
                       ? "bg-brand-green/20 text-brand-green font-semibold"
                       : "text-brand-cream/60 hover:bg-brand-cream/10"
                   }`}
                 >
                   <PlantAvatar plantKey={m.avatar_emoji} size="sm" />
-                  <span className="truncate">{m.display_name}</span>
+                  <span className="flex-1 whitespace-normal break-words leading-snug text-left">
+                    {m.display_name}
+                  </span>
                   {active && (
-                    <span className="ml-auto text-[10px] font-bold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-full">
+                    <span className="ml-auto mt-0.5 text-[10px] font-bold text-brand-green bg-brand-green/10 px-2 py-0.5 rounded-full">
                       Active
                     </span>
                   )}

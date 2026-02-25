@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "30 Plants",
-    short_name: "30 Plants",
+    name: "Plantmaxxing",
+    short_name: "Plantmaxxing",
     description:
       "Track your weekly plant diversity and compete with family and friends",
     start_url: "/",

@@ -18,21 +18,21 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://plant-challenge.onrender.com"
   ),
-  title: "30 Plants",
+  title: "Plantmaxxing",
   description: "Track your weekly plant diversity and compete with family and friends",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "30 Plants",
+    title: "Plantmaxxing",
   },
   openGraph: {
-    title: "30 Plants",
+    title: "Plantmaxxing",
     description: "Track your weekly plant diversity. Feed your gut. Transform your health.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "30 Plants",
+    title: "Plantmaxxing",
     description: "Track your weekly plant diversity. Feed your gut. Transform your health.",
   },
 };

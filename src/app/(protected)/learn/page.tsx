@@ -139,7 +139,7 @@ export default function LearnPage() {
                 : "opacity-0 translate-y-6"
             }`}
           >
-            The 30 Plant Challenge
+            The Plantmaxxing Challenge
           </h1>
 
           {/* Subtitle */}

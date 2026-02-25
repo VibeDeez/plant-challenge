@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "30 Plant Point Challenge";
+export const alt = "Plantmaxxing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -30,14 +30,14 @@ export default async function Image() {
         >
           <span
             style={{
-              fontSize: 120,
+              fontSize: 96,
               fontWeight: 900,
               color: "#22c55e",
               lineHeight: 0.9,
               letterSpacing: "-2px",
             }}
           >
-            30 Plants.
+            Plantmaxxing.
           </span>
           <span
             style={{
@@ -47,7 +47,7 @@ export default async function Image() {
               lineHeight: 1.1,
             }}
           >
-            That&apos;s it.
+            Level up your gut.
           </span>
         </div>
 

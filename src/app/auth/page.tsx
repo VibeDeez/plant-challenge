@@ -62,19 +62,19 @@ const STEPS = [
     num: "01",
     title: "Log Your Plants",
     desc: "Ate an apple? A handful of walnuts? Log each unique plant species you eat throughout the week.",
-    illo: "/illustrations/library/strawberry.png",
+    illo: "/illustrations/character-radish.png",
   },
   {
     num: "02",
     title: "Watch Your Week Build",
     desc: "Track your progress toward 30 points with your weekly ring. Herbs and spices count too.",
-    illo: "/illustrations/library/wheat-hero.png",
+    illo: "/illustrations/character-sunflower.png",
   },
   {
     num: "03",
     title: "Compete & Share",
     desc: "See how you stack up on the family leaderboard. Get the whole household involved.",
-    illo: "/illustrations/library/rosemary-hero.png",
+    illo: "/illustrations/character-tomato.png",
   },
 ];
 
@@ -191,85 +191,44 @@ export default function AuthPage() {
 
       {/* ===== HERO ===== */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain mt-safe">
-        {/* Floating botanical specimens — larger and more prominent with new clean PNGs */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-          {/* Top-left: sunflower */}
-          <div className="absolute -top-2 -left-6 w-44 h-44 rotate-[-12deg] animate-gentleFloat">
-            <Image
-              src="/illustrations/library/sunflower-hero.png"
-              alt=""
-              width={180}
-              height={180}
-              className="object-contain illo-hero"
-              priority
-            />
-          </div>
-          {/* Top-right: strawberry */}
-          <div className="absolute top-12 -right-6 w-32 h-48 rotate-[8deg] animate-gentleFloat" style={{ animationDelay: "1.5s" }}>
-            <Image
-              src="/illustrations/library/strawberry.png"
-              alt=""
-              width={130}
-              height={200}
-              className="object-contain illo-hero"
-              priority
-            />
-          </div>
-          {/* Mid-left: wheat */}
-          <div className="absolute top-1/2 -left-3 w-24 h-48 rotate-[5deg] animate-gentleFloat" style={{ animationDelay: "3s" }}>
-            <Image
-              src="/illustrations/library/wheat-hero.png"
-              alt=""
-              width={100}
-              height={200}
-              className="object-contain illo-accent"
-            />
-          </div>
-          {/* Bottom-right: cherries */}
-          <div className="absolute bottom-36 -right-4 w-36 h-36 rotate-[-10deg] animate-gentleFloat" style={{ animationDelay: "2s" }}>
-            <Image
-              src="/illustrations/library/cherries.png"
-              alt=""
-              width={150}
-              height={150}
-              className="object-contain illo-hero"
-            />
-          </div>
-          {/* Bottom-left: rosemary */}
-          <div className="absolute bottom-20 left-6 w-28 h-28 rotate-[15deg] animate-gentleFloat" style={{ animationDelay: "4s" }}>
-            <Image
-              src="/illustrations/library/rosemary-hero.png"
-              alt=""
-              width={110}
-              height={110}
-              className="object-contain illo-accent"
-            />
-          </div>
-        </div>
 
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
           {/* 3D headline */}
-          <h1 className="mb-6">
+          <h1 className="mb-1">
             <span
-              className="block text-[clamp(4rem,15vw,10rem)] font-black leading-[0.85] tracking-tight text-brand-green font-display animate-fadeInUp"
+              className="block text-[clamp(3rem,12vw,8rem)] font-black leading-[0.85] tracking-tight text-brand-green font-display animate-fadeInUp"
               style={{
                 textShadow: "0 4px 0 #166534, 0 8px 0 #14532d, 0 12px 24px rgba(0,0,0,0.4)",
                 animationDelay: "0.1s",
               }}
             >
-              30 Plants.
-            </span>
-            <span
-              className="block text-[clamp(2.5rem,8vw,5.5rem)] font-bold leading-tight text-brand-cream mt-2 font-display animate-fadeInUp"
-              style={{ animationDelay: "0.3s" }}
-            >
-              That&apos;s it.
+              Plantmaxxing
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-brand-cream/60 max-w-md mx-auto mb-12 leading-relaxed animate-fadeInUp" style={{ animationDelay: "0.5s" }}>
-            Track your weekly plant diversity. Feed your gut. Transform your health.
-          </p>
+          {/* Mascot — the buff carrot */}
+          <div className="relative mx-auto w-64 h-64 sm:w-72 sm:h-72 mt-2 -mb-2 animate-fadeInUp" style={{ animationDelay: "0.3s" }}>
+            <Image
+              src="/illustrations/character-carrot.png"
+              alt="Plantmaxxing mascot — a buff carrot flexing"
+              width={288}
+              height={288}
+              className="object-contain animate-gentleFloat"
+              unoptimized
+              priority
+            />
+          </div>
+
+          <div className="max-w-sm mx-auto mb-8 animate-fadeInUp" style={{ animationDelay: "0.5s" }}>
+            <p className="text-lg sm:text-xl font-display text-brand-cream/80 leading-relaxed">
+              Stop letting processed slop
+              <br />
+              <span className="font-bold whitespace-nowrap">cortisol-maxx</span> your flora.
+            </p>
+            <p className="text-lg sm:text-xl font-display text-brand-cream/80 leading-relaxed mt-4">
+              Become <span className="text-brand-green font-bold">unmoggable.</span>
+            </p>
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fadeInUp" style={{ animationDelay: "0.7s" }}>
             <a
@@ -280,21 +239,19 @@ export default function AuthPage() {
             </a>
             <a
               href="#start"
-              className="px-8 py-3.5 text-brand-rose-light/70 font-medium hover:text-brand-cream transition-colors text-lg"
+              className="px-8 py-3.5 text-orange-400 font-medium hover:text-orange-300 transition-colors text-lg"
             >
               Sign In
             </a>
           </div>
         </div>
 
-        {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-brand-cream to-transparent" />
       </section>
 
       {/* ===== BOTANICAL PARADE — auto-scrolling specimen strip ===== */}
       <section className="bg-brand-cream py-8 overflow-hidden grain-light">
         <p className="text-center text-[10px] font-medium text-brand-muted tracking-[0.2em] uppercase mb-5">
-          51 Botanical Specimens &middot; 8 Categories
+          Botanical Specimens &middot; 8 Categories
         </p>
         <div className="relative">
           {/* Fade edges */}
@@ -336,14 +293,15 @@ export default function AuthPage() {
                 }`}
                 style={{ transitionDelay: stepsReveal.visible ? `${100 + i * 150}ms` : "0ms" }}
               >
-                {/* Botanical background — new clean illustrations */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                {/* Character illustration */}
+                <div className="flex items-end justify-center pt-6 px-4 bg-white/20">
                   <Image
                     src={step.illo}
                     alt=""
-                    width={200}
-                    height={200}
-                    className="object-contain illo-accent"
+                    width={220}
+                    height={280}
+                    className="object-contain h-52 sm:h-64"
+                    unoptimized
                   />
                 </div>
                 <div className="relative bg-white/30 backdrop-blur-sm p-6 text-center sm:text-left">
@@ -463,7 +421,7 @@ export default function AuthPage() {
               scienceReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
             }`}
           >
-            Based on the American Gut Project &amp; the work of Dr. Will Bulsiewicz
+            Based on the American Gut Project research
           </p>
         </div>
       </section>
@@ -598,7 +556,7 @@ export default function AuthPage() {
 
         <div className="relative max-w-sm mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-brand-dark text-center mb-10 font-display">
-            Start Your Challenge
+            Start Plantmaxxing
           </h2>
 
           {/* Glassmorphic form card */}
@@ -702,7 +660,7 @@ export default function AuthPage() {
         </div>
         <div className="relative max-w-4xl mx-auto text-center">
           <p className="text-sm text-brand-cream/40">
-            30 Plant Point Challenge &middot; Based on the principles of Dr. Will Bulsiewicz &middot; {new Date().getFullYear()}
+            Plantmaxxing &middot; Inspired by the American Gut Project research &middot; {new Date().getFullYear()}
           </p>
         </div>
       </footer>

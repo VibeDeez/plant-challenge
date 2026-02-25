@@ -44,8 +44,13 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Redirect authenticated users away from /auth
-  if (user && request.nextUrl.pathname.startsWith("/auth")) {
+  // Redirect authenticated users away from /auth (except reset-password and callback)
+  if (
+    user &&
+    request.nextUrl.pathname.startsWith("/auth") &&
+    !request.nextUrl.pathname.startsWith("/auth/reset-password") &&
+    !request.nextUrl.pathname.startsWith("/auth/callback")
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/";
     return NextResponse.redirect(url);

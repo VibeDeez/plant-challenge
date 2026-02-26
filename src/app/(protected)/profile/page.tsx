@@ -84,7 +84,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-brand-bg">
       {/* Dark green header with botanical watermark */}
-      <div className="relative bg-brand-dark px-5 pt-6 pb-8 overflow-hidden grain">
+      <div className="relative overflow-hidden bg-brand-dark px-page pt-6 pb-8 grain">
         <div className="absolute -right-6 -bottom-6 pointer-events-none">
           <Image
             src="/illustrations/character-radish.png"
@@ -102,7 +102,7 @@ export default function ProfilePage() {
         </h1>
       </div>
 
-      <div className="px-4 -mt-4 pb-8 space-y-6">
+      <div className="-mt-4 px-4 pb-8 stack-section">
         {/* Owner card */}
         {owner && !editingOwner && (
           <div className="relative rounded-2xl overflow-hidden shadow-sm">
@@ -132,7 +132,7 @@ export default function ProfilePage() {
                 </div>
                 <button
                   onClick={startEditOwner}
-                  className="p-2.5 rounded-xl bg-brand-dark/5 hover:bg-brand-dark/10 transition-colors"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-dark/5 transition-colors hover:bg-brand-dark/10"
                 >
                   <Pencil size={16} className="text-brand-dark/60" />
                 </button>
@@ -174,7 +174,7 @@ export default function ProfilePage() {
 
         {/* Family section */}
         <div>
-          <div className="flex items-center justify-between mb-3">
+          <div className="mb-3 flex items-center justify-between">
             <h2
               className="text-lg text-brand-dark font-display"
             >
@@ -182,7 +182,7 @@ export default function ProfilePage() {
             </h2>
             <button
               onClick={() => setKidModal({ open: true })}
-              className="flex items-center gap-1.5 text-sm font-medium text-brand-green hover:text-brand-green-hover transition-colors"
+              className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-brand-green transition-colors hover:text-brand-green-hover"
             >
               <Plus size={16} />
               Add Kid
@@ -212,7 +212,7 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="stack-card">
               {kids.map((kid, index) => (
                 <div
                   key={kid.id}
@@ -240,13 +240,13 @@ export default function ProfilePage() {
                       onClick={() =>
                         setKidModal({ open: true, editing: kid })
                       }
-                      className="p-2 rounded-xl hover:bg-brand-dark/5 transition-colors"
+                      className="flex h-11 w-11 items-center justify-center rounded-xl transition-colors hover:bg-brand-dark/5"
                     >
                       <Pencil size={14} className="text-brand-muted" />
                     </button>
                     <button
                       onClick={() => deleteKid(kid.id)}
-                      className="p-2 rounded-xl hover:bg-red-50 transition-colors"
+                      className="flex h-11 w-11 items-center justify-center rounded-xl transition-colors hover:bg-red-50"
                     >
                       <Trash2 size={14} className="text-brand-muted/60 hover:text-red-500" />
                     </button>

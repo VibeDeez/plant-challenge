@@ -135,7 +135,7 @@ export default function HomePage() {
   return (
     <>
       {/* === HERO HEADER === */}
-      <section className="relative bg-brand-dark px-5 pt-5 pb-14 overflow-hidden grain">
+      <section className="relative overflow-hidden bg-brand-dark px-page pt-5 pb-14 grain">
         {/* Character mascot — anchored right, subtle */}
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
@@ -202,7 +202,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-brand-cream px-5 py-5 grain-light" data-testid="sage-teaser">
+      <section className="bg-brand-cream px-page py-section grain-light" data-testid="sage-teaser">
         <div className="max-w-lg mx-auto">
           <Link
             href="/sage"
@@ -224,7 +224,7 @@ export default function HomePage() {
 
       {/* === CATEGORY BREAKDOWN MOSAIC === */}
       {categoriesUsed > 0 && (
-        <section className="bg-brand-cream px-5 py-5 grain-light">
+        <section className="bg-brand-cream px-page py-section grain-light">
           <div className="max-w-lg mx-auto">
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp size={14} className="text-brand-muted" />
@@ -290,7 +290,7 @@ export default function HomePage() {
 
       {/* === CROP CIRCLES ONBOARDING BANNER === */}
       {showCircleBanner && (
-        <section className="bg-brand-cream px-5 pt-5 grain-light">
+        <section className="bg-brand-cream px-page pt-5 grain-light">
           <div className="max-w-lg mx-auto">
             <div className="relative bg-brand-green/10 border border-brand-green/20 rounded-2xl p-5 animate-fadeInUp">
               <button
@@ -326,7 +326,7 @@ export default function HomePage() {
       )}
 
       {/* === PLANT LOG === */}
-      <section className="relative bg-brand-bg px-5 py-6 min-h-[40vh] overflow-hidden grain-light">
+      <section className="relative min-h-[40vh] overflow-hidden bg-brand-bg px-page py-6 grain-light">
         {/* Botanical collage background - only when there are logs */}
         {!loading && logs.length > 0 && (
           <div className="absolute inset-0 pointer-events-none overflow-hidden">

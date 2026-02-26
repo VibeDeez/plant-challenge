@@ -38,7 +38,7 @@ export default function SagePage() {
 
   return (
     <div className="min-h-screen bg-brand-bg" data-testid="sage-page">
-      <section className="relative overflow-hidden bg-brand-dark px-5 pt-6 pb-8 grain">
+      <section className="relative overflow-hidden bg-brand-dark px-page pt-6 pb-8 grain">
         <div className="absolute -right-6 -bottom-8 pointer-events-none">
           <Image
             src="/illustrations/library/sage.png"
@@ -61,8 +61,8 @@ export default function SagePage() {
         </div>
       </section>
 
-      <section className="bg-brand-cream px-5 py-5 grain-light">
-        <div className="mx-auto max-w-lg space-y-3">
+      <section className="bg-brand-cream px-page py-section grain-light">
+        <div className="mx-auto max-w-lg stack-card">
           <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
             <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
               <MessageCircle size={14} />
@@ -78,8 +78,8 @@ export default function SagePage() {
 
       <SageChat alreadyLoggedThisWeek={loggedPlantsThisWeek} />
 
-      <section className="bg-brand-cream px-5 pb-28 grain-light">
-        <div className="mx-auto max-w-lg space-y-3">
+      <section className="bg-brand-cream px-page pb-28 grain-light">
+        <div className="mx-auto max-w-lg stack-card">
           <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
             <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
               <NotebookPen size={14} />

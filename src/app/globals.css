@@ -20,6 +20,11 @@ html {
 :root {
   --background: #f8faf8;
   --foreground: #1a1a1a;
+  --space-page-x: 1.25rem;
+  --space-section-y: 1.25rem;
+  --space-section-y-tight: 1rem;
+  --space-stack-card: 0.75rem;
+  --space-stack-section: 1.5rem;
 }
 
 body {
@@ -175,4 +180,28 @@ body {
 }
 @utility illo-showcase {
   opacity: 0.80;
+}
+
+/* ---- Mobile spacing tokens ---- */
+@utility px-page {
+  padding-left: var(--space-page-x);
+  padding-right: var(--space-page-x);
+}
+@utility py-section {
+  padding-top: var(--space-section-y);
+  padding-bottom: var(--space-section-y);
+}
+@utility py-section-tight {
+  padding-top: var(--space-section-y-tight);
+  padding-bottom: var(--space-section-y-tight);
+}
+@utility stack-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-card);
+}
+@utility stack-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-stack-section);
 }

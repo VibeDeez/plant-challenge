@@ -7,6 +7,9 @@ test.describe("Circle Detail page", () => {
   let circleName: string;
 
   test.beforeEach(async ({ authedPage: page }) => {
+    // Isolate leaderboard state from previous failed/partial runs.
+    await cleanup(page, { circles: true, plant_logs: true });
+
     circleName = uniqueName("Detail Circle");
     // Create a circle to test with
     await page.goto("/circles/create");
@@ -48,7 +51,9 @@ test.describe("Circle Detail page", () => {
     authedPage: page,
   }) => {
     // A freshly created circle should have no scores
-    await expect(page.getByText("No scores yet")).toBeVisible();
+    await expect(
+      page.locator("h2").filter({ hasText: "No scores yet" })
+    ).toBeVisible();
   });
 
   test("leaderboard updates after logging a plant", async ({

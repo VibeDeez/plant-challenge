@@ -27,7 +27,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npm run dev",
+    command: "HOST=127.0.0.1 PORT=3000 E2E_TEST=true npm run dev",
     url: "http://localhost:3000/auth",
     reuseExistingServer: true,
     timeout: 60_000,

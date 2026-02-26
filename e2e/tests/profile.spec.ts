@@ -115,24 +115,23 @@ test.describe("Profile page", () => {
       .click();
     await expect(page.getByText("Kid To Delete")).toBeVisible();
 
-    // Set up dialog handler to auto-accept the confirm
-    page.on("dialog", (dialog: { accept: () => Promise<void> }) =>
-      dialog.accept()
-    );
-
-    // Click the trash button on the kid card
-    const kidCard = page.locator("div").filter({ hasText: "Kid To Delete" });
-    const trashBtn = kidCard.locator("button").filter({
-      has: page.locator('svg'),
-    }).last();
+    // Click the trash button in the specific kid row and accept confirmation.
+    const kidRow = page.locator("p", { hasText: "Kid To Delete" })
+      .locator("xpath=ancestor::div[contains(@class,'flex items-center gap-3')]");
+    const trashBtn = kidRow.getByRole("button").nth(1);
+    const dialogPromise = page.waitForEvent("dialog");
     await trashBtn.click();
+    const dialog = await dialogPromise;
+    await dialog.accept();
 
     // Kid should disappear
-    await expect(page.getByText("Kid To Delete")).not.toBeVisible();
+    await expect(page.getByText("Kid To Delete", { exact: true })).toHaveCount(
+      0
+    );
   });
 
   test("Sign Out redirects to /auth", async ({ authedPage: page }) => {
-    await page.getByText("Sign Out").click();
-    await expect(page).toHaveURL(/\/auth/);
+    await page.getByRole("button", { name: "Sign Out" }).click();
+    await expect(page).toHaveURL(/\/auth(?:$|\?)/);
   });
 });

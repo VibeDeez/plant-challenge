@@ -32,6 +32,33 @@ test.describe("Home page", () => {
     await expect(page.getByText("Log Plants")).toBeVisible();
   });
 
+  test("shows Sage teaser and opens dedicated Sage page", async ({
+    authedPage: page,
+  }) => {
+    const sageTeaser = page.getByTestId("sage-teaser");
+    await expect(sageTeaser).toBeVisible();
+
+    await page.getByRole("link", { name: /Visit Sage/i }).click();
+    await expect(page).toHaveURL(/\/sage/);
+    await expect(page.getByTestId("sage-chat-section")).toBeVisible();
+  });
+
+  test("Sage returns deterministic coffee guidance for a meaningful query", async ({
+    authedPage: page,
+  }) => {
+    await page.goto("/sage");
+    await page.getByRole("button", { name: /Ask Sage Quick help/i }).click();
+
+    const question = page.locator("#sage-question");
+    await question.fill("Does espresso count?");
+    await page.getByRole("button", { name: "Ask Sage", exact: true }).click();
+
+    const sageResponse = page.getByTestId("sage-chat-section");
+    await expect(sageResponse.getByText(/Answer:\s*Coffee counts as 0\.25 points\./)).toBeVisible();
+    await expect(sageResponse.getByText("Verdict: Counts")).toBeVisible();
+    await expect(sageResponse.getByText("Points: 0.25")).toBeVisible();
+  });
+
   test("plant appears after logging", async ({ authedPage: page }) => {
     await page.goto("/add");
     await page.waitForSelector('input[placeholder="Search plants..."]');

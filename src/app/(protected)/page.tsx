@@ -16,7 +16,7 @@ import PlantCard from "@/components/PlantCard";
 import GutHealthPopover from "@/components/GutHealthPopover";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Leaf, TrendingUp, X } from "lucide-react";
+import { Plus, Leaf, TrendingUp, X, Sparkles } from "lucide-react";
 
 // Get 2-3 illustrations for the background collage
 function getCollageIllustrations(): string[] {
@@ -129,7 +129,6 @@ export default function HomePage() {
   }, {});
 
   const categoriesUsed = Object.keys(categoryBreakdown).length;
-
   const collageIllustrations = useMemo(() => getCollageIllustrations(), []);
   const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
 
@@ -200,6 +199,26 @@ export default function HomePage() {
           <svg viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none" className="w-full h-8 block">
             <path d="M0 48h1440V20C1220 0 960 8 720 16S220 40 0 20v28z" fill="#f5f0e8" />
           </svg>
+        </div>
+      </section>
+
+      <section className="bg-brand-cream px-5 py-5 grain-light" data-testid="sage-teaser">
+        <div className="max-w-lg mx-auto">
+          <Link
+            href="/sage"
+            className="flex min-h-11 items-center gap-3 rounded-2xl border border-brand-dark/10 bg-white/70 px-4 py-3 transition-colors hover:bg-white"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-green/15 text-brand-dark">
+              <Sparkles size={18} strokeWidth={2} />
+            </span>
+            <span className="flex-1">
+              <span className="block text-sm font-semibold text-brand-dark">Visit Sage</span>
+              <span className="block text-xs text-brand-muted">
+                Ask questions, quick log from chat, and Menu Max tools.
+              </span>
+            </span>
+            <span className="text-xs font-semibold text-brand-green">Open</span>
+          </Link>
         </div>
       </section>
 

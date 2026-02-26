@@ -2,13 +2,14 @@ import { test, expect } from "../fixtures/authenticated-page";
 import { test as base, expect as baseExpect } from "@playwright/test";
 
 test.describe("Navigation", () => {
-  test("bottom nav shows four tabs", async ({ authedPage: page }) => {
+  test("bottom nav shows Sage entry and all tabs", async ({ authedPage: page }) => {
     const nav = page.locator("nav");
     await expect(nav).toBeVisible();
     const links = nav.locator("a");
-    await expect(links).toHaveCount(4);
+    await expect(links).toHaveCount(5);
     await expect(nav.getByText("Home")).toBeVisible();
     await expect(nav.getByText("Circles")).toBeVisible();
+    await expect(nav.getByText("Sage")).toBeVisible();
     await expect(nav.getByText("Learn")).toBeVisible();
     await expect(nav.getByText("Profile")).toBeVisible();
   });
@@ -32,6 +33,15 @@ test.describe("Navigation", () => {
     await expect(
       page.locator("h1").filter({ hasText: "The Plantmaxxing Challenge" })
     ).toBeVisible();
+  });
+
+  test("navigate to Sage via bottom nav", async ({ authedPage: page }) => {
+    await page.locator('nav a[href="/sage"]').click();
+    await expect(page).toHaveURL(/\/sage/);
+    await expect(
+      page.locator("h1").filter({ hasText: "Sage" })
+    ).toBeVisible();
+    await expect(page.getByTestId("sage-chat-section")).toBeVisible();
   });
 
   test("navigate to Profile via bottom nav", async ({ authedPage: page }) => {

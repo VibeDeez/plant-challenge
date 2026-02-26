@@ -3,13 +3,15 @@
 This setup gives you:
 - Detached Codex runs in tmux
 - Task registry in `.clawdbot/active-tasks.json`
-- Notifications on start/done/fail/stuck
-- A checker script for periodic monitoring
+- Notifications on start/done/fail/stuck/progress
+- Per-task local watcher (no OpenClaw cron dependency)
 
 ## Files
 - `scripts/codex-run-watch.sh` — launch a tracked Codex task in tmux
 - `scripts/codex-task-finish.sh` — finalize state + notify
-- `scripts/check-codex-tasks.sh` — detect stuck/failed tasks
+- `scripts/check-codex-tasks.sh` — detect done/stuck/failed/progress and notify
+- `scripts/watch-task-until-finish.sh` — lightweight per-task watcher loop
+- `scripts/prune-codex-tasks.sh` — prune old completed task entries
 - `.clawdbot/active-tasks.json` — task registry
 - `.clawdbot/tasks/<task-id>/` — per-task logs and metadata
 
@@ -44,17 +46,22 @@ bash scripts/check-codex-tasks.sh
 cat .clawdbot/active-tasks.json
 ```
 
-## Cron monitor (real-time profile)
+## Monitoring model (real-time)
 
-Current recommended cadence:
-- monitor job every **2 minutes**
+Default model now uses a **local per-task watcher** started by `codex-run-watch.sh`:
+- checker interval: every 30s (per task)
 - progress notifications every **5 minutes** (`PROGRESS_NOTIFY_MINUTES=5`)
 - stuck threshold **15 minutes** (`STUCK_MINUTES=15`)
+- startup grace period **30s** (`STARTUP_GRACE_SECONDS=30`)
 
-You can run checker manually:
+Manual commands:
 ```bash
-cd ~/desktop/placeholder && bash scripts/check-codex-tasks.sh
+cd ~/desktop/placeholder
+bash scripts/check-codex-tasks.sh
+bash scripts/prune-codex-tasks.sh 3
 ```
+
+OpenClaw cron monitoring is optional and can stay disabled to avoid model-loop noise.
 
 ## Telegram Topics routing (optional, recommended)
 

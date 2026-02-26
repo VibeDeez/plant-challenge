@@ -102,14 +102,16 @@ if [[ -z "$CODEX_BIN" ]]; then
   exit 1
 fi
 
-RUN_FILE="$TASK_DIR/run.sh"
+RUN_FILE="$ROOT_DIR/$TASK_DIR/run.sh"
 cat > "$RUN_FILE" <<EOF
 #!/bin/bash
 set -euo pipefail
 cd "$ROOT_DIR"
 set -o pipefail
+set +e
 "$CODEX_BIN" exec --full-auto --json --model "$MODEL" - < "$PROMPT_DEST" 2>&1 | tee -a "$RAW_LOG" | tee "$JSONL_LOG" >/dev/null
 ec=\$?
+set -e
 echo "\$ec" > "$STATUS_FILE"
 bash "$ROOT_DIR/scripts/codex-task-finish.sh" "$TASK_ID" "\$ec"
 EOF
@@ -121,6 +123,9 @@ if tmux has-session -t "$SESSION" 2>/dev/null; then
 fi
 
 tmux new-session -d -s "$SESSION" "bash '$RUN_FILE'"
+
+# Per-task local watcher (independent of OpenClaw cron/subagent timing)
+nohup bash "$ROOT_DIR/scripts/watch-task-until-finish.sh" "$TASK_ID" 30 240 >/tmp/codex-task-watch.${TASK_ID}.log 2>&1 &
 
 notify codex_start "🚀 Codex task started: $TASK_ID (session: $SESSION, model: $MODEL)"
 echo "Started task $TASK_ID in tmux session $SESSION"

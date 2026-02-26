@@ -13,6 +13,7 @@
     "test:coverage-check": "bash scripts/check-test-coverage.sh",
     "codex:check": "bash scripts/check-codex-tasks.sh",
     "codex:task": "bash scripts/task.sh",
+    "codex:prune": "bash scripts/prune-codex-tasks.sh 3",
     "prepare": "[ -d .git ] && cp scripts/pre-push.sh .git/hooks/pre-push && chmod +x .git/hooks/pre-push || true"
   },
   "dependencies": {

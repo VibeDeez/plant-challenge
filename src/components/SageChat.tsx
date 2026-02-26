@@ -110,7 +110,7 @@ export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) 
   }
 
   return (
-    <section className="bg-brand-cream px-5 py-5 grain-light" data-testid="sage-chat-section">
+    <section className="bg-brand-cream px-page py-section grain-light" data-testid="sage-chat-section">
       <div className="max-w-lg mx-auto">
         <button
           type="button"

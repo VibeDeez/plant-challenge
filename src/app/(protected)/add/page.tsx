@@ -151,7 +151,7 @@ export default function AddPlantPage() {
   return (
     <>
       {/* === HEADER === */}
-      <div className="bg-brand-dark px-5 pt-4 pb-2 grain">
+      <div className="bg-brand-dark px-page pt-4 pb-2 grain">
         <div className="max-w-lg mx-auto">
           <div className="flex items-center gap-3 mb-4">
             <Link
@@ -170,7 +170,7 @@ export default function AddPlantPage() {
           {/* Snap to Log banner */}
           <button
             onClick={() => setShowCamera(true)}
-            className="w-full mb-3 flex items-center gap-3 rounded-2xl bg-brand-green px-4 py-3 text-left hover:bg-brand-green-hover active:scale-[0.98] transition-all"
+            className="mb-3 flex min-h-11 w-full items-center gap-3 rounded-2xl bg-brand-green px-4 py-3 text-left transition-all hover:bg-brand-green-hover active:scale-[0.98]"
           >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
               <Camera size={22} className="text-white" strokeWidth={2} />
@@ -194,7 +194,7 @@ export default function AddPlantPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search plants..."
-              className="w-full rounded-xl bg-brand-cream/10 py-2.5 pl-10 pr-3 text-sm text-brand-cream placeholder:text-brand-cream/30 focus:bg-brand-cream/15 focus:outline-none transition-colors"
+              className="min-h-11 w-full rounded-xl bg-brand-cream/10 py-2.5 pl-10 pr-3 text-sm text-brand-cream placeholder:text-brand-cream/30 transition-colors focus:bg-brand-cream/15 focus:outline-none"
             />
             {search && (
               <button
@@ -217,10 +217,10 @@ export default function AddPlantPage() {
 
       {/* === GALLERY / LIST === */}
       <div className="bg-brand-bg min-h-[60vh] grain-light">
-        <div className="max-w-lg mx-auto px-5 py-4">
+        <div className="mx-auto max-w-lg px-page py-section-tight">
           {showGallery ? (
             // Gallery view: grouped by category with big section headers
-            <div className="space-y-8">
+            <div className="stack-section">
               {Object.entries(grouped).map(([cat, items], i) => {
                 const Icon = CATEGORY_ICONS[cat] ?? Leaf;
                 const color = CATEGORY_COLORS[cat] ?? "#6b7260";

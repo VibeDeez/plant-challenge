@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import PlantAvatar from "./PlantAvatar";
+import { getLeaderboardGoalMeta } from "@/lib/leaderboardGoal";
 
 const PODIUM_ILLUSTRATIONS = [
   "/illustrations/library/strawberry.png",
@@ -30,6 +31,7 @@ export default function LeaderboardRow({
 }) {
   const pointsDisplay = points % 1 === 0 ? points : points.toFixed(2);
   const progress = Math.min(points / 30, 1);
+  const goal = getLeaderboardGoalMeta(points);
   const isPodium = rank <= 3;
   const isHero = rank === 1;
   const rankColor = RANK_COLORS[rank];
@@ -82,9 +84,18 @@ export default function LeaderboardRow({
                   >
                     {displayName}
                   </p>
-                  {isFamily && (
-                    <p className="text-xs font-medium text-brand-green">Your family</p>
-                  )}
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    {isFamily && (
+                      <p className="text-xs font-medium text-brand-green">Your family</p>
+                    )}
+                    {goal.showBadge && (
+                      <span
+                        className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+                      >
+                        {goal.label}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -172,9 +183,18 @@ export default function LeaderboardRow({
               <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
                 {displayName}
               </p>
-              {isFamily && (
-                <p className="text-[11px] font-medium text-brand-green">Your family</p>
-              )}
+              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                {isFamily && (
+                  <p className="text-[11px] font-medium text-brand-green">Your family</p>
+                )}
+                {goal.showBadge && (
+                  <span
+                    className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+                  >
+                    {goal.label}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Points + mini progress */}
@@ -222,9 +242,18 @@ export default function LeaderboardRow({
         <p className="text-sm font-medium text-brand-dark whitespace-normal break-words leading-snug">
           {displayName}
         </p>
-        {isFamily && (
-          <p className="text-[11px] font-medium text-brand-green">Your family</p>
-        )}
+        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+          {isFamily && (
+            <p className="text-[11px] font-medium text-brand-green">Your family</p>
+          )}
+          {goal.showBadge && (
+            <span
+              className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+            >
+              {goal.label}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Points + mini progress */}

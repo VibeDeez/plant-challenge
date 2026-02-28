@@ -12,6 +12,7 @@ import {
   timeAgo,
   getShareUrl,
 } from "@/lib/circles";
+import { getLeaderboardGoalMeta } from "@/lib/leaderboardGoal";
 import type {
   Circle,
   CircleWeeklyScore,
@@ -63,13 +64,16 @@ function HeroCard({
   entry,
   isMe,
   subtitle,
+  showGoalBadge,
 }: {
   entry: { display_name: string; avatar_emoji: string; total_points: number; is_ghost: boolean };
   isMe: boolean;
   subtitle?: string;
+  showGoalBadge: boolean;
 }) {
   const rc = RANK_COLORS[1];
   const pts = entry.total_points % 1 === 0 ? entry.total_points : entry.total_points.toFixed(2);
+  const goal = getLeaderboardGoalMeta(entry.total_points);
   return (
     <div className={entry.is_ghost ? "opacity-40" : ""}>
       <div
@@ -97,10 +101,19 @@ function HeroCard({
                   <p className="text-lg font-bold text-brand-dark whitespace-normal break-words leading-snug font-display">
                     {entry.display_name}
                   </p>
-                  {isMe && <p className="text-xs font-medium text-brand-green">You</p>}
-                  {entry.is_ghost && (
-                    <p className="text-[11px] text-brand-muted">inactive</p>
-                  )}
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    {isMe && <p className="text-xs font-medium text-brand-green">You</p>}
+                    {entry.is_ghost && (
+                      <p className="text-[11px] text-brand-muted">inactive</p>
+                    )}
+                    {showGoalBadge && goal.showBadge && (
+                      <span
+                        className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+                      >
+                        {goal.label}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -123,14 +136,17 @@ function PodiumCard({
   entry,
   isMe,
   subtitle,
+  showGoalBadge,
 }: {
   rank: 2 | 3;
   entry: { display_name: string; avatar_emoji: string; total_points: number; is_ghost: boolean };
   isMe: boolean;
   subtitle?: string;
+  showGoalBadge: boolean;
 }) {
   const rc = RANK_COLORS[rank];
   const pts = entry.total_points % 1 === 0 ? entry.total_points : entry.total_points.toFixed(2);
+  const goal = getLeaderboardGoalMeta(entry.total_points);
   return (
     <div className={entry.is_ghost ? "opacity-40" : ""}>
       <div
@@ -156,10 +172,19 @@ function PodiumCard({
               <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
                 {entry.display_name}
               </p>
-              {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
-              {entry.is_ghost && (
-                <p className="text-[11px] text-brand-muted">inactive</p>
-              )}
+              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
+                {entry.is_ghost && (
+                  <p className="text-[11px] text-brand-muted">inactive</p>
+                )}
+                {showGoalBadge && goal.showBadge && (
+                  <span
+                    className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+                  >
+                    {goal.label}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="text-right shrink-0">
               <p className="text-xl font-bold text-brand-dark font-display">{pts}</p>
@@ -179,13 +204,16 @@ function StandardRow({
   entry,
   isMe,
   subtitle,
+  showGoalBadge,
 }: {
   rank: number;
   entry: { display_name: string; avatar_emoji: string; total_points: number; is_ghost: boolean };
   isMe: boolean;
   subtitle?: string;
+  showGoalBadge: boolean;
 }) {
   const pts = entry.total_points % 1 === 0 ? entry.total_points : entry.total_points.toFixed(2);
+  const goal = getLeaderboardGoalMeta(entry.total_points);
   return (
     <div className={entry.is_ghost ? "opacity-40" : ""}>
       <div
@@ -203,10 +231,19 @@ function StandardRow({
           <p className="text-sm font-medium text-brand-dark whitespace-normal break-words leading-snug">
             {entry.display_name}
           </p>
-          {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
-          {entry.is_ghost && (
-            <p className="text-[11px] text-brand-muted">inactive</p>
-          )}
+          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+            {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
+            {entry.is_ghost && (
+              <p className="text-[11px] text-brand-muted">inactive</p>
+            )}
+            {showGoalBadge && goal.showBadge && (
+              <span
+                className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+              >
+                {goal.label}
+              </span>
+            )}
+          </div>
         </div>
         <div className="text-right">
           <p className="text-sm font-bold text-brand-dark">{pts}</p>
@@ -468,6 +505,8 @@ export default function CircleDetailPage() {
 
   // ---------- Sorted leaderboard data ----------
   const currentScores = lbView === "weekly" ? weeklyScores : alltimeScores;
+  const shouldShowGoalBadge = (entry: { is_ghost: boolean }) =>
+    lbView === "weekly" && !entry.is_ghost;
 
   // ---------- Loading / Error states ----------
   if (loading) {
@@ -646,6 +685,7 @@ export default function CircleDetailPage() {
                       <HeroCard
                         entry={currentScores[0]}
                         isMe={currentScores[0].member_id === activeMember?.id}
+                        showGoalBadge={shouldShowGoalBadge(currentScores[0])}
                         subtitle={
                           lbView === "alltime" && "avg_weekly" in currentScores[0]
                             ? `${(currentScores[0] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
@@ -661,6 +701,7 @@ export default function CircleDetailPage() {
                         rank={2}
                         entry={currentScores[1]}
                         isMe={currentScores[1].member_id === activeMember?.id}
+                        showGoalBadge={shouldShowGoalBadge(currentScores[1])}
                         subtitle={
                           lbView === "alltime" && "avg_weekly" in currentScores[1]
                             ? `${(currentScores[1] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
@@ -676,6 +717,7 @@ export default function CircleDetailPage() {
                         rank={3}
                         entry={currentScores[2]}
                         isMe={currentScores[2].member_id === activeMember?.id}
+                        showGoalBadge={shouldShowGoalBadge(currentScores[2])}
                         subtitle={
                           lbView === "alltime" && "avg_weekly" in currentScores[2]
                             ? `${(currentScores[2] as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`
@@ -696,6 +738,7 @@ export default function CircleDetailPage() {
                         rank={i + 4}
                         entry={entry}
                         isMe={entry.member_id === activeMember?.id}
+                        showGoalBadge={shouldShowGoalBadge(entry)}
                         subtitle={
                           lbView === "alltime" && "avg_weekly" in entry
                             ? `${(entry as CircleAlltimeScore).avg_weekly.toFixed(1)} avg/wk`

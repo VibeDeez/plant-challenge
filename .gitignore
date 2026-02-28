@@ -35,3 +35,11 @@ next-env.d.ts
 
 # worktrees
 .worktrees/
+
+# local task/workflow artifacts
+.clawdbot/
+.lobster/
+.openclaw/
+.playwright-mcp/
+/test-results/
+/public/Gemini Illustrations/

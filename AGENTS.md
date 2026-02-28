@@ -22,6 +22,7 @@ Primary viewport is ~375px. Design and test for narrow mobile first.
 - No git worktrees for this repo.
 - Always use a named branch off `main`.
 - Do not work directly on `main`.
+- Follow `docs/coding-workflow-playbook.md` for task mode selection (direct vs subagent), update cadence, retry policy, and done-definition.
 
 ## Sage backend rules (current v1)
 - Endpoint: `POST /api/sage`

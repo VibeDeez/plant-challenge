@@ -132,10 +132,12 @@ for dp, _, fs in os.walk(API_ROOT):
             'env': env,
         })
 
+contracts = sorted(contracts, key=lambda x: (x['route'], x['file']))
+
 (DOCS / 'api-contracts-deep.json').write_text(json.dumps(contracts, indent=2) + '\n', encoding='utf-8')
 md = ['# API Contracts - Deep Pass\n', f'Last updated: {datetime.date.today().isoformat()}\n',
       'Generated from route implementations. This is code-derived and should be treated as source-aligned reference.\n']
-for c in sorted(contracts, key=lambda x: x['route']):
+for c in contracts:
     md.append(f"## `{c['route']}`")
     md.append(f"- File: `{c['file']}`")
     md.append(f"- Methods: {', '.join(c['methods']) if c['methods'] else 'n/a'}")

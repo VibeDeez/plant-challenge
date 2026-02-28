@@ -9,10 +9,12 @@
     "requestFieldsInCode": [],
     "statusCodes": [
       "207",
+      "400",
       "401",
       "404"
     ],
     "errorMessages": [
+      "Invalid JSON",
       "Not authenticated",
       "Not found"
     ],

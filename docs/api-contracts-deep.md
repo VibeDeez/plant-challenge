@@ -9,8 +9,8 @@ Generated from route implementations. This is code-derived and should be treated
 - Methods: POST
 - Auth required: yes
 - Request fields observed: none or query-only
-- Status codes observed: 207, 401, 404
-- Error messages observed: Not authenticated; Not found
+- Status codes observed: 207, 400, 401, 404
+- Error messages observed: Invalid JSON; Not authenticated; Not found
 - Env vars: E2E_TEST, NODE_ENV
 
 ## `/api/e2e/login`

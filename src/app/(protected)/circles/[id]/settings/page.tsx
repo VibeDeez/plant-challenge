@@ -274,7 +274,7 @@ export default function CircleSettingsPage() {
               disabled={
                 savingName || !editName.trim() || editName.trim() === circle.name
               }
-              className="bg-brand-green text-white font-semibold rounded-xl px-4 py-2.5 text-sm hover:bg-brand-green-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+              className="flex h-11 items-center justify-center bg-brand-green text-white font-semibold rounded-xl px-4 text-sm hover:bg-brand-green-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               {savingName ? "Saving..." : "Save"}
             </button>
@@ -308,7 +308,7 @@ export default function CircleSettingsPage() {
           <div className="flex gap-2">
             <button
               onClick={handleCopyLink}
-              className="flex-1 flex items-center justify-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 py-2.5 text-sm font-semibold text-brand-dark hover:bg-white/80 transition-colors"
+              className="flex-1 flex h-11 items-center justify-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 text-sm font-semibold text-brand-dark hover:bg-white/80 transition-colors"
             >
               {copied ? (
                 <>
@@ -325,7 +325,7 @@ export default function CircleSettingsPage() {
             <button
               onClick={handleRegenerate}
               disabled={regenerating}
-              className="flex items-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 py-2.5 text-sm font-medium text-brand-muted hover:bg-white/80 hover:text-brand-dark transition-colors disabled:opacity-50"
+              className="flex h-11 items-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 text-sm font-medium text-brand-muted hover:bg-white/80 hover:text-brand-dark transition-colors disabled:opacity-50"
             >
               <RefreshCw size={14} className={regenerating ? "animate-spin" : ""} />
               {regenerating ? "..." : "New Code"}
@@ -347,7 +347,7 @@ export default function CircleSettingsPage() {
                   className="flex items-center gap-3 rounded-xl bg-white/30 backdrop-blur-sm border border-brand-dark/10 px-4 py-3"
                 >
                   <PlantAvatar plantKey={m.member.avatar_emoji} size="lg" />
-                  <span className="flex-1 text-sm font-medium text-brand-dark">
+                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-brand-dark">
                     {m.member.display_name}
                   </span>
                   {isAdmin ? (
@@ -362,7 +362,7 @@ export default function CircleSettingsPage() {
                           m.member.display_name
                         )
                       }
-                      className="p-2 rounded-xl hover:bg-red-50 transition-colors"
+                      className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-red-50 transition-colors"
                       title={`Remove ${m.member.display_name}`}
                     >
                       <X
@@ -409,7 +409,7 @@ export default function CircleSettingsPage() {
               <button
                 onClick={handleTransfer}
                 disabled={!transferTargetId || transferring}
-                className="bg-brand-green text-white font-semibold rounded-xl px-4 py-2.5 text-sm hover:bg-brand-green-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
+                className="flex h-11 items-center justify-center bg-brand-green text-white font-semibold rounded-xl px-4 text-sm hover:bg-brand-green-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               >
                 {transferring ? "Transferring..." : "Transfer"}
               </button>

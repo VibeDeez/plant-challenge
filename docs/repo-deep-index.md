@@ -26,7 +26,7 @@ Last updated: 2026-02-28
 - `src/app/opengraph-image.tsx` - 67 lines | exports:alt, size, contentType
 
 ## API files (6)
-- `src/app/api/e2e/cleanup/route.ts` - 82 lines | methods:POST | exports:POST | db:circle, circle_member, member, plant_log | env:E2E_TEST, NODE_ENV
+- `src/app/api/e2e/cleanup/route.ts` - 119 lines | methods:POST | exports:POST | db:circle, circle_member, member, plant_log | env:E2E_TEST, NODE_ENV
 - `src/app/api/e2e/login/route.ts` - 33 lines | methods:GET | exports:GET | env:E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NODE_ENV
 - `src/app/api/recognize/route.ts` - 270 lines | methods:POST | exports:POST | db:plant | env:OPENROUTER_API_KEY
 - `src/app/api/sage/route.test.mjs` - 75 lines

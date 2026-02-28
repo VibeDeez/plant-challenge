@@ -2,6 +2,32 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { isE2ERouteBlocked } from "@/lib/api/e2eGuard";
 
+type CleanupBody = {
+  plant_logs: boolean;
+  circles: boolean;
+  kids: boolean;
+  restore_owner_name: boolean;
+};
+
+function parseCleanupBody(input: unknown): CleanupBody {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return {
+      plant_logs: false,
+      circles: false,
+      kids: false,
+      restore_owner_name: false,
+    };
+  }
+
+  const body = input as Record<string, unknown>;
+  return {
+    plant_logs: body.plant_logs === true,
+    circles: body.circles === true,
+    kids: body.kids === true,
+    restore_owner_name: body.restore_owner_name === true,
+  };
+}
+
 export async function POST(request: NextRequest) {
   if (
     isE2ERouteBlocked({
@@ -21,7 +47,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const body = await request.json();
+  let rawBody: unknown = {};
+  const contentLength = request.headers.get("content-length");
+  const hasBody = contentLength !== "0";
+  if (hasBody) {
+    try {
+      rawBody = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
+  }
+
+  const body = parseCleanupBody(rawBody);
   const errors: string[] = [];
 
   const { data: members } = await supabase

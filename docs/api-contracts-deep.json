@@ -1,0 +1,81 @@
+[
+  {
+    "route": "/api/recognize",
+    "file": "src/app/api/recognize/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [
+      "image"
+    ],
+    "statusCodes": [],
+    "errorMessages": [],
+    "env": [
+      "OPENROUTER_API_KEY"
+    ]
+  },
+  {
+    "route": "/api/e2e/cleanup",
+    "file": "src/app/api/e2e/cleanup/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "207",
+      "401",
+      "404"
+    ],
+    "errorMessages": [
+      "Not authenticated",
+      "Not found"
+    ],
+    "env": [
+      "E2E_TEST",
+      "NODE_ENV"
+    ]
+  },
+  {
+    "route": "/api/e2e/login",
+    "file": "src/app/api/e2e/login/route.ts",
+    "methods": [
+      "GET"
+    ],
+    "authRequired": false,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "401",
+      "404",
+      "500"
+    ],
+    "errorMessages": [
+      "Not found",
+      "Test credentials not configured"
+    ],
+    "env": [
+      "E2E_TEST",
+      "E2E_TEST_EMAIL",
+      "E2E_TEST_PASSWORD",
+      "NODE_ENV"
+    ]
+  },
+  {
+    "route": "/api/sage",
+    "file": "src/app/api/sage/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [],
+    "errorMessages": [],
+    "env": [
+      "OPENROUTER_API_KEY",
+      "SAGE_DETERMINISTIC_ONLY",
+      "SAGE_OPENROUTER_MODEL",
+      "SAGE_OPENROUTER_TIMEOUT_MS"
+    ]
+  }
+]

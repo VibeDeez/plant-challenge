@@ -3,7 +3,10 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart } from "@/lib/weekUtils";
-import { validateJoinCirclePayload } from "@/lib/circles";
+import {
+  isValidInviteCode,
+  validateJoinCirclePayload,
+} from "@/lib/circles";
 import { useApp } from "@/components/ProtectedLayout";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -97,11 +100,18 @@ export default function CirclesPage() {
   async function handleJoin(e: React.FormEvent) {
     e.preventDefault();
     if (!activeMember || !joinCode.trim()) return;
+
+    const normalizedCode = joinCode.trim().toUpperCase();
+    if (!isValidInviteCode(normalizedCode)) {
+      setJoinError("Invite codes are 6 characters using letters and numbers.");
+      return;
+    }
+
     setJoining(true);
     setJoinError("");
 
     const { data, error } = await supabase.rpc("join_circle", {
-      p_invite_code: joinCode.trim().toUpperCase(),
+      p_invite_code: normalizedCode,
       p_member_id: activeMember.id,
     });
 

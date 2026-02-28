@@ -1,0 +1,12 @@
+# Baseline allowlist for docs/db-access-matrix.csv table_or_rpc values.
+# Add new values here when schema references intentionally expand.
+circle
+circle_activity
+circle_activity_reaction
+circle_alltime_score
+circle_member
+circle_weekly_score
+member
+plant
+plant_log
+rpc:join_circle

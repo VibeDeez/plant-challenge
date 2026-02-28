@@ -13,7 +13,7 @@ import {
 import { useApp } from "@/components/ProtectedLayout";
 import CategoryTabs from "@/components/CategoryTabs";
 import PlantListItem from "@/components/PlantListItem";
-import { ArrowLeft, Plus, Search, X, Leaf, Camera } from "lucide-react";
+import { ArrowLeft, Plus, Search, X, Leaf, Camera, Trophy } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import PhotoRecognitionModal from "@/components/PhotoRecognitionModal";
@@ -23,6 +23,14 @@ type Plant = {
   name: string;
   category: string;
   points: number;
+};
+
+type LogFeedback = {
+  pointsAdded: number;
+  duplicateCount: number;
+  newUniqueCount: number;
+  uniqueProgress: number;
+  hasCircleImpact: boolean;
 };
 
 const supabase = createClient();
@@ -37,6 +45,9 @@ export default function AddPlantPage() {
   const [customCategory, setCustomCategory] = useState("Fruits");
   const [showCustom, setShowCustom] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [weekTotalPoints, setWeekTotalPoints] = useState(0);
+  const [feedback, setFeedback] = useState<LogFeedback | null>(null);
+  const [circleCount, setCircleCount] = useState(0);
   const weekStart = useMemo(() => getWeekStart(), []);
 
   // Escape key closes custom plant modal
@@ -49,16 +60,23 @@ export default function AddPlantPage() {
 
   const fetchData = useCallback(async () => {
     if (!activeMember) return;
-    const [plantsRes, logsRes] = await Promise.all([
+    const [plantsRes, logsRes, circlesRes] = await Promise.all([
       supabase.from("plant").select("*").order("name"),
       supabase
         .from("plant_log")
-        .select("plant_name")
+        .select("plant_name, points")
         .eq("member_id", activeMember.id)
         .eq("week_start", weekStart),
+      supabase
+        .from("circle_member")
+        .select("circle_id", { count: "exact", head: true })
+        .eq("member_id", activeMember.id),
     ]);
     setPlants(plantsRes.data ?? []);
-    setLoggedNames(new Set((logsRes.data ?? []).map((l) => l.plant_name)));
+    const logs = logsRes.data ?? [];
+    setLoggedNames(new Set(logs.map((l) => l.plant_name)));
+    setWeekTotalPoints(logs.reduce((sum, l) => sum + Number(l.points ?? 0), 0));
+    setCircleCount(circlesRes.count ?? 0);
   }, [activeMember, weekStart]);
 
   useEffect(() => {
@@ -76,6 +94,14 @@ export default function AddPlantPage() {
     });
     if (!error) {
       setLoggedNames((prev) => new Set(prev).add(plant.name));
+      setWeekTotalPoints((prev) => prev + plant.points);
+      setFeedback({
+        pointsAdded: plant.points,
+        duplicateCount: 0,
+        newUniqueCount: 1,
+        uniqueProgress: loggedNames.size + 1,
+        hasCircleImpact: circleCount > 0,
+      });
     }
   }
 
@@ -94,13 +120,21 @@ export default function AddPlantPage() {
     });
     if (!error) {
       setLoggedNames((prev) => new Set(prev).add(customName.trim()));
+      setWeekTotalPoints((prev) => prev + points);
+      setFeedback({
+        pointsAdded: points,
+        duplicateCount: 0,
+        newUniqueCount: 1,
+        uniqueProgress: loggedNames.size + 1,
+        hasCircleImpact: circleCount > 0,
+      });
       setCustomName("");
       setShowCustom(false);
     }
   }
 
   async function logRecognizedPlants(
-    recognized: { name: string; category: string; points: number }[]
+    recognized: { name: string; category: string; points: number; confidence?: number }[]
   ) {
     if (!activeMember) return;
     const inserts = recognized
@@ -112,13 +146,32 @@ export default function AddPlantPage() {
         points: p.points,
         week_start: weekStart,
       }));
-    if (inserts.length === 0) return;
+    const duplicateCount = recognized.length - inserts.length;
+    if (inserts.length === 0) {
+      setFeedback({
+        pointsAdded: 0,
+        duplicateCount,
+        newUniqueCount: 0,
+        uniqueProgress: loggedNames.size,
+        hasCircleImpact: circleCount > 0,
+      });
+      return;
+    }
     const { error } = await supabase.from("plant_log").insert(inserts);
     if (!error) {
+      const addedPoints = inserts.reduce((sum, row) => sum + Number(row.points ?? 0), 0);
+      setWeekTotalPoints((prev) => prev + addedPoints);
       setLoggedNames((prev) => {
         const next = new Set(prev);
         inserts.forEach((i) => next.add(i.plant_name));
         return next;
+      });
+      setFeedback({
+        pointsAdded: addedPoints,
+        duplicateCount,
+        newUniqueCount: inserts.length,
+        uniqueProgress: loggedNames.size + inserts.length,
+        hasCircleImpact: circleCount > 0,
       });
     }
   }
@@ -182,6 +235,28 @@ export default function AddPlantPage() {
               </p>
             </div>
           </button>
+
+          {feedback && (
+            <div className="mb-3 rounded-2xl border border-brand-green/25 bg-brand-green/10 p-3 text-brand-dark">
+              <p className="text-sm font-semibold flex items-center gap-2">
+                <Trophy size={15} className="text-brand-green" />
+                {feedback.pointsAdded > 0 ? `+${feedback.pointsAdded} pts added` : "No new points added"}
+              </p>
+              <p className="mt-1 text-xs text-brand-muted">
+                {feedback.duplicateCount > 0
+                  ? `${feedback.duplicateCount} duplicate ${feedback.duplicateCount === 1 ? "entry" : "entries"} this week did not add a new unique point.`
+                  : `${feedback.newUniqueCount} new unique ${feedback.newUniqueCount === 1 ? "species" : "species"} logged.`}
+              </p>
+              <p className="mt-1 text-xs text-brand-muted">
+                Weekly progress: {feedback.uniqueProgress} unique plants · {weekTotalPoints} total points
+              </p>
+              {feedback.hasCircleImpact && (
+                <p className="mt-1 text-xs text-brand-muted">
+                  Circle impact: this log now counts in your circles leaderboard totals.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Search bar */}
           <div className="relative mb-2">

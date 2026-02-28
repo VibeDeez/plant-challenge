@@ -4,7 +4,11 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/ProtectedLayout";
-import { getShareUrl, generateInviteCode } from "@/lib/circles";
+import {
+  getShareUrl,
+  generateInviteCode,
+  validateMembershipOperation,
+} from "@/lib/circles";
 import type { Circle } from "@/lib/types/circle";
 import Link from "next/link";
 import PlantAvatar from "@/components/PlantAvatar";
@@ -156,6 +160,18 @@ export default function CircleSettingsPage() {
 
   async function handleRemoveMember(memberId: string, displayName: string) {
     if (!confirm(`Remove ${displayName} from this circle?`)) return;
+
+    const membershipCheck = validateMembershipOperation({
+      operation: "remove",
+      circleId,
+      memberId,
+      existingMemberIds: members.map((m) => m.member_id),
+    });
+
+    if (!membershipCheck.ok) {
+      alert(membershipCheck.message || "Invalid membership operation");
+      return;
+    }
 
     const { error } = await supabase
       .from("circle_member")

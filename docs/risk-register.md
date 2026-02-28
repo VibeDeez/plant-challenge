@@ -1,0 +1,15 @@
+# Risk Register - Plant Challenge
+
+Last updated: 2026-02-28
+
+| Risk | Trigger / Symptom | Likelihood | Impact | Owner | Trigger Threshold | Mitigation Status | Last Reviewed | Current Mitigation | Recommended Hardening | Rollback / Recovery |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Auth session drift or cookie mismatch | Users bounced to /auth or random logout | Medium | High | Platform engineer | Auth failure rate > 1.5% daily | Monitoring in progress | 2026-02-28 | Supabase SSR middleware and guarded redirects | Add auth telemetry, session refresh metrics, synthetic auth check | Rollback middleware changes; pin known-good middleware commit |
+| OpenRouter timeout on /api/recognize | Photo recognition fails with timeout | Medium | Medium | AI platform owner | recognize timeout rate > 3% hourly | Active mitigation | 2026-02-28 | 15s timeout + 504 handling | Queue retry w/backoff + client retry UX + circuit breaker | Fail closed to manual logging flow |
+| Malformed model JSON from /api/sage | Sage returns fallback uncertain too often | Medium | Low-Med | AI platform owner | malformed-response fallback > 5% daily | Active mitigation | 2026-02-28 | Schema parse + safe fallback | Track parse-fail rate, tighten prompt contract tests | Switch to deterministic-only mode temporarily |
+| DB schema drift vs code assumptions | Runtime query errors | Medium | High | Data owner | Any CI drift check failure in main | Guarded in CI | 2026-02-28 | Type guards and defensive checks in places | Add migration-based schema docs + CI smoke queries | Revert migration / deploy prior schema snapshot |
+| Circles data integrity (membership/activity) | Leaderboard or membership inconsistencies | Low-Med | High | Product engineer | Any integrity check mismatch in daily audit | Needs automation | 2026-02-28 | Scoped queries and role checks in UI | Add DB constraints + periodic integrity checks | Recompute derived tables and restore from backups |
+| E2E test endpoints exposed in prod | Unauthorized cleanup/login route use | Low | Critical | Security owner | Any prod hit on `/api/e2e/*` | Controlled | 2026-02-28 | Gated behind E2E_TEST env | Add hard deny in prod runtime + alarm on route hit | Hotfix disable routes and rotate test credentials |
+| Env secret/config mismatch on deploy | API endpoints fail in production | Medium | High | Release manager | Missing required env var at startup | Monitoring in progress | 2026-02-28 | Render env var config | Preflight config checker in CI/CD | Rollback deploy, restore last known env snapshot |
+| Rate limiting / provider outage | Sage or recognize unavailable | Medium | Medium | AI platform owner | provider 5xx > 10% for 15m | Active mitigation | 2026-02-28 | Basic error handling | Add provider abstraction + fallback model/provider | Feature flag off AI endpoints and keep core app operational |
+| Mobile UX regressions on 375px | Core actions hard to use | Medium | Medium | UX owner | >2 severe mobile regressions per release | Needs automation | 2026-02-28 | Mobile-first rules in AGENTS.md | Add viewport visual regression suite | Revert offending UI commit and ship patch |

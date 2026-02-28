@@ -1,8 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { isE2ERouteBlocked } from "@/lib/api/e2eGuard";
 
 export async function POST(request: NextRequest) {
-  if (process.env.E2E_TEST !== "true") {
+  if (
+    isE2ERouteBlocked({
+      nodeEnv: process.env.NODE_ENV,
+      e2eTest: process.env.E2E_TEST,
+    })
+  ) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
@@ -18,7 +24,6 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const errors: string[] = [];
 
-  // Get the test user's member IDs (owner + kids)
   const { data: members } = await supabase
     .from("member")
     .select("id, is_owner")
@@ -26,7 +31,6 @@ export async function POST(request: NextRequest) {
 
   const memberIds = (members ?? []).map((m) => m.id);
 
-  // Delete plant logs for all members belonging to this user
   if (body.plant_logs && memberIds.length > 0) {
     const { error } = await supabase
       .from("plant_log")
@@ -35,16 +39,13 @@ export async function POST(request: NextRequest) {
     if (error) errors.push(`plant_logs: ${error.message}`);
   }
 
-  // Delete circles where the test user is admin
   if (body.circles && memberIds.length > 0) {
-    // First remove circle memberships for test user's members
     const { error: cmError } = await supabase
       .from("circle_member")
       .delete()
       .in("member_id", memberIds);
     if (cmError) errors.push(`circle_member: ${cmError.message}`);
 
-    // Then delete circles administered by test user's members
     const { error: cError } = await supabase
       .from("circle")
       .delete()
@@ -52,7 +53,6 @@ export async function POST(request: NextRequest) {
     if (cError) errors.push(`circle: ${cError.message}`);
   }
 
-  // Delete non-owner members (kids)
   if (body.kids) {
     const { error } = await supabase
       .from("member")
@@ -62,7 +62,6 @@ export async function POST(request: NextRequest) {
     if (error) errors.push(`kids: ${error.message}`);
   }
 
-  // Restore the owner's display name to "Me"
   if (body.restore_owner_name) {
     const owner = (members ?? []).find((m) => m.is_owner);
     if (owner) {

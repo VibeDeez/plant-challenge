@@ -1,15 +1,26 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Camera, Loader2, Check } from "lucide-react";
+import { X, Camera, Loader2, Check, AlertCircle, ShieldCheck } from "lucide-react";
 import { CATEGORY_COLORS } from "@/lib/constants";
-import { compressImage } from "@/lib/imageUtils";
+import {
+  compressImage,
+  getApproxDataUrlBytes,
+  MAX_IMAGE_DATA_URL_BYTES,
+  MAX_UPLOAD_FILE_BYTES,
+} from "@/lib/imageUtils";
+import {
+  normalizeRecognitionConfidence,
+  requiresConfidenceReview,
+} from "@/lib/recognitionReview";
+import { DUPLICATE_SPECIES_GUARD_COPY, DUPLICATE_SPECIES_SHORT_COPY } from "@/lib/copy";
 
 type RecognizedPlant = {
   name: string;
   category: string;
   points: number;
   matched: boolean;
+  confidence?: number;
 };
 
 type Props = {
@@ -52,7 +63,16 @@ export default function PhotoRecognitionModal({
     setResults([]);
 
     try {
+      if (file.size > MAX_UPLOAD_FILE_BYTES) {
+        setError("Image is too large. Please pick one under 8MB.");
+        return;
+      }
+
       const dataUrl = await compressImage(file);
+      if (getApproxDataUrlBytes(dataUrl) > MAX_IMAGE_DATA_URL_BYTES) {
+        setError("Compressed image is still too large. Try a smaller or lower-detail photo.");
+        return;
+      }
       setPreview(dataUrl);
       setLoading(true);
 
@@ -62,12 +82,13 @@ export default function PhotoRecognitionModal({
         body: JSON.stringify({ image: dataUrl }),
       });
 
-      if (!res.ok) {
-        throw new Error("Recognition failed");
-      }
+      if (!res.ok) throw new Error("Recognition failed");
 
       const data = await res.json();
-      const plants: RecognizedPlant[] = data.plants ?? [];
+      const plants: RecognizedPlant[] = (data.plants ?? []).map((plant: RecognizedPlant) => ({
+        ...plant,
+        confidence: normalizeRecognitionConfidence(plant.confidence),
+      }));
       setResults(plants);
 
       const preSelected = new Set<number>();
@@ -75,8 +96,9 @@ export default function PhotoRecognitionModal({
         if (!loggedNames.has(p.name)) preSelected.add(i);
       });
       setSelected(preSelected);
-    } catch {
-      setError("Could not identify plants. Try a clearer photo.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Could not identify plants. Try a clearer photo.";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -99,26 +121,39 @@ export default function PhotoRecognitionModal({
 
   useEffect(() => {
     if (!open) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") handleClose(); };
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
     document.addEventListener("keydown", handler);
+
+    if (!preview && !loading) {
+      const t = setTimeout(() => fileRef.current?.click(), 180);
+      return () => {
+        clearTimeout(t);
+        document.removeEventListener("keydown", handler);
+      };
+    }
+
     return () => document.removeEventListener("keydown", handler);
-  }, [open]);
+  }, [open, preview, loading]);
 
   if (!open) return null;
 
   const selectedCount = selected.size;
+  const uncertainCount = results.filter(
+    (plant) => !loggedNames.has(plant.name) && requiresConfidenceReview(normalizeRecognitionConfidence(plant.confidence))
+  ).length;
+  const duplicateCount = results.filter((plant) => loggedNames.has(plant.name)).length;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black/40 animate-fadeIn" onClick={handleClose} />
       <div className="relative w-full max-h-[85vh] bg-brand-cream rounded-t-3xl overflow-y-auto pb-20 animate-slideUp">
-        <div className="flex justify-center pt-2 pb-0"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
+        <div className="flex justify-center pt-2 pb-0">
+          <div className="w-10 h-1 rounded-full bg-brand-dark/15" />
+        </div>
         <div className="sticky top-safe bg-brand-cream z-10 flex items-center justify-between p-5 pb-3 border-b border-brand-dark/10">
-          <h3
-            className="text-lg font-bold text-brand-dark font-display"
-          >
-            Snap to Log
-          </h3>
+          <h3 className="text-lg font-bold text-brand-dark font-display">Snap to Log</h3>
           <button
             onClick={handleClose}
             className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
@@ -137,35 +172,28 @@ export default function PhotoRecognitionModal({
                 <Camera size={28} className="text-brand-dark/40" strokeWidth={1.5} />
               </div>
               <div className="text-center">
-                <p className="text-sm font-semibold text-brand-dark">
-                  Take or upload a photo
-                </p>
-                <p className="text-xs text-brand-muted mt-1">
-                  We&apos;ll identify the plants on your plate
-                </p>
+                <p className="text-sm font-semibold text-brand-dark">Take or upload a photo</p>
+                <p className="text-xs text-brand-muted mt-1">We&apos;ll identify the plants on your plate</p>
               </div>
             </button>
           ) : (
             <div className="relative rounded-2xl overflow-hidden">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={preview}
-                alt="Meal photo"
-                className="w-full aspect-[4/3] object-cover"
-              />
+              <img src={preview} alt="Meal photo" className="w-full aspect-[4/3] object-cover" />
               {loading && (
                 <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
                   <div className="flex items-center gap-2 bg-white/90 rounded-xl px-4 py-2.5">
                     <Loader2 size={18} className="animate-spin text-brand-green" />
-                    <span className="text-sm font-medium text-brand-dark">
-                      Identifying plants...
-                    </span>
+                    <span className="text-sm font-medium text-brand-dark">Identifying plants...</span>
                   </div>
                 </div>
               )}
               {!loading && (
                 <button
-                  onClick={() => { reset(); fileRef.current?.click(); }}
+                  onClick={() => {
+                    reset();
+                    fileRef.current?.click();
+                  }}
                   className="absolute top-3 right-3 flex min-h-11 items-center bg-black/40 text-white rounded-xl px-4 py-1.5 text-xs font-medium hover:bg-black/60 transition-colors"
                 >
                   Retake
@@ -174,22 +202,29 @@ export default function PhotoRecognitionModal({
             </div>
           )}
 
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFile}
-            className="hidden"
-          />
+          <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
 
           {error && (
-            <div className="rounded-xl bg-red-50 border border-red-200 p-3">
+            <div className="rounded-xl bg-red-50 border border-red-200 p-3 flex items-start gap-2">
+              <AlertCircle size={16} className="text-red-600 mt-0.5" />
               <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
 
           {results.length > 0 && !loading && (
             <>
+              {(uncertainCount > 0 || duplicateCount > 0) && (
+                <div className="rounded-xl border border-brand-dark/10 bg-white/80 p-3 text-xs text-brand-muted space-y-1">
+                  {uncertainCount > 0 && (
+                    <p className="flex items-center gap-1.5">
+                      <ShieldCheck size={14} className="text-amber-600" />
+                      {uncertainCount} item{uncertainCount === 1 ? "" : "s"} need a quick confidence review.
+                    </p>
+                  )}
+                  {duplicateCount > 0 && <p>{DUPLICATE_SPECIES_GUARD_COPY}</p>}
+                </div>
+              )}
+
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold text-brand-dark">
                   Found {results.length} plant{results.length !== 1 ? "s" : ""}
@@ -217,6 +252,7 @@ export default function PhotoRecognitionModal({
                   const alreadyLogged = loggedNames.has(plant.name);
                   const isSelected = selected.has(idx);
                   const color = CATEGORY_COLORS[plant.category] ?? "#6b7260";
+                  const lowConfidence = requiresConfidenceReview(normalizeRecognitionConfidence(plant.confidence));
 
                   return (
                     <button
@@ -240,21 +276,12 @@ export default function PhotoRecognitionModal({
                             : "border-brand-dark/20"
                         }`}
                       >
-                        {(isSelected || alreadyLogged) && (
-                          <Check size={12} className="text-white" strokeWidth={3} />
-                        )}
+                        {(isSelected || alreadyLogged) && <Check size={12} className="text-white" strokeWidth={3} />}
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-brand-dark whitespace-normal break-words leading-snug">
-                          {plant.name}
-                          {alreadyLogged && (
-                            <span className="font-normal text-brand-muted ml-1">
-                              (already logged)
-                            </span>
-                          )}
-                        </p>
-                        <div className="flex items-center gap-2 mt-0.5">
+                        <p className="text-sm font-semibold text-brand-dark whitespace-normal break-words leading-snug">{plant.name}</p>
+                        <div className="flex flex-wrap items-center gap-2 mt-0.5">
                           <span
                             className="inline-block rounded-full px-2 py-0.5 text-[10px] font-medium text-white"
                             style={{ backgroundColor: color }}
@@ -262,12 +289,20 @@ export default function PhotoRecognitionModal({
                             {plant.category}
                           </span>
                           <span className="text-[11px] text-brand-muted">
-                            {plant.points === 0.25 ? "\u00BCpt" : `${plant.points}pt`}
+                            {plant.points === 0.25 ? "¼pt" : `${plant.points}pt`}
                           </span>
-                          {!plant.matched && (
-                            <span className="text-[10px] text-brand-muted/60 italic">
-                              custom
+                          {lowConfidence && !alreadyLogged && (
+                            <span className="text-[10px] rounded-full bg-amber-50 px-2 py-0.5 text-amber-700 border border-amber-200">
+                              Review
                             </span>
+                          )}
+                          {alreadyLogged && (
+                            <span className="text-[10px] rounded-full bg-brand-dark/5 px-2 py-0.5 text-brand-muted border border-brand-dark/10">
+                              {DUPLICATE_SPECIES_SHORT_COPY}
+                            </span>
+                          )}
+                          {!plant.matched && (
+                            <span className="text-[10px] text-brand-muted/60 italic">custom</span>
                           )}
                         </div>
                       </div>
@@ -294,9 +329,7 @@ export default function PhotoRecognitionModal({
 
           {results.length === 0 && !loading && preview && !error && (
             <div className="text-center py-6">
-              <p className="text-sm text-brand-muted">
-                No plant-based foods detected. Try a different photo.
-              </p>
+              <p className="text-sm text-brand-muted">No plant-based foods detected. Try a different photo.</p>
             </div>
           )}
         </div>

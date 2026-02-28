@@ -28,6 +28,25 @@ if [ "$has_app_changes" = false ] && [ -n "$changed_files" ]; then
   exit 0
 fi
 
+# Keep deep index docs fresh when src changes
+if [ "$has_app_changes" = true ]; then
+  if [ -f scripts/refresh-architecture-docs.py ]; then
+    echo "[pre-push] refreshing deep index docs"
+    python3 scripts/refresh-architecture-docs.py >/dev/null || {
+      echo -e "${RED}✗ Failed to regenerate deep index docs${NC}"
+      exit 1
+    }
+    # block push if regenerated docs are not committed
+    if ! git diff --quiet -- docs/repo-deep-index.md docs/repo-deep-index.json docs/db-access-matrix.csv docs/api-contracts-deep.md docs/api-contracts-deep.json docs/architecture-bible.md; then
+      echo -e "${YELLOW}Index docs changed after regeneration.${NC}"
+      echo "Commit updated docs before pushing:"
+      echo "  git add docs/repo-deep-index.md docs/repo-deep-index.json docs/db-access-matrix.csv docs/api-contracts-deep.md docs/api-contracts-deep.json docs/architecture-bible.md docs/db-access-matrix.csv docs/api-contracts-deep.md docs/api-contracts-deep.json docs/architecture-bible.md"
+      echo "  git commit -m 'chore: refresh deep index docs'"
+      exit 1
+    fi
+  fi
+fi
+
 echo ""
 echo "=== Pre-Push: Running E2E Tests ==="
 echo "    (skip with: git push --no-verify)"

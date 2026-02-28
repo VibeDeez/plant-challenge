@@ -1,0 +1,83 @@
+# Architecture Graph
+
+Mermaid source lives in `architecture-graph.mmd`.
+
+```mermaid
+flowchart TD
+  subgraph Client[Client PWA]
+    A[Auth UI /auth]
+    H[Home Dashboard]
+    AD[Add Plant]
+    C[Circles]
+    S[Sage]
+    P[Profile]
+  end
+
+  subgraph Next[Next.js App Router]
+    M[middleware.ts]
+    API_REC[/api/recognize]
+    API_SAGE[/api/sage]
+    API_E2E_LOGIN[/api/e2e/login]
+    API_E2E_CLEAN[/api/e2e/cleanup]
+  end
+
+  subgraph Supabase[Supabase]
+    AUTH[(Auth)]
+    T_MEMBER[(member)]
+    T_PLANT[(plant)]
+    T_LOG[(plant_log)]
+    T_CIRCLE[(circle)]
+    T_CIRCLE_MEMBER[(circle_member)]
+    T_WEEK[(circle_weekly_score)]
+    T_ALL[(circle_alltime_score)]
+    T_ACT[(circle_activity)]
+    T_REACT[(circle_activity_reaction)]
+    RPC_JOIN[[rpc:join_circle]]
+  end
+
+  subgraph AI[External AI]
+    OR1[OpenRouter Vision]
+    OR2[OpenRouter LLM]
+  end
+
+  A --> M
+  H --> M
+  AD --> M
+  C --> M
+  S --> M
+  P --> M
+
+  M --> AUTH
+  H --> T_LOG
+  H --> T_PLANT
+  H --> T_CIRCLE_MEMBER
+
+  AD --> API_REC
+  AD --> T_PLANT
+  AD --> T_LOG
+  API_REC --> OR1
+  API_REC --> T_PLANT
+  API_REC --> AUTH
+
+  S --> API_SAGE
+  S --> T_LOG
+  API_SAGE --> OR2
+  API_SAGE --> AUTH
+
+  C --> T_CIRCLE
+  C --> T_CIRCLE_MEMBER
+  C --> T_WEEK
+  C --> T_ALL
+  C --> T_ACT
+  C --> T_REACT
+  C --> RPC_JOIN
+
+  P --> T_MEMBER
+
+  API_E2E_LOGIN --> AUTH
+  API_E2E_CLEAN --> T_MEMBER
+  API_E2E_CLEAN --> T_LOG
+  API_E2E_CLEAN --> T_CIRCLE
+  API_E2E_CLEAN --> T_CIRCLE_MEMBER
+
+```

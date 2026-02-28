@@ -2,7 +2,8 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import type { SageResponse, SageVerdict } from "@/lib/ai/sageRules";
-import { Sparkles } from "lucide-react";
+import { Sparkles, AlertTriangle } from "lucide-react";
+import { DUPLICATE_SPECIES_GUARD_COPY } from "@/lib/copy";
 
 type SageChatProps = {
   alreadyLoggedThisWeek?: string[];
@@ -49,6 +50,7 @@ export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) 
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<SageResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mode, setMode] = useState<string | null>(null);
 
   const normalizedContext = useMemo(
     () => Array.from(new Set(alreadyLoggedThisWeek.map((item) => item.trim()).filter(Boolean))),
@@ -81,6 +83,7 @@ export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) 
         const body = (await res.json().catch(() => null)) as SageApiError | null;
         setError(body?.error ?? "Sage is unavailable right now. Please try again.");
         setResponse(null);
+        setMode(null);
         return;
       }
 
@@ -88,13 +91,16 @@ export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) 
       if (!isSageResponse(body)) {
         setError("Sage returned an unexpected response. Please try again.");
         setResponse(null);
+        setMode(null);
         return;
       }
 
+      setMode(res.headers.get("x-sage-mode"));
       setResponse(body);
     } catch {
       setError("Could not reach Sage. Check your connection and try again.");
       setResponse(null);
+      setMode(null);
     } finally {
       setLoading(false);
     }
@@ -181,12 +187,23 @@ export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) 
 
             {response && (
               <div className="mt-3 space-y-2 rounded-xl border border-brand-dark/10 bg-brand-cream/60 p-3 text-sm text-brand-dark">
+                {mode === "deterministic-only-fallback" && (
+                  <p className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-800">
+                    Sage is in deterministic-only fallback mode. Answers are limited to hard rules.
+                  </p>
+                )}
                 <p>
                   <span className="font-semibold">Answer:</span> {response.answer}
                 </p>
                 <p>
                   <span className="font-semibold">Verdict:</span> {VERDICT_LABELS[response.verdict]}
                 </p>
+                {response.verdict === "duplicate_week" && (
+                  <p className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-amber-800 flex items-center gap-1.5">
+                    <AlertTriangle size={14} />
+                    {DUPLICATE_SPECIES_GUARD_COPY}
+                  </p>
+                )}
                 {response.points !== null && (
                   <p>
                     <span className="font-semibold">Points:</span> {response.points}

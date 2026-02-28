@@ -1,8 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { isE2ERouteBlocked } from "@/lib/api/e2eGuard";
 
 export async function GET(request: NextRequest) {
-  if (process.env.E2E_TEST !== "true") {
+  if (
+    isE2ERouteBlocked({
+      nodeEnv: process.env.NODE_ENV,
+      e2eTest: process.env.E2E_TEST,
+    })
+  ) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 

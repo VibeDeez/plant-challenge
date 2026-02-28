@@ -45,7 +45,7 @@ files = sorted(files)
 idx = {rel: analyze_file(rel) for rel in files}
 
 json_out = {
-    'generatedAt': datetime.datetime.now(datetime.UTC).isoformat(),
+    'generatedAt': datetime.date.today().isoformat(),
     'files': idx,
     'crossCutting': {
         'supabaseRefs': sorted(set(t for a in idx.values() for t in a['supabase'])),

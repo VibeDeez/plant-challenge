@@ -3,6 +3,7 @@ import test from "node:test";
 import {
   extractModelMessageContent,
   getSageRequestLimitError,
+  makeDeterministicOnlySageFallbackResponse,
   parseSageTimeoutMs,
 } from "./routeUtils.ts";
 
@@ -61,4 +62,13 @@ test("extractModelMessageContent safely handles malformed payloads", () => {
     }),
     "hello"
   );
+});
+
+
+test("deterministic-only fallback response is explicit and safe", () => {
+  const response = makeDeterministicOnlySageFallbackResponse();
+  assert.equal(response.verdict, "uncertain");
+  assert.equal(response.points, null);
+  assert.match(response.answer, /deterministic-only mode/i);
+  assert.match(response.reason, /disabled by configuration/i);
 });

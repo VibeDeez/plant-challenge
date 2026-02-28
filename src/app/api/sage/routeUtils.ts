@@ -1,4 +1,4 @@
-import type { SageContext } from "../../../lib/ai/sageRules";
+import type { SageContext, SageResponse } from "../../../lib/ai/sageRules";
 
 const DEFAULT_TIMEOUT_MS = 12_000;
 const MIN_TIMEOUT_MS = 1_000;
@@ -82,4 +82,18 @@ export function extractModelMessageContent(payload: unknown): string | null {
   const message = first.message;
   if (!isRecord(message)) return null;
   return typeof message.content === "string" ? message.content : null;
+}
+
+export function makeDeterministicOnlySageFallbackResponse(): SageResponse {
+  return {
+    answer:
+      "Sage is in deterministic-only mode right now. I can only answer the hard rules for coffee, tea, bell pepper variants, and duplicate species in the same week.",
+    verdict: "uncertain",
+    points: null,
+    reason:
+      "Non-deterministic model calls are disabled by configuration, so this request used deterministic-only fallback guidance.",
+    confidence: 0.9,
+    followUpQuestion:
+      "If your question is about coffee, tea, bell pepper variants, or duplicate weekly species, ask with those exact details.",
+  };
 }

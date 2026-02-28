@@ -1,0 +1,37 @@
+name: Docs Freshness
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  architecture-docs-fresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Regenerate architecture docs
+        run: python3 scripts/refresh-architecture-docs.py
+
+      - name: Fail if generated docs are stale
+        run: |
+          git diff --exit-code \
+            docs/repo-deep-index.md \
+            docs/repo-deep-index.json \
+            docs/db-access-matrix.csv \
+            docs/api-contracts-deep.md \
+            docs/api-contracts-deep.json \
+            docs/architecture-bible.md \
+            docs/sequence-diagrams.md \
+            docs/sequence-diagrams.mmd
+
+      - name: Check db-access schema drift allowlist
+        run: python3 scripts/check-db-access-drift.py

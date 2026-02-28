@@ -1,3 +1,6 @@
+export const MAX_UPLOAD_FILE_BYTES = 8 * 1024 * 1024;
+export const MAX_IMAGE_DATA_URL_BYTES = 4 * 1024 * 1024;
+
 /**
  * Compress an image file to a base64 JPEG data URL.
  * Resizes to maxDim on longest side, compresses to quality.
@@ -38,4 +41,9 @@ export function compressImage(
     reader.onerror = () => reject(new Error("Failed to read file"));
     reader.readAsDataURL(file);
   });
+}
+
+export function getApproxDataUrlBytes(dataUrl: string): number {
+  const base64Payload = dataUrl.split(",")[1] ?? "";
+  return Math.floor((base64Payload.length * 3) / 4);
 }

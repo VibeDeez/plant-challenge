@@ -11,6 +11,8 @@ import {
   getActivityIcon,
   timeAgo,
   getShareUrl,
+  detectLeaderboardDiscrepancies,
+  sanitizeActivityFeed,
 } from "@/lib/circles";
 import { getLeaderboardGoalMeta } from "@/lib/leaderboardGoal";
 import type {
@@ -266,6 +268,7 @@ export default function CircleDetailPage() {
   // Circle data
   const [circle, setCircle] = useState<Circle | null>(null);
   const [memberCount, setMemberCount] = useState(0);
+  const [memberIds, setMemberIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -295,12 +298,13 @@ export default function CircleDetailPage() {
     setLoading(true);
     setError(null);
 
-    const [circleRes, countRes] = await Promise.all([
+    const [circleRes, countRes, membersRes] = await Promise.all([
       supabase.from("circle").select("*").eq("id", circleId).single(),
       supabase
         .from("circle_member")
         .select("id", { count: "exact", head: true })
         .eq("circle_id", circleId),
+      supabase.from("circle_member").select("member_id").eq("circle_id", circleId),
     ]);
 
     if (circleRes.error || !circleRes.data) {
@@ -311,6 +315,10 @@ export default function CircleDetailPage() {
 
     setCircle(circleRes.data as Circle);
     setMemberCount(countRes.count ?? 0);
+    const resolvedMemberIds = (membersRes.data ?? [])
+      .map((row) => row.member_id)
+      .filter((id): id is string => typeof id === "string" && !!id.trim());
+    setMemberIds(resolvedMemberIds);
     setLoading(false);
   }, [circleId]);
 
@@ -383,8 +391,6 @@ export default function CircleDetailPage() {
           avatar_emoji: member?.avatar_emoji ?? "",
         };
       });
-      setActivities(parsed);
-
       // Fetch reactions for these activities
       const ids = parsed.map((a) => a.id);
       if (ids.length > 0) {
@@ -392,16 +398,40 @@ export default function CircleDetailPage() {
           .from("circle_activity_reaction")
           .select("*")
           .in("activity_id", ids);
-        if (rxData) {
-          setReactions(rxData as CircleActivityReaction[]);
+
+        const sanitized = sanitizeActivityFeed({
+          activities: parsed,
+          reactions: ((rxData ?? []) as CircleActivityReaction[]).map((row) => ({
+            activity_id: row.activity_id,
+            member_id: row.member_id,
+            emoji: row.emoji,
+          })),
+          memberIds,
+        });
+
+        if (sanitized.discrepancies.length > 0) {
+          console.warn("[circles:activity-integrity]", {
+            circleId,
+            discrepancies: sanitized.discrepancies,
+          });
         }
+
+        setActivities(sanitized.activities as CircleActivity[]);
+        const sanitizedKeys = new Set(
+          sanitized.reactions.map((r) => `${r.activity_id}:${r.member_id}:${r.emoji}`)
+        );
+        const safeRows = ((rxData ?? []) as CircleActivityReaction[]).filter((row) =>
+          sanitizedKeys.has(`${row.activity_id}:${row.member_id}:${row.emoji}`)
+        );
+        setReactions(safeRows);
       } else {
+        setActivities(parsed);
         setReactions([]);
       }
     }
 
     setActivityLoading(false);
-  }, [circleId]);
+  }, [circleId, memberIds]);
 
   // ---------- Lifecycle ----------
   useEffect(() => {
@@ -485,6 +515,31 @@ export default function CircleDetailPage() {
 
     setOpenPicker(null);
   }
+
+
+  useEffect(() => {
+    if (memberIds.length === 0) return;
+    const discrepancies = detectLeaderboardDiscrepancies({
+      weeklyScores: weeklyScores.map((row) => ({
+        member_id: row.member_id,
+        total_points: row.total_points,
+        is_ghost: row.is_ghost,
+      })),
+      alltimeScores: alltimeScores.map((row) => ({
+        member_id: row.member_id,
+        total_points: row.total_points,
+        is_ghost: row.is_ghost,
+      })),
+      memberIds,
+    });
+
+    if (discrepancies.length > 0) {
+      console.warn("[circles:leaderboard-integrity]", {
+        circleId,
+        discrepancies,
+      });
+    }
+  }, [weeklyScores, alltimeScores, memberIds, circleId]);
 
   // ---------- Helpers ----------
   const reactionsByActivity = useMemo(() => {

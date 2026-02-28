@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { apiError } from "@/lib/api/errors";
+import { createApiTelemetry } from "@/lib/api/telemetry";
+import {
+  fetchWithPolicy,
+  RECOGNIZE_OPENROUTER_POLICY,
+} from "@/lib/ai/openRouterPolicy";
+import {
+  buildAnalyticsEvent,
+  trackAnalyticsEvent,
+} from "@/lib/analytics/events";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const VISION_MODEL = "google/gemini-2.0-flash-lite-001";
-const REQUEST_TIMEOUT_MS = 15_000;
-const MAX_REQUEST_BYTES = 5 * 1024 * 1024;
 const MAX_IMAGE_DATA_URL_LENGTH = 4 * 1024 * 1024;
 
 const SYSTEM_PROMPT = `You are a food recognition assistant for a plant diversity tracking app. Analyze the photo and identify all visible plant-based whole foods.
@@ -24,24 +32,83 @@ Respond with ONLY a JSON array, no other text:
 
 If no plant foods are visible, respond with: []`;
 
+type RecognizeErrorCode =
+  | "RECOGNIZE_API_KEY_MISSING"
+  | "RECOGNIZE_PAYLOAD_TOO_LARGE"
+  | "RECOGNIZE_INVALID_JSON"
+  | "RECOGNIZE_INVALID_BODY"
+  | "RECOGNIZE_IMAGE_MISSING"
+  | "RECOGNIZE_IMAGE_INVALID"
+  | "RECOGNIZE_TIMEOUT"
+  | "RECOGNIZE_PROVIDER_FAILURE"
+  | "RECOGNIZE_INTERNAL_ERROR"
+  | "AUTH_UNAUTHORIZED";
+
 function isValidImageDataUrl(value: string): boolean {
   return /^data:image\/[a-zA-Z0-9.+-]+;base64,[a-zA-Z0-9+/=\s]+$/.test(value);
 }
 
 export async function POST(req: NextRequest) {
-  if (!OPENROUTER_API_KEY) {
-    return NextResponse.json(
-      { error: "API key not configured" },
-      { status: 500 }
+  const contentLength = Number(req.headers.get("content-length") ?? 0);
+  const requestSizeBytes = Number.isFinite(contentLength) ? contentLength : null;
+  const telemetry = createApiTelemetry("/api/recognize", requestSizeBytes);
+  let parseFailed = false;
+  let actorId: string | undefined;
+
+  const respondError = (
+    status: number,
+    code: RecognizeErrorCode,
+    message: string,
+    extras?: { timeout?: boolean }
+  ) => {
+    telemetry({ statusCode: status, parseFailed, timeout: extras?.timeout });
+    trackAnalyticsEvent(
+      buildAnalyticsEvent(
+        "recognize_failure",
+        "server",
+        {
+          endpoint: "/api/recognize",
+          status_code: status,
+          error_code: code,
+          timeout: !!extras?.timeout,
+          parse_failed: parseFailed,
+        },
+        actorId
+      )
     );
+    return apiError(status, code, message);
+  };
+
+  const respondOk = (payload: unknown, extras?: { plantCount?: number }) => {
+    telemetry({ statusCode: 200, parseFailed });
+    trackAnalyticsEvent(
+      buildAnalyticsEvent(
+        "recognize_success",
+        "server",
+        {
+          endpoint: "/api/recognize",
+          plant_count: extras?.plantCount ?? null,
+          parse_failed: parseFailed,
+        },
+        actorId
+      )
+    );
+    return NextResponse.json(payload);
+  };
+
+  if (!OPENROUTER_API_KEY) {
+    return respondError(500, "RECOGNIZE_API_KEY_MISSING", "API key not configured");
   }
 
   try {
-    const contentLength = Number(req.headers.get("content-length") ?? 0);
-    if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
-      return NextResponse.json(
-        { error: "Image payload is too large. Please use a smaller image." },
-        { status: 413 }
+    if (
+      requestSizeBytes !== null &&
+      requestSizeBytes > RECOGNIZE_OPENROUTER_POLICY.maxRequestBytes
+    ) {
+      return respondError(
+        413,
+        "RECOGNIZE_PAYLOAD_TOO_LARGE",
+        "Image payload is too large. Please use a smaller image."
       );
     }
 
@@ -50,99 +117,95 @@ export async function POST(req: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return respondError(401, "AUTH_UNAUTHORIZED", "Unauthorized");
     }
+    actorId = user.id;
 
     let body: unknown;
     try {
       body = await req.json();
     } catch {
-      return NextResponse.json(
-        { error: "Invalid JSON body" },
-        { status: 400 }
-      );
+      return respondError(400, "RECOGNIZE_INVALID_JSON", "Invalid JSON body");
     }
 
     if (!body || typeof body !== "object" || Array.isArray(body)) {
-      return NextResponse.json(
-        { error: "Request body must be an object with an image field" },
-        { status: 400 }
+      return respondError(
+        400,
+        "RECOGNIZE_INVALID_BODY",
+        "Request body must be an object with an image field"
       );
     }
 
     const { image } = body as { image?: unknown };
 
     if (!image || typeof image !== "string") {
-      return NextResponse.json(
-        { error: "Missing image data" },
-        { status: 400 }
-      );
+      return respondError(400, "RECOGNIZE_IMAGE_MISSING", "Missing image data");
     }
 
     if (image.length > MAX_IMAGE_DATA_URL_LENGTH) {
-      return NextResponse.json(
-        { error: "Image payload is too large. Please use a smaller image." },
-        { status: 413 }
+      return respondError(
+        413,
+        "RECOGNIZE_PAYLOAD_TOO_LARGE",
+        "Image payload is too large. Please use a smaller image."
       );
     }
 
     if (!isValidImageDataUrl(image)) {
-      return NextResponse.json(
-        { error: "Image must be a base64 data URL in data:image/... format" },
-        { status: 400 }
+      return respondError(
+        400,
+        "RECOGNIZE_IMAGE_INVALID",
+        "Image must be a base64 data URL in data:image/... format"
       );
     }
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
     let orResponse: Response;
 
     try {
-      orResponse = await fetch(OPENROUTER_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
+      orResponse = await fetchWithPolicy(
+        OPENROUTER_URL,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: VISION_MODEL,
+            messages: [
+              { role: "system", content: SYSTEM_PROMPT },
+              {
+                role: "user",
+                content: [
+                  {
+                    type: "text",
+                    text: "Identify the plant-based foods in this photo.",
+                  },
+                  { type: "image_url", image_url: { url: image } },
+                ],
+              },
+            ],
+            temperature: 0.1,
+            max_tokens: 1024,
+          }),
         },
-        body: JSON.stringify({
-          model: VISION_MODEL,
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            {
-              role: "user",
-              content: [
-                {
-                  type: "text",
-                  text: "Identify the plant-based foods in this photo.",
-                },
-                { type: "image_url", image_url: { url: image } },
-              ],
-            },
-          ],
-          temperature: 0.1,
-          max_tokens: 1024,
-        }),
-        signal: controller.signal,
-      });
+        RECOGNIZE_OPENROUTER_POLICY
+      );
     } catch (error) {
       if ((error as Error).name === "AbortError") {
-        return NextResponse.json(
-          { error: "Recognition request timed out. Please try again." },
-          { status: 504 }
+        return respondError(
+          504,
+          "RECOGNIZE_TIMEOUT",
+          "Recognition request timed out. Please try again.",
+          { timeout: true }
         );
       }
       throw error;
-    } finally {
-      clearTimeout(timeout);
     }
 
     if (!orResponse.ok) {
       const errText = await orResponse.text();
       console.error("OpenRouter error:", orResponse.status, errText);
-      return NextResponse.json(
-        { error: "Vision model request failed" },
-        { status: 502 }
-      );
+      return respondError(502, "RECOGNIZE_PROVIDER_FAILURE", "Vision model request failed");
     }
 
     const orData = await orResponse.json();
@@ -155,13 +218,20 @@ export async function POST(req: NextRequest) {
       identified = JSON.parse(jsonStr);
       if (!Array.isArray(identified)) identified = [];
     } catch {
-      console.error("Failed to parse vision response:", content);
+      console.error("Failed to parse vision response");
+      parseFailed = true;
       identified = [];
     }
 
     const validCategories = new Set([
-      "Fruits", "Vegetables", "Whole Grains", "Legumes",
-      "Nuts", "Seeds", "Herbs", "Spices",
+      "Fruits",
+      "Vegetables",
+      "Whole Grains",
+      "Legumes",
+      "Nuts",
+      "Seeds",
+      "Herbs",
+      "Spices",
     ]);
 
     identified = identified.filter(
@@ -173,19 +243,16 @@ export async function POST(req: NextRequest) {
     );
 
     if (identified.length === 0) {
-      return NextResponse.json({ plants: [] });
+      return respondOk({ plants: [] }, { plantCount: 0 });
     }
 
     const { data: dbPlants } = await supabase.from("plant").select("name, category, points");
 
-    const plantMap = new Map(
-      (dbPlants ?? []).map((p) => [p.name.toLowerCase(), p])
-    );
+    const plantMap = new Map((dbPlants ?? []).map((p) => [p.name.toLowerCase(), p]));
 
     const results = identified.map((item) => {
       const match = plantMap.get(item.name.toLowerCase());
-      const isHerbOrSpice =
-        item.category === "Herbs" || item.category === "Spices";
+      const isHerbOrSpice = item.category === "Herbs" || item.category === "Spices";
       return {
         name: match ? match.name : item.name,
         category: match ? match.category : item.category,
@@ -194,12 +261,9 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    return NextResponse.json({ plants: results });
+    return respondOk({ plants: results }, { plantCount: results.length });
   } catch (err) {
     console.error("Recognize error:", err);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return respondError(500, "RECOGNIZE_INTERNAL_ERROR", "Internal server error");
   }
 }

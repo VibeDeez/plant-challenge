@@ -55,3 +55,26 @@ Notes:
 - `E2E_TEST=true` enables `/api/e2e/login` and middleware exemption (this is the actual env flag used in code).
 - Route signs in with `E2E_TEST_EMAIL` / `E2E_TEST_PASSWORD`
 - `member` row auto-created via `handle_new_user` trigger
+
+
+## Repository intelligence docs (mandatory)
+Before planning or coding, review these if your task touches architecture, API behavior, data flow, or risk:
+- `docs/repo-index.md`
+- `docs/repo-deep-index.md`
+- `docs/architecture-bible.md`
+- `docs/api-contracts-deep.md`
+- `docs/risk-register.md`
+- `docs/db-access-matrix.csv`
+- `docs/architecture-graph.mmd`
+
+Policy:
+- CI enforces freshness via `.github/workflows/docs-freshness.yml`; stale generated docs will fail PR checks.
+- Treat these as living docs derived from current code.
+- If your PR changes routes, data access, env vars, or major flows, update the matching index docs in the same PR.
+- If code and index docs disagree, code is source-of-truth and docs must be corrected before merge.
+
+## Index maintenance automation
+- Regenerate deep indexes with:
+  - `python3 scripts/refresh-architecture-docs.py`
+- Git hooks are configured to keep indexes fresh on commits/pushes.
+- Do not bypass stale-index warnings unless the change is docs-only and no `src/` behavior changed.

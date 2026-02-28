@@ -1,0 +1,776 @@
+{
+  "generatedAt": "2026-02-28",
+  "files": {
+    "src/app/(protected)/add/page.tsx": {
+      "lines": 521,
+      "exports": [
+        "AddPlantPage"
+      ],
+      "methods": [],
+      "supabase": [
+        "circle_member",
+        "plant",
+        "plant_log"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/circles/[id]/page.tsx": {
+      "lines": 916,
+      "exports": [
+        "CircleDetailPage"
+      ],
+      "methods": [],
+      "supabase": [
+        "circle",
+        "circle_activity",
+        "circle_activity_reaction",
+        "circle_alltime_score",
+        "circle_member",
+        "circle_weekly_score"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/circles/[id]/settings/page.tsx": {
+      "lines": 473,
+      "exports": [
+        "CircleSettingsPage"
+      ],
+      "methods": [],
+      "supabase": [
+        "circle",
+        "circle_member"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/circles/create/page.tsx": {
+      "lines": 260,
+      "exports": [
+        "CircleCreatePage"
+      ],
+      "methods": [],
+      "supabase": [
+        "circle",
+        "circle_member"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/circles/page.tsx": {
+      "lines": 338,
+      "exports": [
+        "CirclesPage"
+      ],
+      "methods": [],
+      "supabase": [
+        "circle_member",
+        "circle_weekly_score",
+        "rpc:join_circle"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/join/[code]/page.tsx": {
+      "lines": 105,
+      "exports": [
+        "JoinCirclePage"
+      ],
+      "methods": [],
+      "supabase": [
+        "rpc:join_circle"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/layout.tsx": {
+      "lines": 10,
+      "exports": [
+        "ProtectedGroupLayout"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/(protected)/learn/page.tsx": {
+      "lines": 702,
+      "exports": [
+        "LearnPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/(protected)/page.tsx": {
+      "lines": 445,
+      "exports": [
+        "HomePage"
+      ],
+      "methods": [],
+      "supabase": [
+        "circle_member",
+        "plant",
+        "plant_log"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/profile/page.tsx": {
+      "lines": 280,
+      "exports": [
+        "ProfilePage"
+      ],
+      "methods": [],
+      "supabase": [
+        "member"
+      ],
+      "env": []
+    },
+    "src/app/(protected)/sage/page.tsx": {
+      "lines": 133,
+      "exports": [
+        "SagePage"
+      ],
+      "methods": [],
+      "supabase": [
+        "plant_log"
+      ],
+      "env": []
+    },
+    "src/app/api/e2e/cleanup/route.ts": {
+      "lines": 119,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [
+        "circle",
+        "circle_member",
+        "member",
+        "plant_log"
+      ],
+      "env": [
+        "E2E_TEST",
+        "NODE_ENV"
+      ]
+    },
+    "src/app/api/e2e/login/route.ts": {
+      "lines": 33,
+      "exports": [
+        "GET"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "supabase": [],
+      "env": [
+        "E2E_TEST",
+        "E2E_TEST_EMAIL",
+        "E2E_TEST_PASSWORD",
+        "NODE_ENV"
+      ]
+    },
+    "src/app/api/recognize/route.ts": {
+      "lines": 270,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [
+        "plant"
+      ],
+      "env": [
+        "OPENROUTER_API_KEY"
+      ]
+    },
+    "src/app/api/sage/route.test.mjs": {
+      "lines": 75,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/api/sage/route.ts": {
+      "lines": 369,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [],
+      "env": [
+        "OPENROUTER_API_KEY",
+        "SAGE_DETERMINISTIC_ONLY",
+        "SAGE_OPENROUTER_MODEL",
+        "SAGE_OPENROUTER_TIMEOUT_MS"
+      ]
+    },
+    "src/app/api/sage/routeUtils.ts": {
+      "lines": 100,
+      "exports": [
+        "parseSageTimeoutMs",
+        "getSageRequestLimitError",
+        "extractModelMessageContent",
+        "makeDeterministicOnlySageFallbackResponse"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/apple-icon.tsx": {
+      "lines": 53,
+      "exports": [
+        "size",
+        "contentType"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/auth/callback/redirect.test.mjs": {
+      "lines": 30,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/auth/callback/redirect.ts": {
+      "lines": 39,
+      "exports": [
+        "sanitizeRedirectPath"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/auth/callback/route.ts": {
+      "lines": 34,
+      "exports": [
+        "GET"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/auth/page.tsx": {
+      "lines": 739,
+      "exports": [
+        "AuthPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/auth/reset-password/page.tsx": {
+      "lines": 137,
+      "exports": [
+        "ResetPasswordPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/icon.tsx": {
+      "lines": 35,
+      "exports": [
+        "Icon",
+        "size",
+        "contentType"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/layout.tsx": {
+      "lines": 71,
+      "exports": [
+        "RootLayout",
+        "metadata",
+        "viewport"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "NEXT_PUBLIC_SITE_URL"
+      ]
+    },
+    "src/app/manifest.ts": {
+      "lines": 22,
+      "exports": [
+        "manifest"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/opengraph-image.tsx": {
+      "lines": 67,
+      "exports": [
+        "alt",
+        "size",
+        "contentType"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/Accordion.tsx": {
+      "lines": 43,
+      "exports": [
+        "Accordion"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/AddKidModal.tsx": {
+      "lines": 90,
+      "exports": [
+        "AddKidModal"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/AddToHomeScreen.tsx": {
+      "lines": 97,
+      "exports": [
+        "AddToHomeScreen"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/BottomNav.tsx": {
+      "lines": 56,
+      "exports": [
+        "BottomNav"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/CategoryTabs.tsx": {
+      "lines": 42,
+      "exports": [
+        "CategoryTabs"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/GutHealthPopover.tsx": {
+      "lines": 79,
+      "exports": [
+        "GutHealthPopover"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/LeaderboardRow.tsx": {
+      "lines": 279,
+      "exports": [
+        "LeaderboardRow"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/MemberSwitcher.tsx": {
+      "lines": 80,
+      "exports": [
+        "MemberSwitcher"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/PhotoRecognitionModal.tsx": {
+      "lines": 340,
+      "exports": [
+        "PhotoRecognitionModal"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/PlantAvatar.tsx": {
+      "lines": 30,
+      "exports": [
+        "PlantAvatar"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/PlantCard.tsx": {
+      "lines": 62,
+      "exports": [
+        "PlantCard"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/PlantListItem.tsx": {
+      "lines": 57,
+      "exports": [
+        "PlantListItem"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/PlantPicker.tsx": {
+      "lines": 32,
+      "exports": [
+        "PlantPicker"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/ProgressBar.tsx": {
+      "lines": 90,
+      "exports": [
+        "ProgressBar"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/ProtectedLayout.tsx": {
+      "lines": 132,
+      "exports": [
+        "ProtectedLayout",
+        "useApp"
+      ],
+      "methods": [],
+      "supabase": [
+        "member"
+      ],
+      "env": []
+    },
+    "src/components/SageChat.tsx": {
+      "lines": 228,
+      "exports": [
+        "SageChat"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/openRouterPolicy.test.mjs": {
+      "lines": 30,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/openRouterPolicy.ts": {
+      "lines": 71,
+      "exports": [
+        "parseBooleanFlag",
+        "fetchWithPolicy",
+        "RECOGNIZE_OPENROUTER_POLICY",
+        "SAGE_OPENROUTER_POLICY",
+        "OpenRouterPolicy"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/sageRules.test.mjs": {
+      "lines": 54,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/sageRules.ts": {
+      "lines": 229,
+      "exports": [
+        "getSageDeterministicAliases",
+        "matchDeterministicSageRule",
+        "SageVerdict",
+        "SageContext",
+        "SageResponse",
+        "DeterministicSageResult"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/analytics/events.ts": {
+      "lines": 39,
+      "exports": [
+        "trackAnalyticsEvent",
+        "buildAnalyticsEvent",
+        "ANALYTICS_EVENT_NAMES",
+        "AnalyticsEventName",
+        "AnalyticsEvent"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/api/e2eGuard.test.mjs": {
+      "lines": 24,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/api/e2eGuard.ts": {
+      "lines": 10,
+      "exports": [
+        "isE2ERouteBlocked"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/api/errors.ts": {
+      "lines": 27,
+      "exports": [
+        "apiError",
+        "ApiErrorCode"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/api/telemetry.ts": {
+      "lines": 44,
+      "exports": [
+        "createApiTelemetry"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/circles.test.mjs": {
+      "lines": 110,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/circles.ts": {
+      "lines": 339,
+      "exports": [
+        "generateInviteCode",
+        "getShareUrl",
+        "isValidCircleId",
+        "isValidInviteCode",
+        "validateJoinCirclePayload",
+        "detectLeaderboardDiscrepancies",
+        "validateMembershipOperation",
+        "sanitizeActivityFeed",
+        "formatActivityEvent",
+        "getActivityIcon",
+        "timeAgo",
+        "JoinCircleValidationResult",
+        "CircleLeaderboardEntry",
+        "CircleActivityEntry",
+        "CircleReactionEntry",
+        "FeedSanitizationResult"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "NEXT_PUBLIC_SITE_URL"
+      ]
+    },
+    "src/lib/constants.ts": {
+      "lines": 310,
+      "exports": [
+        "getAvatarByKey",
+        "getRandomAvatarKey",
+        "CATEGORIES",
+        "CATEGORY_COLORS",
+        "CATEGORY_EMOJI",
+        "CATEGORY_ICONS",
+        "CATEGORY_ILLUSTRATIONS",
+        "CATEGORY_GALLERY",
+        "ALL_ILLUSTRATIONS",
+        "PARADE_ILLUSTRATIONS",
+        "CATEGORY_ORDER",
+        "AVATAR_ICONS",
+        "getPlantByKey",
+        "getRandomPlantKey",
+        "AVATAR_PLANTS",
+        "TIPS",
+        "Category",
+        "AvatarIcon"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/copy.ts": {
+      "lines": 6,
+      "exports": [
+        "DUPLICATE_SPECIES_GUARD_COPY",
+        "DUPLICATE_SPECIES_SHORT_COPY"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/imageUtils.ts": {
+      "lines": 50,
+      "exports": [
+        "compressImage",
+        "getApproxDataUrlBytes",
+        "MAX_UPLOAD_FILE_BYTES",
+        "MAX_IMAGE_DATA_URL_BYTES"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/leaderboardGoal.test.mjs": {
+      "lines": 29,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/leaderboardGoal.ts": {
+      "lines": 33,
+      "exports": [
+        "getLeaderboardGoalState",
+        "getLeaderboardGoalMeta",
+        "WEEKLY_GOAL_POINTS",
+        "LeaderboardGoalState"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/recognitionReview.test.mjs": {
+      "lines": 19,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/recognitionReview.ts": {
+      "lines": 19,
+      "exports": [
+        "normalizeRecognitionConfidence",
+        "getRecognitionConfidenceBucket",
+        "requiresConfidenceReview",
+        "RECOGNITION_LOW_CONFIDENCE_THRESHOLD",
+        "RecognitionConfidenceBucket"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/supabase/client.ts": {
+      "lines": 9,
+      "exports": [
+        "createClient"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL"
+      ]
+    },
+    "src/lib/supabase/middleware.ts": {
+      "lines": 61,
+      "exports": [
+        "updateSession"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "E2E_TEST",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL"
+      ]
+    },
+    "src/lib/supabase/server.ts": {
+      "lines": 29,
+      "exports": [
+        "createClient"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "NEXT_PUBLIC_SUPABASE_URL"
+      ]
+    },
+    "src/lib/types/circle.ts": {
+      "lines": 69,
+      "exports": [
+        "REACTION_EMOJIS",
+        "Circle",
+        "CircleMember",
+        "CircleWeeklyScore",
+        "CircleAlltimeScore",
+        "CircleActivity",
+        "CircleActivityReaction",
+        "ReactionEmoji"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/weekUtils.ts": {
+      "lines": 45,
+      "exports": [
+        "getWeekStart",
+        "getWeekLabel",
+        "getWeekDays"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/middleware.ts": {
+      "lines": 14,
+      "exports": [
+        "middleware",
+        "config"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    }
+  },
+  "crossCutting": {
+    "supabaseRefs": [
+      "circle",
+      "circle_activity",
+      "circle_activity_reaction",
+      "circle_alltime_score",
+      "circle_member",
+      "circle_weekly_score",
+      "member",
+      "plant",
+      "plant_log",
+      "rpc:join_circle"
+    ],
+    "envVars": [
+      "E2E_TEST",
+      "E2E_TEST_EMAIL",
+      "E2E_TEST_PASSWORD",
+      "NEXT_PUBLIC_SITE_URL",
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "NEXT_PUBLIC_SUPABASE_URL",
+      "NODE_ENV",
+      "OPENROUTER_API_KEY",
+      "SAGE_DETERMINISTIC_ONLY",
+      "SAGE_OPENROUTER_MODEL",
+      "SAGE_OPENROUTER_TIMEOUT_MS"
+    ]
+  }
+}

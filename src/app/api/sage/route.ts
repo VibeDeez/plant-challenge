@@ -9,17 +9,37 @@ import {
 import {
   extractModelMessageContent,
   getSageRequestLimitError,
+  makeDeterministicOnlySageFallbackResponse,
   parseSageTimeoutMs,
 } from "./routeUtils";
+import { apiError } from "@/lib/api/errors";
+import { createApiTelemetry } from "@/lib/api/telemetry";
+import {
+  fetchWithPolicy,
+  parseBooleanFlag,
+  SAGE_OPENROUTER_POLICY,
+} from "@/lib/ai/openRouterPolicy";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const SAGE_OPENROUTER_MODEL =
   process.env.SAGE_OPENROUTER_MODEL ?? "x-ai/grok-4-fast";
 
-const REQUEST_TIMEOUT_MS = parseSageTimeoutMs(
-  process.env.SAGE_OPENROUTER_TIMEOUT_MS
+const SAGE_POLICY = {
+  ...SAGE_OPENROUTER_POLICY,
+  timeoutMs: parseSageTimeoutMs(process.env.SAGE_OPENROUTER_TIMEOUT_MS),
+};
+
+const SAGE_DETERMINISTIC_ONLY = parseBooleanFlag(
+  process.env.SAGE_DETERMINISTIC_ONLY
 );
+
+const SAGE_MODE_HEADER = "x-sage-mode";
+type SageMode =
+  | "deterministic-rule"
+  | "deterministic-only-fallback"
+  | "model"
+  | "model-fallback";
 
 const SAGE_SYSTEM_PROMPT = `You are Sage, an informational helper for Plantmaxxing.
 
@@ -93,8 +113,10 @@ function isValidContext(value: unknown): value is SageContext {
     if (!Array.isArray(value.recognizedPlants)) return false;
     const validPlants = value.recognizedPlants.every((item) => {
       if (!isRecord(item) || typeof item.name !== "string") return false;
-      if (item.category !== undefined && typeof item.category !== "string") return false;
-      if (item.points !== undefined && typeof item.points !== "number") return false;
+      if (item.category !== undefined && typeof item.category !== "string")
+        return false;
+      if (item.points !== undefined && typeof item.points !== "number")
+        return false;
       return true;
     });
     if (!validPlants) return false;
@@ -104,13 +126,13 @@ function isValidContext(value: unknown): value is SageContext {
     if (!isRecord(value.weekProgress)) return false;
     const { points, uniquePlants, target } = value.weekProgress;
     if (points !== undefined && typeof points !== "number") return false;
-    if (uniquePlants !== undefined && typeof uniquePlants !== "number") return false;
+    if (uniquePlants !== undefined && typeof uniquePlants !== "number")
+      return false;
     if (target !== undefined && typeof target !== "number") return false;
   }
 
   return true;
 }
-
 
 function clampConfidence(confidence: number): number {
   if (Number.isNaN(confidence)) return 0.35;
@@ -129,8 +151,10 @@ function parseModelSageResponse(rawContent: string): SageResponse | null {
   }
 
   if (!isRecord(parsed)) return null;
-  if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0) return null;
-  if (typeof parsed.reason !== "string" || parsed.reason.trim().length === 0) return null;
+  if (typeof parsed.answer !== "string" || parsed.answer.trim().length === 0)
+    return null;
+  if (typeof parsed.reason !== "string" || parsed.reason.trim().length === 0)
+    return null;
   if (!VALID_VERDICTS.includes(parsed.verdict as SageVerdict)) return null;
   if (typeof parsed.confidence !== "number") return null;
   if (parsed.points !== null && typeof parsed.points !== "number") return null;
@@ -154,26 +178,76 @@ function parseModelSageResponse(rawContent: string): SageResponse | null {
 }
 
 export async function POST(req: NextRequest) {
+  const contentLength = Number(req.headers.get("content-length") ?? 0);
+  const requestSizeBytes = Number.isFinite(contentLength) ? contentLength : null;
+  const telemetry = createApiTelemetry("/api/sage", requestSizeBytes);
+  let parseFailed = false;
+  let fallbackUsed = false;
+
+  const respondError = (
+    status: number,
+    code:
+      | "SAGE_INVALID_JSON"
+      | "SAGE_INVALID_BODY"
+      | "SAGE_QUESTION_INVALID"
+      | "SAGE_CONTEXT_INVALID"
+      | "SAGE_REQUEST_LIMIT"
+      | "SAGE_MODEL_NOT_CONFIGURED"
+      | "SAGE_TIMEOUT"
+      | "SAGE_PROVIDER_FAILURE"
+      | "SAGE_INTERNAL_ERROR"
+      | "AUTH_UNAUTHORIZED",
+    message: string,
+    extras?: { timeout?: boolean }
+  ) => {
+    telemetry({
+      statusCode: status,
+      parseFailed,
+      fallbackUsed,
+      timeout: extras?.timeout,
+    });
+    return apiError(status, code, message);
+  };
+
+  const respondOk = (payload: unknown, mode: SageMode) => {
+    telemetry({ statusCode: 200, parseFailed, fallbackUsed });
+    const response = NextResponse.json(payload);
+    response.headers.set(SAGE_MODE_HEADER, mode);
+    return response;
+  };
+
   try {
+    if (
+      requestSizeBytes !== null &&
+      requestSizeBytes > SAGE_POLICY.maxRequestBytes
+    ) {
+      return respondError(
+        413,
+        "SAGE_REQUEST_LIMIT",
+        `Request exceeds max payload of ${SAGE_POLICY.maxRequestBytes} bytes`
+      );
+    }
+
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return respondError(401, "AUTH_UNAUTHORIZED", "Unauthorized");
     }
 
     let body: unknown;
     try {
       body = await req.json();
     } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+      return respondError(400, "SAGE_INVALID_JSON", "Invalid JSON body");
     }
 
     if (!isRecord(body)) {
-      return NextResponse.json(
-        { error: "Request body must be an object with question string" },
-        { status: 400 }
+      return respondError(
+        400,
+        "SAGE_INVALID_BODY",
+        "Request body must be an object with question string"
       );
     }
 
@@ -181,83 +255,84 @@ export async function POST(req: NextRequest) {
     const context = body.context;
 
     if (typeof question !== "string" || question.trim().length === 0) {
-      return NextResponse.json(
-        { error: "question must be a non-empty string" },
-        { status: 400 }
+      return respondError(
+        400,
+        "SAGE_QUESTION_INVALID",
+        "question must be a non-empty string"
       );
     }
 
     if (!isValidContext(context)) {
-      return NextResponse.json({ error: "Invalid context shape" }, { status: 400 });
+      return respondError(400, "SAGE_CONTEXT_INVALID", "Invalid context shape");
     }
 
     const limitError = getSageRequestLimitError(question, context);
     if (limitError) {
-      return NextResponse.json({ error: limitError }, { status: 400 });
+      return respondError(400, "SAGE_REQUEST_LIMIT", limitError);
     }
 
     const deterministicMatch = matchDeterministicSageRule(question, context);
     if (deterministicMatch) {
-      return NextResponse.json(deterministicMatch.response);
+      return respondOk(deterministicMatch.response, "deterministic-rule");
     }
 
-    if (!OPENROUTER_API_KEY) {
-      return NextResponse.json(
-        { error: "Sage model is not configured" },
-        { status: 500 }
+    if (SAGE_DETERMINISTIC_ONLY) {
+      fallbackUsed = true;
+      return respondOk(
+        makeDeterministicOnlySageFallbackResponse(),
+        "deterministic-only-fallback"
       );
     }
 
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    if (!OPENROUTER_API_KEY) {
+      return respondError(500, "SAGE_MODEL_NOT_CONFIGURED", "Sage model is not configured");
+    }
+
     let orResponse: Response;
 
     try {
-      orResponse = await fetch(OPENROUTER_URL, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: SAGE_OPENROUTER_MODEL,
-          temperature: 0.2,
-          max_tokens: 500,
-          messages: [
-            { role: "system", content: SAGE_SYSTEM_PROMPT },
-            {
-              role: "user",
-              content: JSON.stringify({
-                question: question.trim(),
-                context: context ?? null,
-              }),
-            },
-          ],
-          response_format: {
-            type: "json_object",
+      orResponse = await fetchWithPolicy(
+        OPENROUTER_URL,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
           },
-        }),
-        signal: controller.signal,
-      });
+          body: JSON.stringify({
+            model: SAGE_OPENROUTER_MODEL,
+            temperature: 0.2,
+            max_tokens: 500,
+            messages: [
+              { role: "system", content: SAGE_SYSTEM_PROMPT },
+              {
+                role: "user",
+                content: JSON.stringify({
+                  question: question.trim(),
+                  context: context ?? null,
+                }),
+              },
+            ],
+            response_format: {
+              type: "json_object",
+            },
+          }),
+        },
+        SAGE_POLICY
+      );
     } catch (error) {
       if ((error as Error).name === "AbortError") {
-        return NextResponse.json(
-          { error: "Sage request timed out. Please try again." },
-          { status: 504 }
-        );
+        return respondError(504, "SAGE_TIMEOUT", "Sage request timed out. Please try again.", {
+          timeout: true,
+        });
       }
       throw error;
-    } finally {
-      clearTimeout(timeout);
     }
 
     if (!orResponse.ok) {
       const errorText = await orResponse.text();
       console.error("Sage OpenRouter error:", orResponse.status, errorText);
-      return NextResponse.json(
-        { error: "Sage model request failed" },
-        { status: 502 }
-      );
+      return respondError(502, "SAGE_PROVIDER_FAILURE", "Sage model request failed");
     }
 
     let modelPayload: unknown;
@@ -265,23 +340,29 @@ export async function POST(req: NextRequest) {
       modelPayload = await orResponse.json();
     } catch {
       console.error("Sage OpenRouter success payload was not valid JSON");
-      return NextResponse.json(makeFallbackResponse());
+      fallbackUsed = true;
+      parseFailed = true;
+      return respondOk(makeFallbackResponse(), "model-fallback");
     }
     const modelContent = extractModelMessageContent(modelPayload);
 
     if (typeof modelContent !== "string") {
       console.error("Sage OpenRouter success payload missing message content");
-      return NextResponse.json(makeFallbackResponse());
+      fallbackUsed = true;
+      parseFailed = true;
+      return respondOk(makeFallbackResponse(), "model-fallback");
     }
 
     const parsed = parseModelSageResponse(modelContent);
     if (!parsed) {
-      return NextResponse.json(makeFallbackResponse());
+      parseFailed = true;
+      fallbackUsed = true;
+      return respondOk(makeFallbackResponse(), "model-fallback");
     }
 
-    return NextResponse.json(parsed);
+    return respondOk(parsed, "model");
   } catch (error) {
     console.error("Sage route error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return respondError(500, "SAGE_INTERNAL_ERROR", "Internal server error");
   }
 }

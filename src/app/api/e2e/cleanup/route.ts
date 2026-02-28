@@ -1,8 +1,40 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import { isE2ERouteBlocked } from "@/lib/api/e2eGuard";
+
+type CleanupBody = {
+  plant_logs: boolean;
+  circles: boolean;
+  kids: boolean;
+  restore_owner_name: boolean;
+};
+
+function parseCleanupBody(input: unknown): CleanupBody {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return {
+      plant_logs: false,
+      circles: false,
+      kids: false,
+      restore_owner_name: false,
+    };
+  }
+
+  const body = input as Record<string, unknown>;
+  return {
+    plant_logs: body.plant_logs === true,
+    circles: body.circles === true,
+    kids: body.kids === true,
+    restore_owner_name: body.restore_owner_name === true,
+  };
+}
 
 export async function POST(request: NextRequest) {
-  if (process.env.E2E_TEST !== "true") {
+  if (
+    isE2ERouteBlocked({
+      nodeEnv: process.env.NODE_ENV,
+      e2eTest: process.env.E2E_TEST,
+    })
+  ) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
@@ -15,10 +47,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const body = await request.json();
+  let rawBody: unknown = {};
+  const contentLength = request.headers.get("content-length");
+  const hasBody = contentLength !== "0";
+  if (hasBody) {
+    try {
+      rawBody = await request.json();
+    } catch {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+    }
+  }
+
+  const body = parseCleanupBody(rawBody);
   const errors: string[] = [];
 
-  // Get the test user's member IDs (owner + kids)
   const { data: members } = await supabase
     .from("member")
     .select("id, is_owner")
@@ -26,7 +68,6 @@ export async function POST(request: NextRequest) {
 
   const memberIds = (members ?? []).map((m) => m.id);
 
-  // Delete plant logs for all members belonging to this user
   if (body.plant_logs && memberIds.length > 0) {
     const { error } = await supabase
       .from("plant_log")
@@ -35,16 +76,13 @@ export async function POST(request: NextRequest) {
     if (error) errors.push(`plant_logs: ${error.message}`);
   }
 
-  // Delete circles where the test user is admin
   if (body.circles && memberIds.length > 0) {
-    // First remove circle memberships for test user's members
     const { error: cmError } = await supabase
       .from("circle_member")
       .delete()
       .in("member_id", memberIds);
     if (cmError) errors.push(`circle_member: ${cmError.message}`);
 
-    // Then delete circles administered by test user's members
     const { error: cError } = await supabase
       .from("circle")
       .delete()
@@ -52,7 +90,6 @@ export async function POST(request: NextRequest) {
     if (cError) errors.push(`circle: ${cError.message}`);
   }
 
-  // Delete non-owner members (kids)
   if (body.kids) {
     const { error } = await supabase
       .from("member")
@@ -62,7 +99,6 @@ export async function POST(request: NextRequest) {
     if (error) errors.push(`kids: ${error.message}`);
   }
 
-  // Restore the owner's display name to "Me"
   if (body.restore_owner_name) {
     const owner = (members ?? []).find((m) => m.is_owner);
     if (owner) {

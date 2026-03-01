@@ -17,7 +17,10 @@
     "prepare": "[ -d .git ] && cp scripts/pre-push.sh .git/hooks/pre-push && chmod +x .git/hooks/pre-push && cp scripts/pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit || true",
     "docs:refresh": "python3 scripts/refresh-architecture-docs.py",
     "docs:check-fresh": "python3 scripts/refresh-architecture-docs.py && git diff --exit-code docs/repo-deep-index.md docs/repo-deep-index.json docs/db-access-matrix.csv docs/api-contracts-deep.md docs/api-contracts-deep.json docs/architecture-bible.md docs/sequence-diagrams.md docs/sequence-diagrams.mmd",
-    "db:check-drift": "python3 scripts/check-db-access-drift.py"
+    "db:check-drift": "python3 scripts/check-db-access-drift.py",
+    "ship:pr": "bash scripts/ship-pr.sh",
+    "qa:seed:leaderboard": "bash scripts/qa-seed-leaderboard.sh",
+    "qa:seed:mobile": "bash scripts/qa-seed-mobile.sh"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

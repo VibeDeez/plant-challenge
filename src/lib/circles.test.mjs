@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   detectLeaderboardDiscrepancies,
+  getShareUrl,
   isValidCircleId,
   isValidInviteCode,
   sanitizeActivityFeed,
@@ -20,6 +21,22 @@ test("isValidInviteCode enforces six-char invite format", () => {
   assert.equal(isValidInviteCode("abc234"), true);
   assert.equal(isValidInviteCode("ABCD12!"), false);
   assert.equal(isValidInviteCode("AB12"), false);
+});
+
+test("getShareUrl uses plantmaxxing.com fallback and normalizes trailing slash", () => {
+  const original = process.env.NEXT_PUBLIC_SITE_URL;
+
+  delete process.env.NEXT_PUBLIC_SITE_URL;
+  assert.equal(getShareUrl("ABC234"), "https://plantmaxxing.com/join/ABC234");
+
+  process.env.NEXT_PUBLIC_SITE_URL = "https://plantmaxxing.com/";
+  assert.equal(getShareUrl("ABC234"), "https://plantmaxxing.com/join/ABC234");
+
+  if (original === undefined) {
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+  } else {
+    process.env.NEXT_PUBLIC_SITE_URL = original;
+  }
 });
 
 test("validateJoinCirclePayload blocks malformed success response without circle id", () => {

@@ -3,8 +3,8 @@
 Last updated: 2026-02-28
 
 ## APP files (21)
-- `src/app/(protected)/add/page.tsx` - 521 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
-- `src/app/(protected)/circles/[id]/page.tsx` - 916 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
+- `src/app/(protected)/add/page.tsx` - 522 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
+- `src/app/(protected)/circles/[id]/page.tsx` - 922 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
 - `src/app/(protected)/circles/[id]/settings/page.tsx` - 473 lines | exports:CircleSettingsPage | db:circle, circle_member
 - `src/app/(protected)/circles/create/page.tsx` - 260 lines | exports:CircleCreatePage | db:circle, circle_member
 - `src/app/(protected)/circles/page.tsx` - 338 lines | exports:CirclesPage | db:circle_member, circle_weekly_score, rpc:join_circle
@@ -61,8 +61,8 @@ Last updated: 2026-02-28
 - `src/lib/api/e2eGuard.ts` - 10 lines | exports:isE2ERouteBlocked
 - `src/lib/api/errors.ts` - 27 lines | exports:apiError, ApiErrorCode
 - `src/lib/api/telemetry.ts` - 44 lines | exports:createApiTelemetry
-- `src/lib/circles.test.mjs` - 110 lines
-- `src/lib/circles.ts` - 339 lines | exports:generateInviteCode, getShareUrl, isValidCircleId, isValidInviteCode, validateJoinCirclePayload, detectLeaderboardDiscrepancies... | env:NEXT_PUBLIC_SITE_URL
+- `src/lib/circles.test.mjs` - 127 lines | env:NEXT_PUBLIC_SITE_URL
+- `src/lib/circles.ts` - 342 lines | exports:generateInviteCode, getShareUrl, isValidCircleId, isValidInviteCode, validateJoinCirclePayload, detectLeaderboardDiscrepancies... | env:NEXT_PUBLIC_SITE_URL
 - `src/lib/constants.ts` - 310 lines | exports:getAvatarByKey, getRandomAvatarKey, CATEGORIES, CATEGORY_COLORS, CATEGORY_EMOJI, CATEGORY_ICONS...
 - `src/lib/copy.ts` - 6 lines | exports:DUPLICATE_SPECIES_GUARD_COPY, DUPLICATE_SPECIES_SHORT_COPY
 - `src/lib/imageUtils.ts` - 50 lines | exports:compressImage, getApproxDataUrlBytes, MAX_UPLOAD_FILE_BYTES, MAX_IMAGE_DATA_URL_BYTES

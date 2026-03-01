@@ -58,9 +58,12 @@ export function generateInviteCode(): string {
 }
 
 export function getShareUrl(inviteCode: string): string {
-  const base =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://plant-challenge.onrender.com";
-  return `${base}/join/${inviteCode}`;
+  const configuredBase = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const base = configuredBase && configuredBase.length > 0
+    ? configuredBase
+    : "https://plantmaxxing.com";
+  const normalizedBase = base.replace(/\/+$/, "");
+  return `${normalizedBase}/join/${inviteCode}`;
 }
 
 export function isValidCircleId(value: unknown): value is string {

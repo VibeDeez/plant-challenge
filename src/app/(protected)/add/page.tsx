@@ -453,7 +453,7 @@ export default function AddPlantPage() {
             className="absolute inset-0 bg-black/40 animate-fadeIn"
             onClick={() => setShowCustom(false)}
           />
-          <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20 animate-slideUp">
+          <div className="relative w-full max-h-[85dvh] overflow-y-auto overscroll-contain rounded-t-3xl bg-brand-cream p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] animate-slideUp">
             <div className="flex justify-center pt-0 pb-3"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
             <div className="flex items-center justify-between mb-4">
               <h3
@@ -502,10 +502,11 @@ export default function AddPlantPage() {
       ) : (
         <button
           onClick={() => setShowCustom(true)}
-          className="fixed bottom-24 right-5 z-40 flex h-12 items-center gap-2 rounded-2xl bg-brand-dark px-5 text-white shadow-lg hover:bg-brand-dark/90 active:scale-95 transition-all"
+          className="fixed right-4 z-40 flex min-h-11 items-center gap-2 rounded-2xl border border-white/20 bg-brand-dark px-4 py-2 text-white shadow-lg transition-all hover:bg-brand-dark/90 active:scale-95"
+          style={{ bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)" }}
         >
           <Plus size={18} strokeWidth={2.5} />
-          <span className="text-sm font-semibold">Custom</span>
+          <span className="text-sm font-semibold">+ Custom</span>
         </button>
       )}
 

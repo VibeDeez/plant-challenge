@@ -86,28 +86,24 @@ function HeroCard({
         }`}
         style={{ backgroundColor: rc.bg }}
       >
-        <div className="relative bg-white/30 backdrop-blur-sm p-5">
-          <div className="flex items-start gap-4">
+        <div className="relative bg-white/30 backdrop-blur-sm px-4 py-4">
+          <div className="flex items-start gap-3">
             <div
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl"
               style={{ backgroundColor: rc.accent }}
             >
-              <span className="text-3xl font-bold font-display" style={{ color: rc.text }}>
+              <span className="text-2xl font-bold font-display" style={{ color: rc.text }}>
                 1
               </span>
             </div>
-            <div className="flex-1 min-w-0 pt-0.5">
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <PlantAvatar plantKey={entry.avatar_emoji} size="lg" />
                 <div className="min-w-0">
-                  <p className="text-lg font-bold text-brand-dark whitespace-normal break-words leading-snug font-display">
-                    {entry.display_name}
-                  </p>
-                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                    {isMe && <p className="text-xs font-medium text-brand-green">You</p>}
-                    {entry.is_ghost && (
-                      <p className="text-[11px] text-brand-muted">inactive</p>
-                    )}
+                  <div className="flex items-center gap-1.5">
+                    <p className="text-lg font-bold text-brand-dark whitespace-normal break-words leading-snug font-display">
+                      {entry.display_name}
+                    </p>
                     {showGoalBadge && goal.showBadge && (
                       <span
                         className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
@@ -116,14 +112,20 @@ function HeroCard({
                       </span>
                     )}
                   </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    {isMe && <p className="text-xs font-medium text-brand-green">You</p>}
+                    {entry.is_ghost && (
+                      <p className="text-[11px] text-brand-muted">inactive</p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-2xl font-bold text-brand-dark font-display">{pts}</p>
-              <p className="text-xs text-brand-muted">points</p>
+              <p className="text-xl font-bold text-brand-dark font-display">{pts}</p>
+              <p className="text-[11px] text-brand-muted">points</p>
               {subtitle && (
-                <p className="text-[11px] text-brand-muted mt-0.5">{subtitle}</p>
+                <p className="text-[10px] text-brand-muted mt-0.5">{subtitle}</p>
               )}
             </div>
           </div>
@@ -159,26 +161,22 @@ function PodiumCard({
         }`}
         style={{ backgroundColor: rc.bg }}
       >
-        <div className="relative bg-white/30 backdrop-blur-sm px-4 py-3.5">
-          <div className="flex items-center gap-3.5">
+        <div className="relative bg-white/30 backdrop-blur-sm px-3.5 py-3">
+          <div className="flex items-center gap-3">
             <div
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
               style={{ backgroundColor: rc.accent }}
             >
-              <span className="text-xl font-bold font-display" style={{ color: rc.text }}>
+              <span className="text-lg font-bold font-display" style={{ color: rc.text }}>
                 {rank}
               </span>
             </div>
             <PlantAvatar plantKey={entry.avatar_emoji} size="lg" />
             <div className="flex-1 min-w-0">
-              <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
-                {entry.display_name}
-              </p>
-              <div className="mt-1 flex flex-wrap items-center gap-1.5">
-                {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
-                {entry.is_ghost && (
-                  <p className="text-[11px] text-brand-muted">inactive</p>
-                )}
+              <div className="flex items-center gap-1.5">
+                <p className="text-[15px] font-semibold text-brand-dark whitespace-normal break-words leading-snug">
+                  {entry.display_name}
+                </p>
                 {showGoalBadge && goal.showBadge && (
                   <span
                     className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
@@ -187,11 +185,17 @@ function PodiumCard({
                   </span>
                 )}
               </div>
+              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
+                {entry.is_ghost && (
+                  <p className="text-[11px] text-brand-muted">inactive</p>
+                )}
+              </div>
             </div>
             <div className="text-right shrink-0">
-              <p className="text-xl font-bold text-brand-dark font-display">{pts}</p>
+              <p className="text-lg font-bold text-brand-dark font-display">{pts}</p>
               {subtitle && (
-                <p className="text-[11px] text-brand-muted">{subtitle}</p>
+                <p className="text-[10px] text-brand-muted">{subtitle}</p>
               )}
             </div>
           </div>
@@ -219,31 +223,33 @@ function StandardRow({
   return (
     <div className={entry.is_ghost ? "opacity-40" : ""}>
       <div
-        className={`flex items-center gap-3 rounded-xl px-4 py-3 transition-colors ${
+        className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 transition-colors ${
           isMe
             ? "bg-brand-green/10 border border-brand-green/20"
             : "bg-white border border-brand-dark/[0.06]"
         }`}
       >
-        <div className="w-8 text-center">
+        <div className="w-7 text-center">
           <span className="text-sm font-medium text-brand-muted">{rank}</span>
         </div>
         <PlantAvatar plantKey={entry.avatar_emoji} size="md" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-brand-dark whitespace-normal break-words leading-snug">
-            {entry.display_name}
-          </p>
-          <div className="mt-1 flex flex-wrap items-center gap-1.5">
-            {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
-            {entry.is_ghost && (
-              <p className="text-[11px] text-brand-muted">inactive</p>
-            )}
+          <div className="flex items-center gap-1.5">
+            <p className="text-sm font-medium text-brand-dark whitespace-normal break-words leading-snug">
+              {entry.display_name}
+            </p>
             {showGoalBadge && goal.showBadge && (
               <span
-                className={`inline-flex min-h-6 items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
+                className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold ${goal.badgeClassName}`}
               >
                 {goal.label}
               </span>
+            )}
+          </div>
+          <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
+            {isMe && <p className="text-[11px] font-medium text-brand-green">You</p>}
+            {entry.is_ghost && (
+              <p className="text-[11px] text-brand-muted">inactive</p>
             )}
           </div>
         </div>

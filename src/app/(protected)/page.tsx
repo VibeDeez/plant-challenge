@@ -243,7 +243,7 @@ export default function HomePage() {
                 return (
                   <div
                     key={cat}
-                    className="relative overflow-hidden rounded-2xl border border-brand-dark/10"
+                    className="relative overflow-hidden rounded-2xl border border-brand-dark/5"
                   >
                     {/* Background illustration */}
                     {illustration && (

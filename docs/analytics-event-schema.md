@@ -1,6 +1,6 @@
 # Analytics Event Schema
 
-Last updated: 2026-02-28
+Last updated: 2026-03-01
 
 Canonical envelope for all analytics events:
 
@@ -37,6 +37,24 @@ Canonical envelope for all analytics events:
 - `recognized_count`: number
 - `selected_count`: number
 - `correction_count`: number
+
+### Voice Log (MVP)
+- `voice_log_opened`
+- `voice_log_recording_started`
+- `voice_log_recording_stopped`
+- `voice_log_transcription_succeeded`
+- `voice_log_transcription_failed`
+- `voice_log_parse_succeeded`
+- `voice_log_parse_failed`
+- `voice_log_review_shown`
+- `voice_log_item_unchecked`
+- `voice_log_item_checked`
+- `voice_log_item_added_manual`
+- `voice_log_confirmed`
+- `voice_log_draft_resumed`
+- `voice_log_abandoned`
+
+MVP note: event-level names are fixed; per-event property contracts will be finalized as UI wiring lands.
 
 ### `join_circle`
 - `circle_id`: uuid

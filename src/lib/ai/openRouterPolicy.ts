@@ -19,6 +19,8 @@ export const SAGE_OPENROUTER_POLICY: OpenRouterPolicy = {
   retryDelayMs: 250,
 };
 
+export const VOICE_OPENROUTER_POLICY = RECOGNIZE_OPENROUTER_POLICY;
+
 export function parseBooleanFlag(rawValue: string | undefined): boolean {
   if (!rawValue) return false;
   const normalized = rawValue.trim().toLowerCase();

@@ -9,6 +9,8 @@
     "lint": "next lint",
     "seed": "echo 'Seed via Supabase migration'",
     "test:e2e": "playwright test --config=e2e/playwright.config.ts",
+    "test:e2e:gate": "playwright test --config=e2e/playwright.config.ts e2e/tests/auth.spec.ts e2e/tests/navigation.spec.ts e2e/tests/home.spec.ts e2e/tests/add-plant.spec.ts e2e/tests/circles.spec.ts e2e/tests/circle-settings.spec.ts e2e/tests/learn.spec.ts e2e/tests/recognize.spec.ts",
+    "test:e2e:quarantine": "playwright test --config=e2e/playwright.config.ts e2e/tests/circle-detail.spec.ts e2e/tests/profile.spec.ts",
     "test:e2e:headed": "playwright test --config=e2e/playwright.config.ts --headed",
     "test:coverage-check": "bash scripts/check-test-coverage.sh",
     "codex:check": "bash scripts/check-codex-tasks.sh",

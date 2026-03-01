@@ -40,6 +40,15 @@ Generated from route implementations. This is code-derived and should be treated
 - Error messages observed: none literal
 - Env vars: OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
 
+## `/api/voice-log`
+- File: `src/app/api/voice-log/route.ts`
+- Methods: POST
+- Auth required: yes
+- Request fields observed: audioBase64, format, locale
+- Status codes observed: implicit 200 only
+- Error messages observed: none literal
+- Env vars: OPENROUTER_API_KEY, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS
+
 ## Telemetry semantics for `/api/recognize` and `/api/sage`
 - Log event name: `api_telemetry`
 - Fields: `endpoint`, `status_code`, `latency_ms`, `timeout`, `fallback_used`, `parse_failed`, `request_size_bucket`

@@ -88,3 +88,4 @@ Data operations inferred:
 - `src/app/api/e2e/login/route.ts` | methods: GET | status codes: 401, 404, 500 | env: E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NODE_ENV
 - `src/app/api/recognize/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY
 - `src/app/api/sage/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
+- `src/app/api/voice-log/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS

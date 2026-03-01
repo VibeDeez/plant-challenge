@@ -79,5 +79,25 @@
       "SAGE_OPENROUTER_MODEL",
       "SAGE_OPENROUTER_TIMEOUT_MS"
     ]
+  },
+  {
+    "route": "/api/voice-log",
+    "file": "src/app/api/voice-log/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [
+      "audioBase64",
+      "format",
+      "locale"
+    ],
+    "statusCodes": [],
+    "errorMessages": [],
+    "env": [
+      "OPENROUTER_API_KEY",
+      "VOICE_OPENROUTER_MODEL",
+      "VOICE_OPENROUTER_TIMEOUT_MS"
+    ]
   }
 ]

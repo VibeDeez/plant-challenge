@@ -23,6 +23,24 @@ Primary viewport is ~375px. Design and test for narrow mobile first.
 - Always use a named branch off `main`.
 - Do not work directly on `main`.
 - Follow `docs/coding-workflow-playbook.md` for task mode selection (direct vs subagent), update cadence, retry policy, and done-definition.
+- Mobile sheet rule: after 2 failed UX fixes or iOS keyboard/viewport instability, stop patching and refactor to shared Sheet primitive.
+- iOS simulator screenshot rule: verify correct state/no error overlay/feature visible before sending.
+
+## Subagent orchestration contract (mandatory)
+- Main Plantmaxxing agent is the coordinator. Henry should not need to babysit.
+- When spawning subagents, always track `runId`, `sessionKey`, owner task, and expected output.
+- Poll subagents until all runs are complete, failed, or timed out. Do not wait for Henry to prompt follow-up checks.
+- Pull subagent results proactively and send one consolidated update in this format:
+  1. Status (`done` or `blocked`)
+  2. What changed
+  3. Validation results
+  4. Risks/unknowns
+  5. Next recommended action
+- Mid-task messages are only allowed for:
+  - explicit approval needed for medium/high-risk changes
+  - true blockers that cannot be resolved after one recovery attempt
+- For long-running background work (>10 min), send at most one concise progress update every 10-15 minutes.
+- Subagent chatter stays internal. User sees coordinator summaries, not fragmented worker logs.
 
 ## Sage backend rules (current v1)
 - Endpoint: `POST /api/sage`

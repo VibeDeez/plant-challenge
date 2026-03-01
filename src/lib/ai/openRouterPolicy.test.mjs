@@ -4,6 +4,7 @@ import {
   parseBooleanFlag,
   RECOGNIZE_OPENROUTER_POLICY,
   SAGE_OPENROUTER_POLICY,
+  VOICE_OPENROUTER_POLICY,
 } from "./openRouterPolicy.ts";
 
 test("parseBooleanFlag accepts common truthy values", () => {
@@ -24,6 +25,12 @@ test("parseBooleanFlag rejects falsey and unknown values", () => {
 test("OpenRouter policies expose non-zero operational limits", () => {
   assert.ok(RECOGNIZE_OPENROUTER_POLICY.timeoutMs > 0);
   assert.ok(RECOGNIZE_OPENROUTER_POLICY.maxRequestBytes > 0);
+  assert.ok(VOICE_OPENROUTER_POLICY.timeoutMs > 0);
+  assert.ok(VOICE_OPENROUTER_POLICY.maxRequestBytes > 0);
   assert.ok(SAGE_OPENROUTER_POLICY.timeoutMs > 0);
   assert.ok(SAGE_OPENROUTER_POLICY.maxRequestBytes > 0);
+});
+
+test("voice policy shares recognize policy defaults", () => {
+  assert.equal(VOICE_OPENROUTER_POLICY, RECOGNIZE_OPENROUTER_POLICY);
 });

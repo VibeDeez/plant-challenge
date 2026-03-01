@@ -3,8 +3,8 @@
 Last updated: 2026-03-01
 
 ## APP files (21)
-- `src/app/(protected)/add/page.tsx` - 521 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
-- `src/app/(protected)/circles/[id]/page.tsx` - 922 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
+- `src/app/(protected)/add/page.tsx` - 580 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
+- `src/app/(protected)/circles/[id]/page.tsx` - 928 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
 - `src/app/(protected)/circles/[id]/settings/page.tsx` - 473 lines | exports:CircleSettingsPage | db:circle, circle_member
 - `src/app/(protected)/circles/create/page.tsx` - 260 lines | exports:CircleCreatePage | db:circle, circle_member
 - `src/app/(protected)/circles/page.tsx` - 340 lines | exports:CirclesPage | db:circle_member, circle_weekly_score, rpc:join_circle
@@ -25,15 +25,16 @@ Last updated: 2026-03-01
 - `src/app/manifest.ts` - 22 lines | exports:manifest
 - `src/app/opengraph-image.tsx` - 67 lines | exports:alt, size, contentType
 
-## API files (6)
+## API files (7)
 - `src/app/api/e2e/cleanup/route.ts` - 119 lines | methods:POST | exports:POST | db:circle, circle_member, member, plant_log | env:E2E_TEST, NODE_ENV
 - `src/app/api/e2e/login/route.ts` - 33 lines | methods:GET | exports:GET | env:E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NODE_ENV
 - `src/app/api/recognize/route.ts` - 270 lines | methods:POST | exports:POST | db:plant | env:OPENROUTER_API_KEY
 - `src/app/api/sage/route.test.mjs` - 75 lines
 - `src/app/api/sage/route.ts` - 369 lines | methods:POST | exports:POST | env:OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
 - `src/app/api/sage/routeUtils.ts` - 100 lines | exports:parseSageTimeoutMs, getSageRequestLimitError, extractModelMessageContent, makeDeterministicOnlySageFallbackResponse
+- `src/app/api/voice-log/route.ts` - 428 lines | methods:POST | exports:POST | env:OPENROUTER_API_KEY, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS
 
-## COMPONENT files (17)
+## COMPONENT files (18)
 - `src/components/Accordion.tsx` - 43 lines | exports:Accordion
 - `src/components/AddKidModal.tsx` - 96 lines | exports:AddKidModal
 - `src/components/AddToHomeScreen.tsx` - 104 lines | exports:AddToHomeScreen | env:NODE_ENV
@@ -50,17 +51,18 @@ Last updated: 2026-03-01
 - `src/components/ProgressBar.tsx` - 90 lines | exports:ProgressBar
 - `src/components/ProtectedLayout.tsx` - 132 lines | exports:ProtectedLayout, useApp | db:member
 - `src/components/SageChat.tsx` - 228 lines | exports:SageChat
+- `src/components/VoiceLogModal.tsx` - 831 lines | exports:VoiceLogModal
 - `src/components/ui/sheet.tsx` - 61 lines
 
 ## LIB files (23)
-- `src/lib/ai/openRouterPolicy.test.mjs` - 30 lines
-- `src/lib/ai/openRouterPolicy.ts` - 71 lines | exports:parseBooleanFlag, fetchWithPolicy, RECOGNIZE_OPENROUTER_POLICY, SAGE_OPENROUTER_POLICY, OpenRouterPolicy
+- `src/lib/ai/openRouterPolicy.test.mjs` - 37 lines
+- `src/lib/ai/openRouterPolicy.ts` - 73 lines | exports:parseBooleanFlag, fetchWithPolicy, RECOGNIZE_OPENROUTER_POLICY, SAGE_OPENROUTER_POLICY, VOICE_OPENROUTER_POLICY, OpenRouterPolicy
 - `src/lib/ai/sageRules.test.mjs` - 54 lines
 - `src/lib/ai/sageRules.ts` - 229 lines | exports:getSageDeterministicAliases, matchDeterministicSageRule, SageVerdict, SageContext, SageResponse, DeterministicSageResult
-- `src/lib/analytics/events.ts` - 39 lines | exports:trackAnalyticsEvent, buildAnalyticsEvent, ANALYTICS_EVENT_NAMES, AnalyticsEventName, AnalyticsEvent
+- `src/lib/analytics/events.ts` - 53 lines | exports:trackAnalyticsEvent, buildAnalyticsEvent, ANALYTICS_EVENT_NAMES, AnalyticsEventName, AnalyticsEvent
 - `src/lib/api/e2eGuard.test.mjs` - 24 lines
 - `src/lib/api/e2eGuard.ts` - 10 lines | exports:isE2ERouteBlocked
-- `src/lib/api/errors.ts` - 27 lines | exports:apiError, ApiErrorCode
+- `src/lib/api/errors.ts` - 37 lines | exports:apiError, ApiErrorCode
 - `src/lib/api/telemetry.ts` - 44 lines | exports:createApiTelemetry
 - `src/lib/circles.test.mjs` - 127 lines | env:NEXT_PUBLIC_SITE_URL
 - `src/lib/circles.ts` - 342 lines | exports:generateInviteCode, getShareUrl, isValidCircleId, isValidInviteCode, validateJoinCirclePayload, detectLeaderboardDiscrepancies... | env:NEXT_PUBLIC_SITE_URL
@@ -82,7 +84,7 @@ Last updated: 2026-03-01
 
 ## Cross-cutting extracted references
 - Supabase tables/RPC: circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score, member, plant, plant_log, rpc:join_circle
-- Env vars: E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_SUPABASE_URL, NODE_ENV, OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
+- Env vars: E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_SUPABASE_URL, NODE_ENV, OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS
 
 ## Regenerate
 - Run: `python3 scripts/refresh-architecture-docs.py`

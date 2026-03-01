@@ -13,10 +13,11 @@ import {
 import { useApp } from "@/components/ProtectedLayout";
 import CategoryTabs from "@/components/CategoryTabs";
 import PlantListItem from "@/components/PlantListItem";
-import { ArrowLeft, Plus, Search, X, Leaf, Camera, Trophy } from "lucide-react";
+import { ArrowLeft, Plus, Search, X, Leaf, Camera, Trophy, Mic } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import PhotoRecognitionModal from "@/components/PhotoRecognitionModal";
+import VoiceLogModal from "@/components/VoiceLogModal";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 type Plant = {
@@ -34,6 +35,10 @@ type LogFeedback = {
   hasCircleImpact: boolean;
 };
 
+function normalizePlantName(name: string): string {
+  return name.trim().replace(/\s+/g, " ");
+}
+
 const supabase = createClient();
 
 export default function AddPlantPage() {
@@ -46,6 +51,7 @@ export default function AddPlantPage() {
   const [customCategory, setCustomCategory] = useState("Fruits");
   const [showCustom, setShowCustom] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [showVoice, setShowVoice] = useState(false);
   const [weekTotalPoints, setWeekTotalPoints] = useState(0);
   const [feedback, setFeedback] = useState<LogFeedback | null>(null);
   const [circleCount, setCircleCount] = useState(0);
@@ -101,24 +107,28 @@ export default function AddPlantPage() {
   async function logCustomPlant(e: React.FormEvent) {
     e.preventDefault();
     if (!activeMember || !customName.trim()) return;
+    const normalizedCustomName = normalizePlantName(customName);
+    const alreadyLoggedThisWeek = Array.from(loggedNames).some(
+      (name) => normalizePlantName(name).toLowerCase() === normalizedCustomName.toLowerCase()
+    );
     const isHerbOrSpice =
       customCategory === "Herbs" || customCategory === "Spices";
     const points = isHerbOrSpice ? 0.25 : 1;
     const { error } = await supabase.from("plant_log").insert({
       member_id: activeMember.id,
-      plant_name: customName.trim(),
+      plant_name: normalizedCustomName,
       category: customCategory,
       points,
       week_start: weekStart,
     });
     if (!error) {
-      setLoggedNames((prev) => new Set(prev).add(customName.trim()));
+      setLoggedNames((prev) => new Set(prev).add(normalizedCustomName));
       setWeekTotalPoints((prev) => prev + points);
       setFeedback({
         pointsAdded: points,
-        duplicateCount: 0,
-        newUniqueCount: 1,
-        uniqueProgress: loggedNames.size + 1,
+        duplicateCount: alreadyLoggedThisWeek ? 1 : 0,
+        newUniqueCount: alreadyLoggedThisWeek ? 0 : 1,
+        uniqueProgress: loggedNames.size + (alreadyLoggedThisWeek ? 0 : 1),
         hasCircleImpact: circleCount > 0,
       });
       setCustomName("");
@@ -130,8 +140,27 @@ export default function AddPlantPage() {
     recognized: { name: string; category: string; points: number; confidence?: number }[]
   ) {
     if (!activeMember) return;
-    const inserts = recognized
-      .filter((p) => !loggedNames.has(p.name))
+
+    const normalizedLogged = new Set(
+      Array.from(loggedNames).map((name) => normalizePlantName(name).toLowerCase())
+    );
+
+    const seen = new Set<string>();
+    const uniqueRecognized = recognized
+      .map((plant) => ({
+        ...plant,
+        name: normalizePlantName(plant.name),
+      }))
+      .filter((p) => p.name.length > 0)
+      .filter((p) => {
+        const key = p.name.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+    const inserts = uniqueRecognized
+      .filter((p) => !normalizedLogged.has(p.name.toLowerCase()))
       .map((p) => ({
         member_id: activeMember.id,
         plant_name: p.name,
@@ -139,6 +168,7 @@ export default function AddPlantPage() {
         points: p.points,
         week_start: weekStart,
       }));
+
     const duplicateCount = recognized.length - inserts.length;
     if (inserts.length === 0) {
       setFeedback({
@@ -167,6 +197,12 @@ export default function AddPlantPage() {
         hasCircleImpact: circleCount > 0,
       });
     }
+  }
+
+  async function logVoicePlants(
+    recognized: { name: string; category: string; points: number; confidence?: number }[]
+  ) {
+    await logRecognizedPlants(recognized);
   }
 
   const filtered = useMemo(
@@ -213,21 +249,36 @@ export default function AddPlantPage() {
             </h1>
           </div>
 
-          {/* Snap to Log banner */}
-          <button
-            onClick={() => setShowCamera(true)}
-            className="mb-3 flex min-h-11 w-full items-center gap-3 rounded-2xl bg-brand-green px-4 py-3 text-left transition-all hover:bg-brand-green-hover active:scale-[0.98]"
-          >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
-              <Camera size={22} className="text-white" strokeWidth={2} />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-white">Snap to Log</p>
-              <p className="text-[11px] text-white/70">
-                Take a photo and we&apos;ll find the plants
-              </p>
-            </div>
-          </button>
+          <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {/* Snap to Log banner */}
+            <button
+              onClick={() => setShowCamera(true)}
+              className="flex min-h-11 w-full items-center gap-3 rounded-2xl bg-brand-green px-4 py-3 text-left transition-all hover:bg-brand-green-hover active:scale-[0.98]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
+                <Camera size={22} className="text-white" strokeWidth={2} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Snap to Log</p>
+                <p className="text-[11px] text-white/70">
+                  Take a photo and we&apos;ll find the plants
+                </p>
+              </div>
+            </button>
+
+            <button
+              onClick={() => setShowVoice(true)}
+              className="flex min-h-11 w-full items-center gap-3 rounded-2xl bg-brand-dark px-4 py-3 text-left transition-all hover:bg-brand-dark/90 active:scale-[0.98]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+                <Mic size={22} className="text-white" strokeWidth={2} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Voice Log</p>
+                <p className="text-[11px] text-white/70">Say what you ate in your own words</p>
+              </div>
+            </button>
+          </div>
 
           {feedback && (
             <div className="mb-3 rounded-2xl border border-brand-green/25 bg-brand-green/10 p-3 text-brand-dark">
@@ -514,6 +565,14 @@ export default function AddPlantPage() {
         onClose={() => setShowCamera(false)}
         loggedNames={loggedNames}
         onLogPlants={logRecognizedPlants}
+      />
+
+      <VoiceLogModal
+        open={showVoice}
+        onClose={() => setShowVoice(false)}
+        plants={plants}
+        loggedNames={loggedNames}
+        onLogPlants={logVoicePlants}
       />
     </>
   );

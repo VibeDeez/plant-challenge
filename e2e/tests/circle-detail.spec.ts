@@ -47,13 +47,16 @@ test.describe("Circle Detail page", () => {
     await expect(weekBtn).toHaveClass(/bg-brand-green/);
   });
 
-  test("shows empty leaderboard for new circle", async ({
+  test("shows owner row with zero points for new circle", async ({
     authedPage: page,
   }) => {
-    // A freshly created circle should have no scores
-    await expect(
-      page.locator("h2").filter({ hasText: "No scores yet" })
-    ).toBeVisible();
+    // New circles render the owner row immediately with zero points.
+    const meRow = page
+      .locator("div")
+      .filter({ has: page.getByText("Me", { exact: true }) })
+      .filter({ has: page.getByText("points") })
+      .first();
+    await expect(meRow).toContainText("0");
   });
 
   test("leaderboard updates after logging a plant", async ({

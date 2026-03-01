@@ -54,10 +54,8 @@ test.describe("Profile page", () => {
       .first()
       .click();
 
-    // Modal should open with "Add Kid" heading
-    await expect(
-      page.locator("h3").filter({ hasText: "Add Kid" })
-    ).toBeVisible();
+    // Sheet should open with an "Add Kid" heading
+    await expect(page.getByRole("heading", { name: "Add Kid" })).toBeVisible();
 
     // Fill in the name
     await page.fill('input[placeholder="Kid\'s name"]', "Test Kid");
@@ -119,10 +117,10 @@ test.describe("Profile page", () => {
     const kidRow = page.locator("p", { hasText: "Kid To Delete" })
       .locator("xpath=ancestor::div[contains(@class,'flex items-center gap-3')]");
     const trashBtn = kidRow.getByRole("button").nth(1);
-    const dialogPromise = page.waitForEvent("dialog");
+    page.once("dialog", async (dialog) => {
+      await dialog.accept();
+    });
     await trashBtn.click();
-    const dialog = await dialogPromise;
-    await dialog.accept();
 
     // Kid should disappear
     await expect(page.getByText("Kid To Delete", { exact: true })).toHaveCount(

@@ -1,0 +1,25 @@
+schemaVersion: 1
+
+# Keep commonly used Apple QA workflows available for agents.
+enabledWorkflows:
+  - simulator
+  - ui-automation
+  - logging
+  - debugging
+  - doctor
+  - session-management
+
+# Session defaults reduce per-call args and improve consistency.
+sessionDefaults:
+  simulatorPlatform: "iOS Simulator"
+  simulatorName: "iPhone 17 Pro"
+  useLatestOS: true
+  platform: "iOS"
+
+# Keep session defaults enabled so agents can reuse these automatically.
+disableSessionDefaults: false
+
+# Keep runtime predictable.
+incrementalBuildsEnabled: false
+uiDebuggerGuardMode: "error"
+debug: false

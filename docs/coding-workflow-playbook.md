@@ -71,10 +71,33 @@ Retry only transient failures (tool startup/network/session issues).
 ### Preferred test lanes
 - **Gate lane (blocking):** stable targeted tests for touched area
 - **Quarantine lane (non-blocking):** known flaky specs tracked separately
+- **iOS simulator lane (manual/assisted):** xcodebuildMCP verification for Safari-only UX
 
-Current known flaky tests to isolate/fix:
+#### Playwright gate lane (blocking in CI/pre-push)
+Run only stable specs in the blocking lane:
+- `e2e/tests/auth.spec.ts`
+- `e2e/tests/navigation.spec.ts`
+- `e2e/tests/home.spec.ts`
+- `e2e/tests/add-plant.spec.ts`
+- `e2e/tests/circles.spec.ts`
+- `e2e/tests/circle-settings.spec.ts`
+- `e2e/tests/learn.spec.ts`
+- `e2e/tests/recognize.spec.ts`
+
+#### Playwright quarantine lane (non-blocking)
+Known flaky or environment-sensitive specs:
 - `e2e/tests/circle-detail.spec.ts` (empty leaderboard for new circle)
-- `e2e/tests/profile.spec.ts` (delete kid)
+- `e2e/tests/profile.spec.ts` (delete kid flow)
+
+Use for local investigation and stabilization work. Do not block push/merge on these until stabilized.
+
+#### xcodebuildMCP iOS smoke lane (required for risky mobile UI changes)
+When a task touches sheets/modals, keyboard behavior, safe areas, or bottom nav overlap, run simulator smoke checks:
+1. Open target flow in iOS Simulator Safari.
+2. Verify keyboard-up state.
+3. Verify primary action is visible and tappable.
+4. Verify close/dismiss works (backdrop, close button, Escape when applicable).
+5. Capture screenshot evidence for each key state.
 
 ---
 
@@ -189,3 +212,99 @@ These improve observability, but they do **not** replace the Telegram default of
 5. If pre-push/test gate blocks urgent delivery:
    - get explicit approval to use `--no-verify` push
    - open follow-up issue for test stabilization
+
+---
+
+## 10) Mobile sheet escalation + refactor trigger
+
+### Refactor trigger (mandatory)
+Do not keep patching fragile sheet behavior. Escalate to primitive refactor when any of these are true:
+- 2 failed UX fixes on the same sheet flow in one task
+- issue involves keyboard + viewport math on iOS Safari
+- submit/action control is intermittently unreachable
+
+Default refactor path:
+- replace hand-rolled sheet/modal with shared Radix/shadcn-style Sheet primitive
+- remove ad-hoc viewport listeners unless strictly needed
+
+### Sheet acceptance criteria (required before done)
+For mobile sheet tasks, "done" requires:
+1. open state verified on iOS Simulator Safari
+2. keyboard-up state verified (or explicit blocker noted)
+3. primary submit/action is visible and tappable
+4. close works via backdrop, close button, and Escape
+5. no overlap with bottom nav/safe area
+
+---
+
+## 11) xcodebuildMCP screenshot/testing protocol
+
+### Capture protocol (send gate)
+Before sending any screenshot, verify all of:
+1. correct route and state
+2. no error overlay (404/500/Next error)
+3. target feature is visible in frame
+4. no blocking coachmark/system prompt obscuring target
+5. include one-line caption describing expected visible state
+
+If any check fails, recapture. Do not send.
+
+### QA state control policy
+Use deterministic, dev-only state controls for simulator capture when needed:
+- allow temporary `?qa=` hooks only in non-production scope
+- remove the hook immediately after capture
+- rerun `npx tsc --noEmit` after cleanup
+
+### Validation baseline for sheet/UI changes
+Minimum validation set:
+- `npx tsc --noEmit`
+- targeted E2E for touched flow (if available)
+- iOS Simulator Safari screenshot evidence for key states
+
+---
+
+## 12) xcodebuildMCP optimization runbook (default usage)
+
+### Session bootstrap (first call in task)
+1. `session_show_defaults`
+2. If missing/incorrect, set defaults once with `session_set_defaults` (simulatorId/simulatorName, simulatorPlatform, scheme/project/workspace when relevant).
+3. Prefer `simulatorId` over `simulatorName` for deterministic runs.
+
+### Preferred simulator flow
+- Use `build_run_sim` for single-step app bring-up when building native app targets.
+- Use `open_sim` only when visual/manual interaction is required.
+- Use `screenshot` + `snapshot_ui` together for verification (image evidence + coordinate tree).
+
+### UI automation flow (reduce manual taps)
+- Prefer structured tools over ad-hoc openurl loops:
+  - `tap` (accessibility id/label first)
+  - `type_text`
+  - `swipe` / `gesture`
+  - `button` / `key_press`
+- Use `snapshot_ui` before and after major UI actions.
+
+### Logging + debugging flow
+- For flaky or timing-sensitive bugs:
+  1. `start_sim_log_cap`
+  2. reproduce issue
+  3. `stop_sim_log_cap`
+- For hard runtime bugs, use debugger tools (`debug_attach_sim`, breakpoints, stack/variables) instead of repeated blind retries.
+
+### Reliability rules
+- In simulator Safari, do not rely on `localhost`; use host LAN URL when required.
+- If stateful commands behave oddly, run `doctor` and re-check defaults.
+- Keep simulator target pinned during a task; avoid switching devices mid-run unless intentional.
+
+### Workflow enablement (repo config)
+If we need advanced capabilities consistently, enable workflows via `.xcodebuildmcp/config.yaml`:
+- `simulator`
+- `ui-automation`
+- `debugging`
+- `logging`
+- optional: `xcode-ide` (when IDE bridge use is planned)
+
+### Done criteria for xcodebuildMCP-driven QA
+- deterministic simulator target recorded
+- at least one verified screenshot per acceptance state
+- logs attached for failures (when reproduced)
+- no temporary QA hooks left in committed code

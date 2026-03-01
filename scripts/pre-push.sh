@@ -52,50 +52,28 @@ echo "=== Pre-Push: Running E2E Tests ==="
 echo "    (skip with: git push --no-verify)"
 echo ""
 
-# Check if dev server is already running (use /auth which doesn't redirect)
-DEV_RUNNING=false
-if curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/auth 2>/dev/null | grep -q "200"; then
-  DEV_RUNNING=true
-  echo "Dev server already running on :3000"
-fi
-
-DEV_PID=""
-cleanup() {
-  if [ -n "$DEV_PID" ]; then
-    echo "Stopping background dev server (PID $DEV_PID)..."
-    kill "$DEV_PID" 2>/dev/null || true
-    wait "$DEV_PID" 2>/dev/null || true
-  fi
-}
-trap cleanup EXIT
-
-# Start dev server in background if not running
-if [ "$DEV_RUNNING" = false ]; then
-  echo "Starting dev server..."
-  npm run dev > /dev/null 2>&1 &
-  DEV_PID=$!
-
-  # Wait for server to be fully compiled and ready (check /auth returns 200)
-  for i in $(seq 1 60); do
-    status=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/auth 2>/dev/null || echo "000")
-    if [ "$status" = "200" ]; then
-      echo "Dev server ready."
-      break
-    fi
-    if [ "$i" -eq 60 ]; then
-      echo -e "${RED}✗ Dev server failed to start within 60s${NC}"
-      exit 1
-    fi
-    sleep 1
-  done
-fi
+# Playwright owns web server lifecycle via e2e/playwright.config.ts webServer.
+# Do not start another dev server here (prevents :3000 conflicts).
 
 # Run coverage check (warnings only)
 bash scripts/check-test-coverage.sh || true
 
 # Run E2E tests
-echo "Running Playwright tests..."
-if npx playwright test --config=e2e/playwright.config.ts; then
+# If stale Next build artifacts cause chunk resolution issues, clear .next once.
+if [ -d .next ]; then
+  rm -rf .next
+fi
+
+echo "Running Playwright gate lane tests..."
+if npx playwright test --config=e2e/playwright.config.ts \
+  e2e/tests/auth.spec.ts \
+  e2e/tests/navigation.spec.ts \
+  e2e/tests/home.spec.ts \
+  e2e/tests/add-plant.spec.ts \
+  e2e/tests/circles.spec.ts \
+  e2e/tests/circle-settings.spec.ts \
+  e2e/tests/learn.spec.ts \
+  e2e/tests/recognize.spec.ts; then
   echo ""
   echo -e "${GREEN}✓ All E2E tests passed — push allowed${NC}"
   echo ""

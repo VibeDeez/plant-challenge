@@ -2,7 +2,7 @@
   "generatedAt": "2026-03-01",
   "files": {
     "src/app/(protected)/add/page.tsx": {
-      "lines": 521,
+      "lines": 580,
       "exports": [
         "AddPlantPage"
       ],
@@ -15,7 +15,7 @@
       "env": []
     },
     "src/app/(protected)/circles/[id]/page.tsx": {
-      "lines": 922,
+      "lines": 928,
       "exports": [
         "CircleDetailPage"
       ],
@@ -215,6 +215,21 @@
       "methods": [],
       "supabase": [],
       "env": []
+    },
+    "src/app/api/voice-log/route.ts": {
+      "lines": 428,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [],
+      "env": [
+        "OPENROUTER_API_KEY",
+        "VOICE_OPENROUTER_MODEL",
+        "VOICE_OPENROUTER_TIMEOUT_MS"
+      ]
     },
     "src/app/apple-icon.tsx": {
       "lines": 53,
@@ -464,6 +479,15 @@
       "supabase": [],
       "env": []
     },
+    "src/components/VoiceLogModal.tsx": {
+      "lines": 831,
+      "exports": [
+        "VoiceLogModal"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
     "src/components/ui/sheet.tsx": {
       "lines": 61,
       "exports": [],
@@ -472,19 +496,20 @@
       "env": []
     },
     "src/lib/ai/openRouterPolicy.test.mjs": {
-      "lines": 30,
+      "lines": 37,
       "exports": [],
       "methods": [],
       "supabase": [],
       "env": []
     },
     "src/lib/ai/openRouterPolicy.ts": {
-      "lines": 71,
+      "lines": 73,
       "exports": [
         "parseBooleanFlag",
         "fetchWithPolicy",
         "RECOGNIZE_OPENROUTER_POLICY",
         "SAGE_OPENROUTER_POLICY",
+        "VOICE_OPENROUTER_POLICY",
         "OpenRouterPolicy"
       ],
       "methods": [],
@@ -513,7 +538,7 @@
       "env": []
     },
     "src/lib/analytics/events.ts": {
-      "lines": 39,
+      "lines": 53,
       "exports": [
         "trackAnalyticsEvent",
         "buildAnalyticsEvent",
@@ -542,7 +567,7 @@
       "env": []
     },
     "src/lib/api/errors.ts": {
-      "lines": 27,
+      "lines": 37,
       "exports": [
         "apiError",
         "ApiErrorCode"
@@ -781,7 +806,9 @@
       "OPENROUTER_API_KEY",
       "SAGE_DETERMINISTIC_ONLY",
       "SAGE_OPENROUTER_MODEL",
-      "SAGE_OPENROUTER_TIMEOUT_MS"
+      "SAGE_OPENROUTER_TIMEOUT_MS",
+      "VOICE_OPENROUTER_MODEL",
+      "VOICE_OPENROUTER_TIMEOUT_MS"
     ]
   }
 }

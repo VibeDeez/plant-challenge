@@ -426,9 +426,15 @@ export default function CircleDetailPage() {
         const sanitizedKeys = new Set(
           sanitized.reactions.map((r) => `${r.activity_id}:${r.member_id}:${r.emoji}`)
         );
-        const safeRows = ((rxData ?? []) as CircleActivityReaction[]).filter((row) =>
-          sanitizedKeys.has(`${row.activity_id}:${row.member_id}:${row.emoji}`)
-        );
+        const seenReactionKeys = new Set<string>();
+        const safeRows: CircleActivityReaction[] = [];
+        for (const row of (rxData ?? []) as CircleActivityReaction[]) {
+          const key = `${row.activity_id}:${row.member_id}:${row.emoji}`;
+          if (!sanitizedKeys.has(key)) continue;
+          if (seenReactionKeys.has(key)) continue;
+          seenReactionKeys.add(key);
+          safeRows.push(row);
+        }
         setReactions(safeRows);
       } else {
         setActivities(parsed);

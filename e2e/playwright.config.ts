@@ -29,7 +29,9 @@ export default defineConfig({
   webServer: {
     command: "HOST=127.0.0.1 PORT=3000 E2E_TEST=true npm run dev",
     url: "http://localhost:3000/auth",
-    reuseExistingServer: true,
+    // Use a fresh dev server per run to avoid attaching to stale local Next dev
+    // processes on :3000 (which can serve mismatched chunks and break auth bootstrap waits).
+    reuseExistingServer: false,
     timeout: 60_000,
   },
 });

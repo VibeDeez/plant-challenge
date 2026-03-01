@@ -132,17 +132,19 @@ test.describe("Add Plant page", () => {
     await expect(appleBtn).toBeDisabled();
   });
 
-  test("custom plant modal opens via floating button", async ({
+  test("custom plant modal opens via CTA", async ({
     authedPage: page,
   }) => {
-    const customBtn = page.getByRole("button", { name: "Custom" });
-    await customBtn.click();
+    const cta = page.getByText("Don't see your plant?");
+    await cta.scrollIntoViewIfNeeded();
+    await cta.click();
     await expect(page.getByText("Custom Plant")).toBeVisible();
   });
 
   test("log a custom plant", async ({ authedPage: page }) => {
-    const customBtn = page.getByRole("button", { name: "Custom" });
-    await customBtn.click();
+    const cta = page.getByText("Don't see your plant?");
+    await cta.scrollIntoViewIfNeeded();
+    await cta.click();
     await page.fill('input[placeholder="Plant name"]', "Dragon Fruit");
     await page
       .locator('button[type="submit"]')
@@ -153,8 +155,9 @@ test.describe("Add Plant page", () => {
   });
 
   test("custom herb gets 0.25 points", async ({ authedPage: page }) => {
-    const customBtn = page.getByRole("button", { name: "Custom" });
-    await customBtn.click();
+    const cta = page.getByText("Don't see your plant?");
+    await cta.scrollIntoViewIfNeeded();
+    await cta.click();
     await page.fill('input[placeholder="Plant name"]', "Test Herb");
     await page.selectOption("select", "Herbs");
     await page

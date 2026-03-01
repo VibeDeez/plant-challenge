@@ -140,3 +140,52 @@ A task is only done when response includes:
 2. where changed (files)
 3. what passed/failed (checks)
 4. what remains (if anything)
+
+---
+
+## 9) Telegram-safe execution mode (ACP reliability policy)
+
+### Default for Telegram
+Use **direct acpx relay** for Codex/Claude-style coding tasks in Telegram DMs.
+
+Why:
+- avoids thread-binding assumptions (Telegram lacks built-in ACP thread binding behavior used in Discord)
+- avoids async "announce back" delivery uncertainty
+- keeps output synchronous in the same chat
+
+### ACP usage boundary
+Use ACP `runtime:"acp"` session/thread mode only when the active channel supports robust thread binding (e.g., Discord), or when explicitly requested by user for experimentation.
+
+### Required heartbeat contract (long runs)
+For any task expected to run >5 minutes, post:
+1. started (scope + ETA)
+2. heartbeat at ~2 min
+3. heartbeat at ~5 min
+4. every 10 min thereafter
+5. done/blocked with summary
+
+### Failure fallback rule
+If no reliable completion callback is observed within heartbeat SLA:
+- stop waiting on async announce path
+- switch to direct acpx execution
+- continue task and report in same chat
+
+### Session visibility baseline (keep enabled)
+- `tools.sessions.visibility=all`
+- `tools.agentToAgent.enabled=true`
+
+These improve observability, but they do **not** replace the Telegram default of direct acpx for delivery reliability.
+
+### PR review/fix runbook for Telegram
+1. Start direct acpx run in repo.
+2. Send immediate start update (scope, ETA, validations planned).
+3. Send heartbeat updates per SLA.
+4. Return structured completion:
+   - Plan
+   - Changes
+   - Validation
+   - Risks
+   - Decision needed
+5. If pre-push/test gate blocks urgent delivery:
+   - get explicit approval to use `--no-verify` push
+   - open follow-up issue for test stabilization

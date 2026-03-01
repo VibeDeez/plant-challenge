@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Trophy, Plus, Ticket, X, Users, ChevronRight } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 type CircleCard = {
   id: string;
@@ -274,25 +275,26 @@ export default function CirclesPage() {
       </div>
 
       {/* === JOIN MODAL (bottom sheet) === */}
-      {joinOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 animate-fadeIn"
-          onClick={() => setJoinOpen(false)}
-        >
-          <div
-            className="w-full max-w-lg bg-brand-cream rounded-t-2xl animate-slideUp p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl font-bold text-brand-dark font-display">
+      <Sheet open={joinOpen} onOpenChange={setJoinOpen}>
+        <SheetContent>
+          <div className="p-6 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
+            <div className="mb-3 flex justify-center">
+              <div className="h-1 w-10 rounded-full bg-brand-dark/15" />
+            </div>
+
+            <div className="mb-5 flex items-center justify-between">
+              <SheetTitle className="text-xl font-bold text-brand-dark font-display">
                 Join a Circle
-              </h2>
-              <button
-                onClick={() => setJoinOpen(false)}
-                className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-brand-dark/5 transition-colors"
-              >
-                <X size={20} className="text-brand-muted" />
-              </button>
+              </SheetTitle>
+              <SheetClose asChild>
+                <button
+                  type="button"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-muted hover:bg-brand-dark/5 transition-colors"
+                  aria-label="Close join circle sheet"
+                >
+                  <X size={20} />
+                </button>
+              </SheetClose>
             </div>
 
             <form onSubmit={handleJoin} className="space-y-4">
@@ -330,8 +332,8 @@ export default function CirclesPage() {
               </button>
             </form>
           </div>
-        </div>
-      )}
+        </SheetContent>
+      </Sheet>
     </>
   );
 }

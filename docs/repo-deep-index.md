@@ -3,11 +3,11 @@
 Last updated: 2026-03-01
 
 ## APP files (21)
-- `src/app/(protected)/add/page.tsx` - 522 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
+- `src/app/(protected)/add/page.tsx` - 521 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
 - `src/app/(protected)/circles/[id]/page.tsx` - 922 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
 - `src/app/(protected)/circles/[id]/settings/page.tsx` - 473 lines | exports:CircleSettingsPage | db:circle, circle_member
 - `src/app/(protected)/circles/create/page.tsx` - 260 lines | exports:CircleCreatePage | db:circle, circle_member
-- `src/app/(protected)/circles/page.tsx` - 338 lines | exports:CirclesPage | db:circle_member, circle_weekly_score, rpc:join_circle
+- `src/app/(protected)/circles/page.tsx` - 340 lines | exports:CirclesPage | db:circle_member, circle_weekly_score, rpc:join_circle
 - `src/app/(protected)/join/[code]/page.tsx` - 105 lines | exports:JoinCirclePage | db:rpc:join_circle
 - `src/app/(protected)/layout.tsx` - 10 lines | exports:ProtectedGroupLayout
 - `src/app/(protected)/learn/page.tsx` - 702 lines | exports:LearnPage
@@ -33,16 +33,16 @@ Last updated: 2026-03-01
 - `src/app/api/sage/route.ts` - 369 lines | methods:POST | exports:POST | env:OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
 - `src/app/api/sage/routeUtils.ts` - 100 lines | exports:parseSageTimeoutMs, getSageRequestLimitError, extractModelMessageContent, makeDeterministicOnlySageFallbackResponse
 
-## COMPONENT files (16)
+## COMPONENT files (17)
 - `src/components/Accordion.tsx` - 43 lines | exports:Accordion
-- `src/components/AddKidModal.tsx` - 90 lines | exports:AddKidModal
-- `src/components/AddToHomeScreen.tsx` - 97 lines | exports:AddToHomeScreen
+- `src/components/AddKidModal.tsx` - 96 lines | exports:AddKidModal
+- `src/components/AddToHomeScreen.tsx` - 104 lines | exports:AddToHomeScreen | env:NODE_ENV
 - `src/components/BottomNav.tsx` - 56 lines | exports:BottomNav
 - `src/components/CategoryTabs.tsx` - 42 lines | exports:CategoryTabs
 - `src/components/GutHealthPopover.tsx` - 79 lines | exports:GutHealthPopover
 - `src/components/LeaderboardRow.tsx` - 279 lines | exports:LeaderboardRow
 - `src/components/MemberSwitcher.tsx` - 80 lines | exports:MemberSwitcher
-- `src/components/PhotoRecognitionModal.tsx` - 340 lines | exports:PhotoRecognitionModal
+- `src/components/PhotoRecognitionModal.tsx` - 342 lines | exports:PhotoRecognitionModal
 - `src/components/PlantAvatar.tsx` - 30 lines | exports:PlantAvatar
 - `src/components/PlantCard.tsx` - 62 lines | exports:PlantCard
 - `src/components/PlantListItem.tsx` - 57 lines | exports:PlantListItem
@@ -50,6 +50,7 @@ Last updated: 2026-03-01
 - `src/components/ProgressBar.tsx` - 90 lines | exports:ProgressBar
 - `src/components/ProtectedLayout.tsx` - 132 lines | exports:ProtectedLayout, useApp | db:member
 - `src/components/SageChat.tsx` - 228 lines | exports:SageChat
+- `src/components/ui/sheet.tsx` - 61 lines
 
 ## LIB files (23)
 - `src/lib/ai/openRouterPolicy.test.mjs` - 30 lines

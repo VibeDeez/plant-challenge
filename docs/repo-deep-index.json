@@ -2,7 +2,7 @@
   "generatedAt": "2026-03-01",
   "files": {
     "src/app/(protected)/add/page.tsx": {
-      "lines": 522,
+      "lines": 521,
       "exports": [
         "AddPlantPage"
       ],
@@ -55,7 +55,7 @@
       "env": []
     },
     "src/app/(protected)/circles/page.tsx": {
-      "lines": 338,
+      "lines": 340,
       "exports": [
         "CirclesPage"
       ],
@@ -325,7 +325,7 @@
       "env": []
     },
     "src/components/AddKidModal.tsx": {
-      "lines": 90,
+      "lines": 96,
       "exports": [
         "AddKidModal"
       ],
@@ -334,13 +334,15 @@
       "env": []
     },
     "src/components/AddToHomeScreen.tsx": {
-      "lines": 97,
+      "lines": 104,
       "exports": [
         "AddToHomeScreen"
       ],
       "methods": [],
       "supabase": [],
-      "env": []
+      "env": [
+        "NODE_ENV"
+      ]
     },
     "src/components/BottomNav.tsx": {
       "lines": 56,
@@ -388,7 +390,7 @@
       "env": []
     },
     "src/components/PhotoRecognitionModal.tsx": {
-      "lines": 340,
+      "lines": 342,
       "exports": [
         "PhotoRecognitionModal"
       ],
@@ -458,6 +460,13 @@
       "exports": [
         "SageChat"
       ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/ui/sheet.tsx": {
+      "lines": 61,
+      "exports": [],
       "methods": [],
       "supabase": [],
       "env": []

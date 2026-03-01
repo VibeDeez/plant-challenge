@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart } from "@/lib/weekUtils";
 import {
@@ -17,6 +17,7 @@ import { ArrowLeft, Plus, Search, X, Leaf, Camera, Trophy } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import PhotoRecognitionModal from "@/components/PhotoRecognitionModal";
+import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 type Plant = {
   id: number;
@@ -49,14 +50,6 @@ export default function AddPlantPage() {
   const [feedback, setFeedback] = useState<LogFeedback | null>(null);
   const [circleCount, setCircleCount] = useState(0);
   const weekStart = useMemo(() => getWeekStart(), []);
-
-  // Escape key closes custom plant modal
-  useEffect(() => {
-    if (!showCustom) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setShowCustom(false); };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [showCustom]);
 
   const fetchData = useCallback(async () => {
     if (!activeMember) return;
@@ -411,6 +404,16 @@ export default function AddPlantPage() {
           ) : (
             // Flat list view (when category filter or search is active)
             <div className="space-y-2">
+              {filtered.length > 0 && (
+                <button
+                  onClick={() => setShowCustom(true)}
+                  className="mb-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-dark/20 bg-brand-dark/[0.03] px-4 py-3 text-sm font-semibold text-brand-dark transition-colors hover:border-brand-dark/30 hover:bg-brand-dark/[0.06] active:scale-[0.99]"
+                >
+                  <Plus size={16} strokeWidth={2.5} className="text-brand-green" />
+                  Add a Custom Plant
+                </button>
+              )}
+
               {filtered.map((plant) => (
                 <PlantListItem
                   key={plant.id}
@@ -446,69 +449,65 @@ export default function AddPlantPage() {
         </div>
       </div>
 
-      {/* === CUSTOM PLANT MODAL === */}
-      {showCustom ? (
-        <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
-          <div
-            className="absolute inset-0 bg-black/40 animate-fadeIn"
-            onClick={() => setShowCustom(false)}
-          />
-          <div className="relative w-full max-h-[85dvh] overflow-y-auto overscroll-contain rounded-t-3xl bg-brand-cream p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] animate-slideUp">
-            <div className="flex justify-center pt-0 pb-3"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
-            <div className="flex items-center justify-between mb-4">
-              <h3
-                className="text-lg font-bold text-brand-dark font-display"
-              >
-                Custom Plant
-              </h3>
-              <button
-                onClick={() => setShowCustom(false)}
-                className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
-              >
-                <X size={20} />
-              </button>
+      {/* === CUSTOM PLANT SHEET === */}
+      <Sheet open={showCustom} onOpenChange={setShowCustom}>
+        <SheetContent className="max-h-[calc(100dvh-0.5rem)]">
+          <div className="flex h-full min-h-[360px] flex-col p-5 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+            <div className="flex justify-center pt-0 pb-3">
+              <div className="h-1 w-10 rounded-full bg-brand-dark/15" />
             </div>
-            <form onSubmit={logCustomPlant} className="space-y-3">
-              <input
-                type="text"
-                value={customName}
-                onChange={(e) => setCustomName(e.target.value)}
-                placeholder="Plant name"
-                required
-                autoFocus
-                className="w-full rounded-xl bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-green"
-              />
-              <select
-                value={customCategory}
-                onChange={(e) => setCustomCategory(e.target.value)}
-                className="w-full rounded-xl bg-white px-4 py-3 text-sm text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-green appearance-none"
-              >
-                {CATEGORY_ORDER.map((c) => (
-                  <option key={c} value={c}>
-                    {c}{" "}
-                    {c === "Herbs" || c === "Spices" ? "(\u00BC pt)" : "(1 pt)"}
-                  </option>
-                ))}
-              </select>
-              <button
-                type="submit"
-                className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover transition-colors"
-              >
-                Log Plant
-              </button>
+
+            <div className="mb-4 flex items-center justify-between">
+              <SheetTitle className="text-lg font-bold text-brand-dark font-display">
+                Custom Plant
+              </SheetTitle>
+              <SheetClose asChild>
+                <button
+                  type="button"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
+                  aria-label="Close custom plant sheet"
+                >
+                  <X size={20} />
+                </button>
+              </SheetClose>
+            </div>
+
+            <form onSubmit={logCustomPlant} className="flex min-h-0 flex-1 flex-col">
+              <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pb-4">
+                <input
+                  type="text"
+                  value={customName}
+                  onChange={(e) => setCustomName(e.target.value)}
+                  placeholder="Plant name"
+                  required
+                  autoFocus
+                  className="w-full rounded-xl bg-white px-4 py-3 text-sm text-brand-dark placeholder:text-brand-muted focus:outline-none focus:ring-2 focus:ring-brand-green"
+                />
+                <select
+                  value={customCategory}
+                  onChange={(e) => setCustomCategory(e.target.value)}
+                  className="w-full rounded-xl bg-white px-4 py-3 text-sm text-brand-dark focus:outline-none focus:ring-2 focus:ring-brand-green appearance-none"
+                >
+                  {CATEGORY_ORDER.map((c) => (
+                    <option key={c} value={c}>
+                      {c} {c === "Herbs" || c === "Spices" ? "(\u00BC pt)" : "(1 pt)"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="shrink-0 border-t border-brand-dark/10 bg-brand-cream pt-3">
+                <button
+                  type="submit"
+                  className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover transition-colors"
+                >
+                  Log Plant
+                </button>
+              </div>
             </form>
           </div>
-        </div>
-      ) : (
-        <button
-          onClick={() => setShowCustom(true)}
-          className="fixed right-4 z-40 flex min-h-11 items-center gap-2 rounded-2xl border border-white/20 bg-brand-dark px-4 py-2 text-white shadow-lg transition-all hover:bg-brand-dark/90 active:scale-95"
-          style={{ bottom: "calc(env(safe-area-inset-bottom) + 5.75rem)" }}
-        >
-          <Plus size={18} strokeWidth={2.5} />
-          <span className="text-sm font-semibold">+ Custom</span>
-        </button>
-      )}
+        </SheetContent>
+      </Sheet>
 
       <PhotoRecognitionModal
         open={showCamera}

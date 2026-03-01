@@ -14,6 +14,9 @@ export default function AddToHomeScreen() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Disable A2HS coachmark in non-production (prevents QA obstruction in simulator/dev)
+    if (process.env.NODE_ENV !== "production") return;
+
     // Already dismissed
     if (localStorage.getItem("dismissed_a2hs")) return;
 
@@ -28,6 +31,10 @@ export default function AddToHomeScreen() {
     const ua = window.navigator.userAgent;
     const isIOS = /iP(hone|ad|od)/.test(ua);
     if (!isIOS) return;
+
+    // Skip prompt in iOS Simulator during QA so it doesn't block critical flows
+    const isSimulator = /Simulator/.test(ua);
+    if (isSimulator) return;
 
     // Detect Safari (iOS Safari doesn't include "CriOS", "FxiOS", "EdgiOS" etc.)
     const isSafari =

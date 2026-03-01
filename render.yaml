@@ -12,3 +12,5 @@ services:
         value: https://bqlbwofbohbbnelbksvy.supabase.co
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
         value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJxbGJ3b2Zib2hiYm5lbGJrc3Z5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3OTE4NTEsImV4cCI6MjA4NzM2Nzg1MX0.5WLlHgW-TUfo2bsNPytssI4vwfW_OyZu0ix1dMpA-XY
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://plantmaxxing.com

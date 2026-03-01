@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os,re,csv,json,datetime
+
+TODAY = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,7 +47,7 @@ files = sorted(files)
 idx = {rel: analyze_file(rel) for rel in files}
 
 json_out = {
-    'generatedAt': datetime.date.today().isoformat(),
+    'generatedAt': TODAY,
     'files': idx,
     'crossCutting': {
         'supabaseRefs': sorted(set(t for a in idx.values() for t in a['supabase'])),
@@ -56,7 +58,7 @@ json_out = {
 
 md = []
 md.append('# Repo Deep Index - Plant Challenge\n')
-md.append(f'Last updated: {datetime.date.today().isoformat()}\n')
+md.append(f'Last updated: {TODAY}\n')
 for sec in ['app', 'api', 'component', 'lib', 'other']:
     group = [r for r in files if classify(r) == sec]
     if not group:
@@ -135,7 +137,7 @@ for dp, _, fs in os.walk(API_ROOT):
 contracts = sorted(contracts, key=lambda x: (x['route'], x['file']))
 
 (DOCS / 'api-contracts-deep.json').write_text(json.dumps(contracts, indent=2) + '\n', encoding='utf-8')
-md = ['# API Contracts - Deep Pass\n', f'Last updated: {datetime.date.today().isoformat()}\n',
+md = ['# API Contracts - Deep Pass\n', f'Last updated: {TODAY}\n',
       'Generated from route implementations. This is code-derived and should be treated as source-aligned reference.\n']
 for c in contracts:
     md.append(f"## `{c['route']}`")
@@ -177,7 +179,7 @@ def db_ops(txt):
 def api_calls(txt):
     return sorted(set(m.group(2) for m in re.finditer(r'fetch\(("|\")(\/api\/[^"]+)',txt)))
 
-b=['# Architecture Bible - Plant Challenge\n', f'Last updated: {datetime.date.today().isoformat()}\n',
+b=['# Architecture Bible - Plant Challenge\n', f'Last updated: {TODAY}\n',
    'This is a high-signal onboarding map from user journeys to UI, API, and data interactions.\n']
 for j, fl in journeys.items():
     b.append(f'## {j}')

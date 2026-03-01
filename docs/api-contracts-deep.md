@@ -1,6 +1,6 @@
 # API Contracts - Deep Pass
 
-Last updated: 2026-02-28
+Last updated: 2026-03-01
 
 Generated from route implementations. This is code-derived and should be treated as source-aligned reference.
 

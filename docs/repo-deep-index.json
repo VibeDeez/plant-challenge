@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-02-28",
+  "generatedAt": "2026-03-01",
   "files": {
     "src/app/(protected)/add/page.tsx": {
-      "lines": 521,
+      "lines": 522,
       "exports": [
         "AddPlantPage"
       ],
@@ -15,7 +15,7 @@
       "env": []
     },
     "src/app/(protected)/circles/[id]/page.tsx": {
-      "lines": 916,
+      "lines": 922,
       "exports": [
         "CircleDetailPage"
       ],
@@ -552,14 +552,16 @@
       "env": []
     },
     "src/lib/circles.test.mjs": {
-      "lines": 110,
+      "lines": 127,
       "exports": [],
       "methods": [],
       "supabase": [],
-      "env": []
+      "env": [
+        "NEXT_PUBLIC_SITE_URL"
+      ]
     },
     "src/lib/circles.ts": {
-      "lines": 339,
+      "lines": 342,
       "exports": [
         "generateInviteCode",
         "getShareUrl",

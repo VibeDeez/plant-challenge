@@ -38,7 +38,7 @@ export default function AddKidModal({
   return (
     <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black/40 animate-fadeIn" onClick={onClose} />
-      <div className="relative w-full bg-brand-cream rounded-t-3xl p-5 pb-20 animate-slideUp">
+      <div className="relative w-full max-h-[85dvh] overflow-y-auto overscroll-contain rounded-t-3xl bg-brand-cream p-5 pb-[calc(env(safe-area-inset-bottom)+1rem)] animate-slideUp">
         <div className="flex justify-center pt-0 pb-3"><div className="w-10 h-1 rounded-full bg-brand-dark/15" /></div>
         <div className="flex items-center justify-between mb-5">
           <h3

@@ -43,3 +43,4 @@ next-env.d.ts
 .playwright-mcp/
 /test-results/
 /public/Gemini Illustrations/
+/output/

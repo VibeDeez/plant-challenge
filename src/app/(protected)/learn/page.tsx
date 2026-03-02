@@ -151,7 +151,7 @@ export default function LearnPage() {
       =================================================== */}
       <section
         ref={scoringReveal.ref}
-        className="bg-brand-cream grain-light"
+        className="bg-brand-bg grain-light"
       >
         <div className="relative max-w-lg mx-auto px-5 py-10">
           {/* Section heading */}
@@ -476,7 +476,7 @@ export default function LearnPage() {
       =================================================== */}
       <section
         ref={faqReveal.ref}
-        className="bg-brand-cream grain-light pb-32"
+        className="bg-brand-bg grain-light pb-32"
       >
         <div className="relative max-w-lg mx-auto px-5 py-10">
           {/* Section heading */}

@@ -61,7 +61,7 @@ export default function SagePage() {
         </div>
       </section>
 
-      <section className="bg-brand-cream px-page py-section grain-light">
+      <section className="bg-brand-bg px-page py-section grain-light">
         <div className="mx-auto max-w-lg stack-card">
           <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
             <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
@@ -78,7 +78,7 @@ export default function SagePage() {
 
       <SageChat alreadyLoggedThisWeek={loggedPlantsThisWeek} />
 
-      <section className="bg-brand-cream px-page pb-28 grain-light">
+      <section className="bg-brand-bg px-page pb-28 grain-light">
         <div className="mx-auto max-w-lg stack-card">
           <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
             <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">

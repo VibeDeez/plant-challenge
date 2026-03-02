@@ -151,7 +151,7 @@ export default function PhotoRecognitionModal({
           </div>
 
           <div className="sticky top-safe z-10 flex items-center justify-between border-b border-brand-dark/10 bg-brand-cream p-5 pb-3">
-            <SheetTitle className="text-lg font-bold text-brand-dark font-display">Snap to Log</SheetTitle>
+            <SheetTitle className="text-lg font-bold text-brand-dark font-display">Pic Log</SheetTitle>
             <SheetClose asChild>
               <button
                 type="button"

@@ -25,7 +25,7 @@ import type {
 } from "@/lib/types/circle";
 import { REACTION_EMOJIS } from "@/lib/types/circle";
 import {
-  Trophy,
+  Target,
   Settings,
   Users,
   Link2,
@@ -590,7 +590,7 @@ export default function CircleDetailPage() {
       <div className="bg-brand-bg min-h-screen grain-light">
         <div className="max-w-lg mx-auto px-5 py-16 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-dark/[0.04]">
-            <Trophy size={28} className="text-brand-dark/20" strokeWidth={1.5} />
+            <Target size={28} className="text-brand-dark/20" strokeWidth={1.5} />
           </div>
           <h2 className="text-lg font-bold text-brand-dark mb-1.5 font-display">
             Circle not found
@@ -735,7 +735,7 @@ export default function CircleDetailPage() {
               ) : currentScores.length === 0 ? (
                 <div className="relative py-16 text-center">
                   <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-dark/[0.04]">
-                    <Trophy size={28} className="text-brand-dark/20" strokeWidth={1.5} />
+                    <Target size={28} className="text-brand-dark/20" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-lg font-bold text-brand-dark mb-1.5 font-display">
                     No scores yet
@@ -828,7 +828,7 @@ export default function CircleDetailPage() {
               ) : activities.length === 0 ? (
                 <div className="relative py-16 text-center">
                   <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-dark/[0.04]">
-                    <Trophy size={28} className="text-brand-dark/20" strokeWidth={1.5} />
+                    <Target size={28} className="text-brand-dark/20" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-lg font-bold text-brand-dark mb-1.5 font-display">
                     No activity yet

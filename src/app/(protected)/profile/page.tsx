@@ -6,10 +6,19 @@ import { useRouter } from "next/navigation";
 import { useApp, type Member } from "@/components/ProtectedLayout";
 import AddKidModal from "@/components/AddKidModal";
 import PlantPicker from "@/components/PlantPicker";
-import { LogOut, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  LogOut,
+  Pencil,
+  Plus,
+  Shield,
+  ChevronRight,
+  Trash2,
+  Lock,
+} from "lucide-react";
 import { ALL_ILLUSTRATIONS } from "@/lib/constants";
 import Image from "next/image";
 import PlantAvatar from "@/components/PlantAvatar";
+import Link from "next/link";
 
 const supabase = createClient();
 
@@ -255,6 +264,50 @@ export default function ProfilePage() {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="stack-card">
+          <h2 className="text-lg text-brand-dark font-display">Account Settings</h2>
+
+          <Link
+            href="/profile/security"
+            className="rounded-2xl border border-brand-dark/10 bg-white/60 px-4 py-3.5 transition-colors hover:bg-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-green/15">
+                <Shield size={18} className="text-brand-dark" />
+              </span>
+              <span className="flex-1">
+                <span className="block text-sm font-semibold text-brand-dark">
+                  Security
+                </span>
+                <span className="block text-xs text-brand-muted">
+                  Password, email, sessions, and security activity
+                </span>
+              </span>
+              <ChevronRight size={16} className="text-brand-muted/70" />
+            </div>
+          </Link>
+
+          <Link
+            href="/profile/privacy"
+            className="rounded-2xl border border-brand-dark/10 bg-white/60 px-4 py-3.5 transition-colors hover:bg-white"
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-dark/5">
+                <Lock size={18} className="text-brand-dark" />
+              </span>
+              <span className="flex-1">
+                <span className="block text-sm font-semibold text-brand-dark">
+                  Privacy & Data
+                </span>
+                <span className="block text-xs text-brand-muted">
+                  Export your data or request account deletion
+                </span>
+              </span>
+              <ChevronRight size={16} className="text-brand-muted/70" />
+            </div>
+          </Link>
         </div>
 
         {/* Sign Out */}

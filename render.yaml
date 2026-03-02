@@ -8,6 +8,8 @@ services:
     buildCommand: npm install --include=dev && npm run build
     startCommand: npm start -- --port $PORT
     envVars:
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://plantmaxxing.com
       - key: NEXT_PUBLIC_SUPABASE_URL
         value: https://bqlbwofbohbbnelbksvy.supabase.co
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY

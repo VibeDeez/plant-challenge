@@ -1,9 +1,9 @@
 # Repo Deep Index - Plant Challenge
 
-Last updated: 2026-03-01
+Last updated: 2026-03-02
 
 ## APP files (21)
-- `src/app/(protected)/add/page.tsx` - 580 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
+- `src/app/(protected)/add/page.tsx` - 588 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
 - `src/app/(protected)/circles/[id]/page.tsx` - 928 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
 - `src/app/(protected)/circles/[id]/settings/page.tsx` - 473 lines | exports:CircleSettingsPage | db:circle, circle_member
 - `src/app/(protected)/circles/create/page.tsx` - 260 lines | exports:CircleCreatePage | db:circle, circle_member
@@ -11,7 +11,7 @@ Last updated: 2026-03-01
 - `src/app/(protected)/join/[code]/page.tsx` - 105 lines | exports:JoinCirclePage | db:rpc:join_circle
 - `src/app/(protected)/layout.tsx` - 10 lines | exports:ProtectedGroupLayout
 - `src/app/(protected)/learn/page.tsx` - 702 lines | exports:LearnPage
-- `src/app/(protected)/page.tsx` - 445 lines | exports:HomePage | db:circle_member, plant, plant_log
+- `src/app/(protected)/page.tsx` - 397 lines | exports:HomePage | db:circle_member, plant, plant_log
 - `src/app/(protected)/profile/page.tsx` - 280 lines | exports:ProfilePage | db:member
 - `src/app/(protected)/sage/page.tsx` - 133 lines | exports:SagePage | db:plant_log
 - `src/app/apple-icon.tsx` - 53 lines | exports:size, contentType
@@ -38,7 +38,7 @@ Last updated: 2026-03-01
 - `src/components/Accordion.tsx` - 43 lines | exports:Accordion
 - `src/components/AddKidModal.tsx` - 96 lines | exports:AddKidModal
 - `src/components/AddToHomeScreen.tsx` - 104 lines | exports:AddToHomeScreen | env:NODE_ENV
-- `src/components/BottomNav.tsx` - 56 lines | exports:BottomNav
+- `src/components/BottomNav.tsx` - 57 lines | exports:BottomNav
 - `src/components/CategoryTabs.tsx` - 42 lines | exports:CategoryTabs
 - `src/components/GutHealthPopover.tsx` - 79 lines | exports:GutHealthPopover
 - `src/components/LeaderboardRow.tsx` - 279 lines | exports:LeaderboardRow

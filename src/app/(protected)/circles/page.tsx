@@ -11,7 +11,7 @@ import { useApp } from "@/components/ProtectedLayout";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Trophy, Plus, Ticket, X, Users, ChevronRight } from "lucide-react";
+import { Target, Plus, Ticket, X, Users, ChevronRight } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 
 type CircleCard = {
@@ -153,11 +153,11 @@ export default function CirclesPage() {
         <div className="relative px-5 pt-6 pb-5">
           <div className="max-w-lg mx-auto">
             <div className="flex items-center gap-3 mb-1">
-              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-cream/10">
-                <Trophy
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-green/15">
+                <Target
                   size={20}
-                  className="text-brand-cream/60"
-                  strokeWidth={1.75}
+                  className="text-brand-green"
+                  strokeWidth={2}
                 />
               </div>
               <div>
@@ -220,7 +220,7 @@ export default function CirclesPage() {
               </div>
               <div className="relative text-center">
                 <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-dark/[0.04]">
-                  <Trophy
+                  <Target
                     size={28}
                     className="text-brand-dark/20"
                     strokeWidth={1.5}

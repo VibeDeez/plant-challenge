@@ -59,7 +59,7 @@ export default function JoinCirclePage() {
     const isAlreadyMember = error.toLowerCase().includes("already a member");
 
     return (
-      <main className="flex items-center justify-center min-h-screen bg-brand-cream">
+      <main className="flex items-center justify-center min-h-screen bg-brand-bg">
         <div className="max-w-sm w-full mx-4">
           <div className="bg-white/30 backdrop-blur-sm rounded-2xl border border-brand-dark/10 p-8 text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
@@ -94,7 +94,7 @@ export default function JoinCirclePage() {
   }
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-brand-cream">
+    <main className="flex items-center justify-center min-h-screen bg-brand-bg">
       <div className="text-center">
         <div className="h-8 w-8 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin mx-auto mb-4" />
         <p className="text-sm text-brand-muted">Joining circle...</p>

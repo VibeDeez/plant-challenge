@@ -25,6 +25,7 @@
     "qa:seed:mobile": "bash scripts/qa-seed-mobile.sh"
   },
   "dependencies": {
+    "@lucide/lab": "^0.1.2",
     "@radix-ui/react-dialog": "^1.1.15",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.97.0",

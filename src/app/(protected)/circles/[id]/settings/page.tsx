@@ -228,7 +228,7 @@ export default function CircleSettingsPage() {
 
   if (loading || !authorized) {
     return (
-      <div className="min-h-screen bg-brand-cream grain-light flex items-center justify-center">
+      <div className="min-h-screen bg-brand-bg grain-light flex items-center justify-center">
         <div className="h-8 w-8 rounded-full border-2 border-brand-green/20 border-t-brand-green animate-spin" />
       </div>
     );
@@ -241,7 +241,7 @@ export default function CircleSettingsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-brand-cream grain-light">
+    <div className="min-h-screen bg-brand-bg grain-light">
       <div className="max-w-lg mx-auto px-5 py-6">
         {/* Back link */}
         <Link

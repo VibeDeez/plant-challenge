@@ -7,8 +7,7 @@ import {
   TIPS,
   CATEGORY_COLORS,
   CATEGORY_ICONS,
-  CATEGORY_ILLUSTRATIONS,
-  ALL_ILLUSTRATIONS,
+  CATEGORY_ORDER,
 } from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
 import ProgressBar from "@/components/ProgressBar";
@@ -16,19 +15,7 @@ import PlantCard from "@/components/PlantCard";
 import GutHealthPopover from "@/components/GutHealthPopover";
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Leaf, TrendingUp, X, Sparkles } from "lucide-react";
-
-// Get 2-3 illustrations for the background collage
-function getCollageIllustrations(): string[] {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
-  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const idx1 = (dayOfYear + 2) % ALL_ILLUSTRATIONS.length;
-  const idx2 = (dayOfYear + 5) % ALL_ILLUSTRATIONS.length;
-  const idx3 = (dayOfYear + 7) % ALL_ILLUSTRATIONS.length;
-  return [ALL_ILLUSTRATIONS[idx1], ALL_ILLUSTRATIONS[idx2], ALL_ILLUSTRATIONS[idx3]];
-}
+import { Plus, Leaf, X, ChevronDown } from "lucide-react";
 
 type PlantLog = {
   id: string;
@@ -44,6 +31,7 @@ export default function HomePage() {
   const { activeMember } = useApp();
   const [logs, setLogs] = useState<PlantLog[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expandedWeekCategories, setExpandedWeekCategories] = useState<Set<string>>(new Set());
   const weekStart = useMemo(() => getWeekStart(), []);
 
   const [blurbMap, setBlurbMap] = useState<Map<string, string>>(new Map());
@@ -94,6 +82,18 @@ export default function HomePage() {
     }
   }, []);
 
+  const toggleWeekCategory = useCallback((category: string) => {
+    setExpandedWeekCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(category)) {
+        next.delete(category);
+      } else {
+        next.add(category);
+      }
+      return next;
+    });
+  }, []);
+
   // --- Crop Circles onboarding banner ---
   const [showCircleBanner, setShowCircleBanner] = useState(false);
 
@@ -122,14 +122,27 @@ export default function HomePage() {
   const totalPoints = logs.reduce((sum, l) => sum + l.points, 0);
   const [tip] = useState(() => TIPS[Math.floor(Math.random() * TIPS.length)]);
 
-  // Group logs by category for the breakdown
-  const categoryBreakdown = logs.reduce<Record<string, number>>((acc, log) => {
-    acc[log.category] = (acc[log.category] || 0) + 1;
-    return acc;
-  }, {});
+  const logsByCategory = useMemo(
+    () =>
+      logs.reduce<Record<string, PlantLog[]>>((acc, log) => {
+        if (!acc[log.category]) acc[log.category] = [];
+        acc[log.category].push(log);
+        return acc;
+      }, {}),
+    [logs]
+  );
+  const weekCategoryEntries = useMemo(() => {
+    const orderedEntries: [string, PlantLog[]][] = CATEGORY_ORDER
+      .filter((category) => logsByCategory[category]?.length)
+      .map((category) => [category, logsByCategory[category]]);
 
-  const categoriesUsed = Object.keys(categoryBreakdown).length;
-  const collageIllustrations = useMemo(() => getCollageIllustrations(), []);
+    const orderedSet = new Set(CATEGORY_ORDER);
+    const extraEntries = Object.entries(logsByCategory).filter(
+      ([category]) => !orderedSet.has(category as (typeof CATEGORY_ORDER)[number])
+    );
+
+    return [...orderedEntries, ...extraEntries];
+  }, [logsByCategory]);
   const weekDays = useMemo(() => getWeekDays(weekStart), [weekStart]);
 
   return (
@@ -194,103 +207,11 @@ export default function HomePage() {
           </Link>
         </div>
 
-        {/* Smooth curved transition to cream */}
-        <div className="absolute -bottom-px left-0 right-0">
-          <svg viewBox="0 0 1440 48" fill="none" preserveAspectRatio="none" className="w-full h-8 block">
-            <path d="M0 48h1440V20C1220 0 960 8 720 16S220 40 0 20v28z" fill="#f5f0e8" />
-          </svg>
-        </div>
       </section>
-
-      <section className="bg-brand-cream px-page py-section grain-light" data-testid="sage-teaser">
-        <div className="max-w-lg mx-auto">
-          <Link
-            href="/sage"
-            className="flex min-h-11 items-center gap-3 rounded-2xl border border-brand-dark/10 bg-white/70 px-4 py-3 transition-colors hover:bg-white"
-          >
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-green/15 text-brand-dark">
-              <Sparkles size={18} strokeWidth={2} />
-            </span>
-            <span className="flex-1">
-              <span className="block text-sm font-semibold text-brand-dark">Visit Sage</span>
-              <span className="block text-xs text-brand-muted">
-                Ask questions, quick log from chat, and Menu Max tools.
-              </span>
-            </span>
-            <span className="text-xs font-semibold text-brand-green">Open</span>
-          </Link>
-        </div>
-      </section>
-
-      {/* === CATEGORY BREAKDOWN MOSAIC === */}
-      {categoriesUsed > 0 && (
-        <section className="bg-brand-cream px-page py-section grain-light">
-          <div className="max-w-lg mx-auto">
-            <div className="flex items-center gap-2 mb-3">
-              <TrendingUp size={14} className="text-brand-muted" />
-              <h3 className="text-xs font-semibold text-brand-muted tracking-widest uppercase">
-                Categories Hit
-              </h3>
-              <span className="text-xs text-brand-muted/60 ml-auto">
-                {categoriesUsed} of 8
-              </span>
-            </div>
-            <div data-testid="category-breakdown-grid" className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-              {Object.entries(categoryBreakdown).map(([cat, count]) => {
-                const Icon = CATEGORY_ICONS[cat] ?? Leaf;
-                const color = CATEGORY_COLORS[cat] ?? "#6b7260";
-                const illustration = CATEGORY_ILLUSTRATIONS[cat];
-                return (
-                  <div
-                    key={cat}
-                    className="relative overflow-hidden rounded-2xl border border-brand-dark/5"
-                  >
-                    {/* Background illustration */}
-                    {illustration && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <Image
-                          src={illustration}
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="object-cover w-full h-full illo-featured"
-                        />
-                      </div>
-                    )}
-                    {/* Glassmorphic overlay */}
-                    <div className="relative bg-white/30 backdrop-blur-sm px-3.5 py-3 flex items-center gap-2.5">
-                      <div
-                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl"
-                        style={{ backgroundColor: `${color}20` }}
-                      >
-                        <Icon size={16} style={{ color }} strokeWidth={2} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold text-brand-dark break-words leading-tight">
-                          {cat}
-                        </p>
-                      </div>
-                      <span
-                        className="text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0"
-                        style={{
-                          backgroundColor: `${color}18`,
-                          color,
-                        }}
-                      >
-                        {count}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* === CROP CIRCLES ONBOARDING BANNER === */}
       {showCircleBanner && (
-        <section className="bg-brand-cream px-page pt-5 grain-light">
+        <section className="bg-brand-bg px-page pt-5 grain-light">
           <div className="max-w-lg mx-auto">
             <div className="relative bg-brand-green/10 border border-brand-green/20 rounded-2xl p-5 animate-fadeInUp">
               <button
@@ -326,41 +247,8 @@ export default function HomePage() {
       )}
 
       {/* === PLANT LOG === */}
-      <section className="relative min-h-[40vh] overflow-hidden bg-brand-bg px-page py-6 grain-light">
-        {/* Botanical collage background - only when there are logs */}
-        {!loading && logs.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            <div className="absolute -top-4 -left-8 w-56 h-56 rotate-[-15deg]">
-              <Image
-                src={collageIllustrations[0]}
-                alt=""
-                width={220}
-                height={220}
-                className="object-contain illo-ghost"
-              />
-            </div>
-            <div className="absolute top-1/4 -right-10 w-60 h-60 rotate-[10deg]">
-              <Image
-                src={collageIllustrations[1]}
-                alt=""
-                width={240}
-                height={240}
-                className="object-contain illo-ghost"
-              />
-            </div>
-            <div className="absolute -bottom-8 left-1/4 w-52 h-52 rotate-[5deg]">
-              <Image
-                src={collageIllustrations[2]}
-                alt=""
-                width={200}
-                height={200}
-                className="object-contain illo-ghost"
-              />
-            </div>
-          </div>
-        )}
-
-        <div className="relative max-w-lg mx-auto">
+      <section className="min-h-[40vh] bg-brand-bg px-page py-6 grain-light">
+        <div className="max-w-lg mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h2
               className="text-xl font-bold text-brand-dark font-display"
@@ -408,21 +296,85 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="space-y-2">
-              {logs.map((log, i) => {
-                const blurb = blurbMap.get(log.plant_name);
+              {weekCategoryEntries.map(([category, categoryLogs], categoryIdx) => {
+                const color = CATEGORY_COLORS[category] ?? "#6b7260";
+                const Icon = CATEGORY_ICONS[category] ?? Leaf;
+                const isExpanded = expandedWeekCategories.has(category);
+                const panelId = `home-week-category-${category.toLowerCase().replace(/\s+/g, "-")}`;
                 return (
-                  <div key={log.id} className="animate-fadeInUp" style={{ animationDelay: `${Math.min(i * 0.05, 0.75)}s` }}>
-                    <PlantCard
-                      log={log}
-                      onDelete={handleDelete}
-                      gutHealthBlurb={blurb}
-                      onInfoTap={blurb ? () => setActivePopover({
-                        plantName: log.plant_name,
-                        category: log.category,
-                        blurb,
-                      }) : undefined}
-                    />
-                  </div>
+                  <section
+                    key={category}
+                    className="animate-fadeInUp overflow-hidden rounded-2xl border border-brand-dark/10 bg-white/55 backdrop-blur-[2px]"
+                    style={{
+                      animationDelay: `${Math.min(categoryIdx * 0.06, 0.4)}s`,
+                      backgroundColor: `${color}08`,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      aria-expanded={isExpanded}
+                      aria-controls={panelId}
+                      onClick={() => toggleWeekCategory(category)}
+                      className="flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left active:scale-[0.995]"
+                    >
+                      <div
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+                        style={{ backgroundColor: `${color}15` }}
+                      >
+                        <Icon size={18} style={{ color }} strokeWidth={2} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-lg font-bold text-brand-dark font-display leading-none">
+                          {category}
+                        </p>
+                        <p className="mt-1 text-[11px] text-brand-muted">
+                          {categoryLogs.length} {categoryLogs.length === 1 ? "plant" : "plants"}
+                        </p>
+                      </div>
+                      <div className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/45 text-brand-dark/65">
+                        <ChevronDown
+                          size={18}
+                          strokeWidth={2.25}
+                          className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
+                        />
+                      </div>
+                    </button>
+
+                    <div
+                      id={panelId}
+                      className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
+                      style={{
+                        gridTemplateRows: isExpanded ? "1fr" : "0fr",
+                        opacity: isExpanded ? 1 : 0,
+                      }}
+                    >
+                      <div className="min-h-0">
+                        <div className="space-y-2 border-t border-brand-dark/10 p-2">
+                          {categoryLogs.map((log, logIdx) => {
+                            const blurb = blurbMap.get(log.plant_name);
+                            return (
+                              <div
+                                key={log.id}
+                                className="animate-fadeInUp"
+                                style={{ animationDelay: `${Math.min(logIdx * 0.04, 0.3)}s` }}
+                              >
+                                <PlantCard
+                                  log={log}
+                                  onDelete={handleDelete}
+                                  gutHealthBlurb={blurb}
+                                  onInfoTap={blurb ? () => setActivePopover({
+                                    plantName: log.plant_name,
+                                    category: log.category,
+                                    blurb,
+                                  }) : undefined}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </section>
                 );
               })}
             </div>

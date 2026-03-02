@@ -4,18 +4,14 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart } from "@/lib/weekUtils";
 import {
-  type Category,
   CATEGORY_COLORS,
   CATEGORY_ICONS,
-  CATEGORY_ILLUSTRATIONS,
   CATEGORY_ORDER,
 } from "@/lib/constants";
 import { useApp } from "@/components/ProtectedLayout";
-import CategoryTabs from "@/components/CategoryTabs";
 import PlantListItem from "@/components/PlantListItem";
-import { ArrowLeft, Plus, Search, X, Leaf, Camera, Trophy, Mic } from "lucide-react";
+import { ArrowLeft, Plus, Search, X, Leaf, Camera, Trophy, Mic, ChevronDown } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import PhotoRecognitionModal from "@/components/PhotoRecognitionModal";
 import VoiceLogModal from "@/components/VoiceLogModal";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
@@ -46,7 +42,6 @@ export default function AddPlantPage() {
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loggedNames, setLoggedNames] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState<Category>("All");
   const [customName, setCustomName] = useState("");
   const [customCategory, setCustomCategory] = useState("Fruits");
   const [showCustom, setShowCustom] = useState(false);
@@ -55,7 +50,20 @@ export default function AddPlantPage() {
   const [weekTotalPoints, setWeekTotalPoints] = useState(0);
   const [feedback, setFeedback] = useState<LogFeedback | null>(null);
   const [circleCount, setCircleCount] = useState(0);
+  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const weekStart = useMemo(() => getWeekStart(), []);
+
+  const toggleCategory = useCallback((cat: string) => {
+    setExpandedCategories((prev) => {
+      const next = new Set(prev);
+      if (next.has(cat)) {
+        next.delete(cat);
+      } else {
+        next.add(cat);
+      }
+      return next;
+    });
+  }, []);
 
   const fetchData = useCallback(async () => {
     if (!activeMember) return;
@@ -208,12 +216,11 @@ export default function AddPlantPage() {
   const filtered = useMemo(
     () =>
       plants.filter((p) => {
-        const matchCategory = category === "All" || p.category === category;
         const matchSearch =
           !search || p.name.toLowerCase().includes(search.toLowerCase());
-        return matchCategory && matchSearch;
+        return matchSearch;
       }),
-    [plants, category, search]
+    [plants, search]
   );
 
   // Group filtered plants by category for gallery view
@@ -228,7 +235,7 @@ export default function AddPlantPage() {
   );
 
   const isSearching = search.length > 0;
-  const showGallery = category === "All" && !isSearching;
+  const showGallery = !isSearching;
 
   return (
     <>
@@ -250,32 +257,32 @@ export default function AddPlantPage() {
           </div>
 
           <div className="mb-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            {/* Snap to Log banner */}
+            {/* Pic Log banner */}
             <button
               onClick={() => setShowCamera(true)}
-              className="flex min-h-11 w-full items-center gap-3 rounded-2xl bg-brand-green px-4 py-3 text-left transition-all hover:bg-brand-green-hover active:scale-[0.98]"
+              className="flex min-h-11 w-full items-center gap-3 rounded-2xl border border-brand-cream/25 bg-gradient-to-br from-brand-cream/16 to-brand-cream/8 px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-[2px] transition-all hover:border-brand-cream/40 hover:from-brand-cream/20 hover:to-brand-cream/12 active:scale-[0.98]"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-cream/30 bg-brand-green/20">
                 <Camera size={22} className="text-white" strokeWidth={2} />
               </div>
               <div>
-                <p className="text-sm font-bold text-white">Snap to Log</p>
-                <p className="text-[11px] text-white/70">
-                  Take a photo and we&apos;ll find the plants
+                <p className="text-sm font-bold text-white">Pic Log</p>
+                <p className="text-xs leading-snug text-brand-cream/85">
+                  Take or upload a pic of your meal or recipe
                 </p>
               </div>
             </button>
 
             <button
               onClick={() => setShowVoice(true)}
-              className="flex min-h-11 w-full items-center gap-3 rounded-2xl bg-brand-dark px-4 py-3 text-left transition-all hover:bg-brand-dark/90 active:scale-[0.98]"
+              className="flex min-h-11 w-full items-center gap-3 rounded-2xl border border-brand-cream/25 bg-gradient-to-br from-brand-cream/16 to-brand-cream/8 px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-[2px] transition-all hover:border-brand-cream/40 hover:from-brand-cream/20 hover:to-brand-cream/12 active:scale-[0.98]"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-cream/30 bg-brand-green/20">
                 <Mic size={22} className="text-white" strokeWidth={2} />
               </div>
               <div>
                 <p className="text-sm font-bold text-white">Voice Log</p>
-                <p className="text-[11px] text-white/70">Say what you ate in your own words</p>
+                <p className="text-xs leading-snug text-brand-cream/85">Say what you ate in your own words</p>
               </div>
             </button>
           </div>
@@ -327,13 +334,6 @@ export default function AddPlantPage() {
         </div>
       </div>
 
-      {/* === CATEGORY TABS === */}
-      <div className="sticky top-safe z-30 bg-brand-cream shadow-sm">
-        <div className="max-w-lg mx-auto">
-          <CategoryTabs active={category} onChange={setCategory} />
-        </div>
-      </div>
-
       {/* === GALLERY / LIST === */}
       <div className="bg-brand-bg min-h-[60vh] grain-light">
         <div className="mx-auto max-w-lg px-page py-section-tight">
@@ -343,28 +343,30 @@ export default function AddPlantPage() {
               {Object.entries(grouped).map(([cat, items], i) => {
                 const Icon = CATEGORY_ICONS[cat] ?? Leaf;
                 const color = CATEGORY_COLORS[cat] ?? "#6b7260";
-                const illustration = CATEGORY_ILLUSTRATIONS[cat];
+                const isExpanded = expandedCategories.has(cat);
+                const panelId = `category-panel-${cat.toLowerCase().replace(/\s+/g, "-")}`;
                 return (
                   <section key={cat} className="animate-fadeInUp" style={{ animationDelay: `${i * 0.1}s` }}>
-                    {/* Category header */}
-                    <div className="rounded-2xl mb-3"
+                    <div
+                      className="overflow-hidden rounded-2xl border border-brand-dark/10 bg-white/50 backdrop-blur-[2px]"
                       style={{ backgroundColor: `${color}08` }}
                     >
-                      <div className="flex items-center gap-3 p-4">
+                      {/* Category header */}
+                      <button
+                        type="button"
+                        aria-expanded={isExpanded}
+                        aria-controls={panelId}
+                        onClick={() => toggleCategory(cat)}
+                        className="flex min-h-11 w-full items-center gap-3 p-4 text-left active:scale-[0.995]"
+                      >
                         <div
                           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                           style={{ backgroundColor: `${color}15` }}
                         >
-                          <Icon
-                            size={18}
-                            style={{ color }}
-                            strokeWidth={2}
-                          />
+                          <Icon size={18} style={{ color }} strokeWidth={2} />
                         </div>
                         <div>
-                          <h2
-                            className="text-lg font-bold text-brand-dark font-display"
-                          >
+                          <h2 className="text-lg font-bold text-brand-dark font-display">
                             {cat}
                           </h2>
                           <p className="text-[11px] text-brand-muted">
@@ -375,61 +377,67 @@ export default function AddPlantPage() {
                               : "1 pt each"}
                           </p>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* Plant grid with background illustration */}
-                    <div className="relative overflow-hidden rounded-2xl min-h-[120px]">
-                      {illustration && (
-                        <div className="absolute -right-8 -bottom-8 w-[280px] h-[280px] pointer-events-none">
-                          <Image
-                            src={illustration}
-                            alt=""
-                            width={280}
-                            height={280}
-                            className="object-contain illo-accent"
+                        <div className="ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/45 text-brand-dark/65">
+                          <ChevronDown
+                            size={18}
+                            strokeWidth={2.25}
+                            className={`transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
                           />
                         </div>
-                      )}
-                      <div className="relative flex flex-wrap gap-1.5 justify-center py-3">
-                      {items.map((plant) => {
-                        const logged = loggedNames.has(plant.name);
-                        return (
-                          <button
-                            key={plant.id}
-                            onClick={() => !logged && logPlant(plant)}
-                            disabled={logged}
-                            className={`relative min-h-11 rounded-full px-4 py-1.5 text-left transition-all backdrop-blur-sm border ${
-                              logged
-                                ? "bg-brand-dark/5 opacity-50 border-brand-dark/10"
-                                : "bg-white/30 hover:bg-white/50 hover:shadow-md active:scale-[0.97] border-brand-dark/10"
-                            }`}
-                          >
-                            <span className="flex items-center gap-1.5">
-                              <span className="text-[13px] font-semibold text-brand-dark">
-                                {plant.name}
-                              </span>
-                              {logged && (
-                                <svg
-                                  width="12"
-                                  height="12"
-                                  viewBox="0 0 10 10"
-                                  fill="none"
-                                  className="shrink-0"
-                                >
-                                  <path
-                                    d="M2 5l2.5 2.5L8 3"
-                                    stroke="#22c55e"
-                                    strokeWidth="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  />
-                                </svg>
-                              )}
-                            </span>
-                          </button>
-                        );
-                      })}
+                      </button>
+
+                      <div
+                        id={panelId}
+                        className="grid transition-[grid-template-rows,opacity] duration-300 ease-out"
+                        style={{
+                          gridTemplateRows: isExpanded ? "1fr" : "0fr",
+                          opacity: isExpanded ? 1 : 0,
+                        }}
+                      >
+                        <div className="min-h-0">
+                          <div className="relative overflow-hidden border-t border-brand-dark/10">
+                            <div className="relative flex flex-wrap justify-center gap-1.5 py-3">
+                              {items.map((plant) => {
+                                const logged = loggedNames.has(plant.name);
+                                return (
+                                  <button
+                                    key={plant.id}
+                                    onClick={() => !logged && logPlant(plant)}
+                                    disabled={logged}
+                                    className={`relative min-h-11 rounded-full border px-4 py-1.5 text-left transition-all backdrop-blur-sm ${
+                                      logged
+                                        ? "bg-brand-dark/5 opacity-50 border-brand-dark/10"
+                                        : "bg-white/30 hover:bg-white/50 hover:shadow-md active:scale-[0.97] border-brand-dark/10"
+                                    }`}
+                                  >
+                                    <span className="flex items-center gap-1.5">
+                                      <span className="text-[13px] font-semibold text-brand-dark">
+                                        {plant.name}
+                                      </span>
+                                      {logged && (
+                                        <svg
+                                          width="12"
+                                          height="12"
+                                          viewBox="0 0 10 10"
+                                          fill="none"
+                                          className="shrink-0"
+                                        >
+                                          <path
+                                            d="M2 5l2.5 2.5L8 3"
+                                            stroke="#22c55e"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      )}
+                                    </span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </section>
@@ -484,7 +492,7 @@ export default function AddPlantPage() {
                     />
                   </div>
                   <p className="text-sm text-brand-muted mb-3">
-                    No plants found for &ldquo;{search || category}&rdquo;
+                    No plants found for &ldquo;{search}&rdquo;
                   </p>
                   <button
                     onClick={() => setShowCustom(true)}

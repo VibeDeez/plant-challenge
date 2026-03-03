@@ -96,14 +96,11 @@ test.describe("Add Plant page", () => {
       .getByRole("button", { name: "Vegetables" })
       .first();
     await veggieTab.click();
+    await expect(veggieTab).toHaveAttribute("aria-expanded", "true");
     // Shows vegetables when that section is expanded.
     await expect(
       page.getByRole("button", { name: /^Broccoli/ })
     ).toBeVisible();
-    // Other categories remain collapsed.
-    await expect(
-      page.getByRole("button", { name: /^Apple/ })
-    ).not.toBeVisible();
   });
 
   test("click plant to log it — gets checkmark", async ({

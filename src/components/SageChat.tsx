@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import type { SageResponse, SageVerdict } from "@/lib/ai/sageRules";
-import { Sparkles, AlertTriangle } from "lucide-react";
+import { AlertTriangle, MessageCircle } from "lucide-react";
 import { DUPLICATE_SPECIES_GUARD_COPY } from "@/lib/copy";
 
 type SageChatProps = {
@@ -12,12 +12,6 @@ type SageChatProps = {
 type SageApiError = {
   error?: string;
 };
-
-const STARTER_PROMPTS = [
-  "I drank black coffee this morning. How many points is that?",
-  "I had red and green bell pepper this week. Is that one species?",
-  "I ate plain oatmeal with walnuts. Does that count?",
-] as const;
 
 const VERDICT_LABELS: Record<SageVerdict, string> = {
   counts: "Counts",
@@ -45,7 +39,6 @@ function isSageResponse(value: unknown): value is SageResponse {
 }
 
 export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<SageResponse | null>(null);
@@ -111,116 +104,82 @@ export default function SageChat({ alreadyLoggedThisWeek = [] }: SageChatProps) 
     await submitQuestion(question);
   }
 
-  function handleStarterPrompt(prompt: string) {
-    setQuestion(prompt);
-  }
-
   return (
     <section className="bg-brand-cream px-page py-section grain-light" data-testid="sage-chat-section">
       <div className="max-w-lg mx-auto">
-        <button
-          type="button"
-          onClick={() => setIsOpen((prev) => !prev)}
-          className="w-full min-h-11 rounded-2xl border border-brand-dark/10 bg-white/70 px-4 py-3 text-left transition-colors hover:bg-white"
-          aria-expanded={isOpen}
-          aria-controls="sage-chat-panel"
-        >
-          <span className="flex items-start gap-3">
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-green/15 text-brand-dark">
-              <Sparkles size={16} strokeWidth={2} />
-            </span>
-            <span>
-              <span className="block text-sm font-semibold text-brand-dark">Ask Sage</span>
-              <span className="block text-xs text-brand-muted">
-                Quick help for count rules and point questions.
-              </span>
-            </span>
-          </span>
-        </button>
+        <div className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
+          <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
+            <MessageCircle size={14} />
+            Ask Sage
+          </p>
+          <h2 className="text-lg font-display text-brand-dark">Rule Q&A</h2>
+          <p className="mt-1 text-sm text-brand-muted">
+            Quick help for count rules and point questions.
+          </p>
 
-        {isOpen && (
-          <div
-            id="sage-chat-panel"
-            className="mt-3 rounded-2xl border border-brand-dark/10 bg-white/70 p-3"
-          >
-            <div className="mb-3 flex flex-wrap gap-2">
-              {STARTER_PROMPTS.map((prompt) => (
-                <button
-                  key={prompt}
-                  type="button"
-                  onClick={() => handleStarterPrompt(prompt)}
-                  disabled={loading}
-                  className="min-h-11 rounded-full border border-brand-dark/15 bg-white px-3 py-2 text-xs font-semibold text-brand-dark transition-colors hover:bg-brand-dark/5 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
+          <form onSubmit={handleSubmit} className="mt-3 space-y-2">
+            <label htmlFor="sage-question" className="text-xs font-medium text-brand-muted">
+              Your question
+            </label>
+            <textarea
+              id="sage-question"
+              value={question}
+              onChange={(event) => setQuestion(event.target.value)}
+              placeholder="e.g. Does almond milk count?"
+              className="w-full rounded-xl border border-brand-dark/10 bg-white px-3 py-2.5 text-sm text-brand-dark placeholder:text-brand-muted/70 focus:border-brand-green focus:outline-none"
+              rows={3}
+              maxLength={500}
+            />
+            <button
+              type="submit"
+              disabled={loading || question.trim().length === 0}
+              className="w-full min-h-11 rounded-xl bg-brand-green px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-green-hover disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loading ? "Asking Sage..." : "Ask Sage"}
+            </button>
+          </form>
 
-            <form onSubmit={handleSubmit} className="space-y-2">
-              <label htmlFor="sage-question" className="text-xs font-medium text-brand-muted">
-                Your question
-              </label>
-              <textarea
-                id="sage-question"
-                value={question}
-                onChange={(event) => setQuestion(event.target.value)}
-                placeholder="e.g. Does almond milk count?"
-                className="w-full rounded-xl border border-brand-dark/10 bg-white px-3 py-2.5 text-sm text-brand-dark placeholder:text-brand-muted/70 focus:border-brand-green focus:outline-none"
-                rows={3}
-                maxLength={500}
-              />
-              <button
-                type="submit"
-                disabled={loading || question.trim().length === 0}
-                className="w-full min-h-11 rounded-xl bg-brand-green px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-green-hover disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {loading ? "Asking Sage..." : "Ask Sage"}
-              </button>
-            </form>
+          {error && (
+            <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
+          )}
 
-            {error && (
-              <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                {error}
+          {response && (
+            <div className="mt-3 space-y-2 rounded-xl border border-brand-dark/10 bg-brand-cream/60 p-3 text-sm text-brand-dark">
+              {mode === "deterministic-only-fallback" && (
+                <p className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-800">
+                  Sage is in deterministic-only fallback mode. Answers are limited to hard rules.
+                </p>
+              )}
+              <p>
+                <span className="font-semibold">Answer:</span> {response.answer}
               </p>
-            )}
-
-            {response && (
-              <div className="mt-3 space-y-2 rounded-xl border border-brand-dark/10 bg-brand-cream/60 p-3 text-sm text-brand-dark">
-                {mode === "deterministic-only-fallback" && (
-                  <p className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-800">
-                    Sage is in deterministic-only fallback mode. Answers are limited to hard rules.
-                  </p>
-                )}
-                <p>
-                  <span className="font-semibold">Answer:</span> {response.answer}
+              <p>
+                <span className="font-semibold">Verdict:</span> {VERDICT_LABELS[response.verdict]}
+              </p>
+              {response.verdict === "duplicate_week" && (
+                <p className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-amber-800 flex items-center gap-1.5">
+                  <AlertTriangle size={14} />
+                  {DUPLICATE_SPECIES_GUARD_COPY}
                 </p>
+              )}
+              {response.points !== null && (
                 <p>
-                  <span className="font-semibold">Verdict:</span> {VERDICT_LABELS[response.verdict]}
+                  <span className="font-semibold">Points:</span> {response.points}
                 </p>
-                {response.verdict === "duplicate_week" && (
-                  <p className="rounded-lg border border-amber-200 bg-amber-50 px-2 py-1 text-amber-800 flex items-center gap-1.5">
-                    <AlertTriangle size={14} />
-                    {DUPLICATE_SPECIES_GUARD_COPY}
-                  </p>
-                )}
-                {response.points !== null && (
-                  <p>
-                    <span className="font-semibold">Points:</span> {response.points}
-                  </p>
-                )}
+              )}
+              <p>
+                <span className="font-semibold">Reason:</span> {response.reason}
+              </p>
+              {response.followUpQuestion && (
                 <p>
-                  <span className="font-semibold">Reason:</span> {response.reason}
+                  <span className="font-semibold">Follow-up:</span> {response.followUpQuestion}
                 </p>
-                {response.followUpQuestion && (
-                  <p>
-                    <span className="font-semibold">Follow-up:</span> {response.followUpQuestion}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

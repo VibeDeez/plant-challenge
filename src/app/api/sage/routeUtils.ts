@@ -81,7 +81,21 @@ export function extractModelMessageContent(payload: unknown): string | null {
   if (!isRecord(first)) return null;
   const message = first.message;
   if (!isRecord(message)) return null;
-  return typeof message.content === "string" ? message.content : null;
+  if (typeof message.content === "string") return message.content;
+
+  if (Array.isArray(message.content)) {
+    const parts = message.content
+      .map((part) => {
+        if (!isRecord(part)) return null;
+        if (part.type !== "text") return null;
+        return typeof part.text === "string" ? part.text : null;
+      })
+      .filter((part): part is string => typeof part === "string" && part.length > 0);
+
+    return parts.length > 0 ? parts.join("\n") : null;
+  }
+
+  return null;
 }
 
 export function makeDeterministicOnlySageFallbackResponse(): SageResponse {

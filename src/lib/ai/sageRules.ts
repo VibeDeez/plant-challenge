@@ -106,7 +106,7 @@ function isDuplicateInWeek(
 ): boolean {
   if (!context) return false;
   const logged = context.alreadyLoggedThisWeek ?? [];
-  const recognized = context.recognizedPlants?.map((p) => p.name) ?? [];
+  const recognized = context.recognizedPlants?.map((plant) => plant.name) ?? [];
   const allKnown = [...logged, ...recognized].map(normalizeSpeciesName);
   return allKnown.includes(canonicalSpecies);
 }

@@ -62,6 +62,21 @@ test("extractModelMessageContent safely handles malformed payloads", () => {
     }),
     "hello"
   );
+  assert.equal(
+    extractModelMessageContent({
+      choices: [
+        {
+          message: {
+            content: [
+              { type: "text", text: "hello" },
+              { type: "text", text: "world" },
+            ],
+          },
+        },
+      ],
+    }),
+    "hello\nworld"
+  );
 });
 
 

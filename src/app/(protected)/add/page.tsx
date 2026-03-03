@@ -285,6 +285,21 @@ export default function AddPlantPage() {
                 <p className="text-xs leading-snug text-brand-cream/85">Say what you ate in your own words</p>
               </div>
             </button>
+
+            <Link
+              href="/sage?mode=image"
+              className="sm:col-span-2 flex min-h-11 w-full items-center gap-3 rounded-2xl border border-brand-cream/25 bg-gradient-to-br from-brand-cream/16 to-brand-cream/8 px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-[2px] transition-all hover:border-brand-cream/40 hover:from-brand-cream/20 hover:to-brand-cream/12 active:scale-[0.98]"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-cream/30 bg-brand-green/20">
+                <Leaf size={22} className="text-white" strokeWidth={2} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white">Menu Max</p>
+                <p className="text-xs leading-snug text-brand-cream/85">
+                  Analyze menus, recipe links, or web recipe searches for top picks
+                </p>
+              </div>
+            </Link>
           </div>
 
           {feedback && (

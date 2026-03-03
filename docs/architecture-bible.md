@@ -1,6 +1,6 @@
 # Architecture Bible - Plant Challenge
 
-Last updated: 2026-03-02
+Last updated: 2026-03-03
 
 This is a high-signal onboarding map from user journeys to UI, API, and data interactions.
 
@@ -84,8 +84,15 @@ Data operations inferred:
 - `member` -> `update`
 
 ## API Contract Index (quick)
+- `src/app/api/account/delete/route.ts` | methods: POST | status codes: 400, 401, 429, 500 | env: none
+- `src/app/api/account/email-change/request/route.ts` | methods: POST | status codes: 400, 401, 429, 500 | env: none
+- `src/app/api/account/export/route.ts` | methods: POST | status codes: 400, 401, 429, 500 | env: none
+- `src/app/api/account/password-reset/request/route.ts` | methods: POST | status codes: 400, 401, 429, 500 | env: none
+- `src/app/api/account/sessions/revoke/route.ts` | methods: POST | status codes: 400, 401, 429, 500 | env: none
+- `src/app/api/account/sessions/route.ts` | methods: GET | status codes: 401, 500 | env: none
 - `src/app/api/e2e/cleanup/route.ts` | methods: POST | status codes: 207, 400, 401, 404 | env: E2E_TEST, NODE_ENV
 - `src/app/api/e2e/login/route.ts` | methods: GET | status codes: 401, 404, 500 | env: E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NODE_ENV
 - `src/app/api/recognize/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY
+- `src/app/api/sage/menu-max/route.ts` | methods: POST | status codes: 400, 401, 422, 500, 502, 504 | env: OPENROUTER_API_KEY, SAGE_MENU_OPENROUTER_MODEL, SAGE_MENU_TIMEOUT_MS
 - `src/app/api/sage/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
 - `src/app/api/voice-log/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS

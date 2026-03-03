@@ -1,0 +1,68 @@
+- generic [active] [ref=e1]:
+  - alert [ref=e4]
+  - generic [ref=e6]:
+    - generic [ref=e8]:
+      - paragraph [ref=e10]: Coconut is technically a fruit (a drupe) — it counts as 1 plant point.
+      - paragraph [ref=e11]: Mar 1 – Mar 7
+      - generic [ref=e12]:
+        - generic [ref=e14]: S
+        - generic [ref=e16]: M
+        - generic [ref=e18]: T
+        - generic [ref=e20]: W
+        - generic [ref=e22]: T
+        - generic [ref=e24]: F
+        - generic [ref=e26]: S
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - generic [ref=e29]: "0"
+          - generic [ref=e30]: / 30
+          - generic [ref=e31]: 0%
+        - generic [ref=e34]:
+          - generic [ref=e37]: "15"
+          - generic [ref=e40]: "25"
+          - generic [ref=e43]: "30"
+        - paragraph [ref=e44]: 30 more plants to go
+      - link "Log a Plant" [ref=e45] [cursor=pointer]:
+        - /url: /add
+        - img [ref=e46]
+        - text: Log a Plant
+    - generic [ref=e49]:
+      - button "Dismiss" [ref=e50]:
+        - img [ref=e51]
+      - heading "Start a Crop Circle" [level=3] [ref=e54]
+      - paragraph [ref=e55]: Invite friends and compete on a weekly leaderboard
+      - generic [ref=e56]:
+        - link "Create" [ref=e57] [cursor=pointer]:
+          - /url: /circles/create
+        - link "Join" [ref=e58] [cursor=pointer]:
+          - /url: /circles
+    - generic [ref=e60]:
+      - generic [ref=e61]:
+        - heading "This Week" [level=2] [ref=e62]
+        - generic [ref=e63]: 0 plants
+      - generic [ref=e65]:
+        - img [ref=e67]
+        - paragraph [ref=e70]: No plants yet
+        - paragraph [ref=e71]: Tap the button above to log your first plant.
+  - navigation [ref=e72]:
+    - generic [ref=e73]:
+      - link "Home" [ref=e74] [cursor=pointer]:
+        - /url: /
+        - img [ref=e75]
+        - generic [ref=e82]: Home
+      - link "Circles" [ref=e83] [cursor=pointer]:
+        - /url: /circles
+        - img [ref=e84]
+        - generic [ref=e88]: Circles
+      - link "Sage" [ref=e89] [cursor=pointer]:
+        - /url: /sage
+        - img [ref=e90]
+        - generic [ref=e93]: Sage
+      - link "Learn" [ref=e94] [cursor=pointer]:
+        - /url: /learn
+        - img [ref=e95]
+        - generic [ref=e97]: Learn
+      - link "Profile" [ref=e98] [cursor=pointer]:
+        - /url: /profile
+        - img [ref=e99]
+        - generic [ref=e102]: Profile

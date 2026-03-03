@@ -8,7 +8,7 @@ export const contentType = "image/png";
 export default async function Image() {
   const host = headers().get("host") ?? "plantmaxxing.com";
   const protocol = host.includes("localhost") ? "http" : "https";
-  const logoUrl = `${protocol}://${host}/logo-plantmaxxing.svg`;
+  const logoUrl = `${protocol}://${host}/plantmaxxing-logo-lockup-transparent.png`;
 
   return new ImageResponse(
     (

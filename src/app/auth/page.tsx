@@ -211,7 +211,7 @@ export default function AuthPage() {
             style={{ animationDelay: "0.1s" }}
           >
             <Image
-              src="/logo-plantmaxxing.svg"
+              src="/plantmaxxing-logo-lockup-transparent.png"
               alt="Plantmaxxing logo"
               width={512}
               height={512}

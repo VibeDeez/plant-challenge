@@ -1,0 +1,43 @@
+- generic [ref=e1]:
+  - alert [ref=e4]
+  - generic [ref=e6]:
+    - generic [ref=e106]:
+      - img [ref=e108]
+      - generic [ref=e112]:
+        - heading "Crop Circles" [level=1] [ref=e113]
+        - paragraph [ref=e114]: Compete with friends on weekly leaderboards
+    - generic [ref=e116]:
+      - generic [ref=e117]:
+        - link "Create a Circle" [ref=e118] [cursor=pointer]:
+          - /url: /circles/create
+          - img [ref=e119]
+          - text: Create a Circle
+        - button "Join a Circle" [ref=e120]:
+          - img [ref=e121]
+          - text: Join a Circle
+      - generic [ref=e124]:
+        - img [ref=e126]
+        - heading "No Crop Circles yet" [level=2] [ref=e130]
+        - paragraph [ref=e131]: Create one and invite friends, or join with an invite code
+  - navigation [ref=e72]:
+    - generic [ref=e73]:
+      - link "Home" [ref=e74] [cursor=pointer]:
+        - /url: /
+        - img [ref=e75]
+        - generic [ref=e82]: Home
+      - link "Circles" [active] [ref=e83] [cursor=pointer]:
+        - /url: /circles
+        - img [ref=e84]
+        - generic [ref=e88]: Circles
+      - link "Sage" [ref=e89] [cursor=pointer]:
+        - /url: /sage
+        - img [ref=e90]
+        - generic [ref=e93]: Sage
+      - link "Learn" [ref=e94] [cursor=pointer]:
+        - /url: /learn
+        - img [ref=e95]
+        - generic [ref=e97]: Learn
+      - link "Profile" [ref=e98] [cursor=pointer]:
+        - /url: /profile
+        - img [ref=e99]
+        - generic [ref=e102]: Profile

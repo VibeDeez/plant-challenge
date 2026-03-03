@@ -64,7 +64,7 @@ export default function AddToHomeScreen() {
           {/* App icon preview */}
           <div className="shrink-0 w-14 h-14 rounded-2xl border border-brand-green/20 overflow-hidden bg-brand-dark">
             <Image
-              src="/logo-plantmaxxing.svg"
+              src="/plantmaxxing-logo-mark-transparent.png"
               alt="Plantmaxxing app icon"
               width={56}
               height={56}

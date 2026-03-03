@@ -1,14 +1,14 @@
 import { ImageResponse } from "next/og";
 import { headers } from "next/headers";
 
-export const alt = "Plantmaxxing — Become unmoggable";
+export const alt = "Plantmaxxing logo on dark green background";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function Image() {
   const host = headers().get("host") ?? "plantmaxxing.com";
   const protocol = host.includes("localhost") ? "http" : "https";
-  const mascotUrl = `${protocol}://${host}/illustrations/character-carrot.png`;
+  const logoUrl = `${protocol}://${host}/logo-plantmaxxing.svg`;
 
   return new ImageResponse(
     (
@@ -17,48 +17,38 @@ export default async function Image() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           alignItems: "center",
           background:
             "radial-gradient(circle at 50% 36%, #1c6f4f 0%, #114735 46%, #0a201a 100%)",
-          padding: "40px 64px",
+          padding: "48px 64px",
           position: "relative",
         }}
       >
         <div
           style={{
-            width: "100%",
+            width: 760,
+            height: 520,
+            borderRadius: 64,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            backgroundColor: "rgba(10, 32, 26, 0.35)",
+            border: "1px solid rgba(245, 240, 232, 0.14)",
+            boxShadow: "0 30px 80px rgba(3, 20, 14, 0.45)",
+            padding: 72,
           }}
         >
-          <span
+          <img
+            src={logoUrl}
+            alt="Plantmaxxing logo"
             style={{
-              fontSize: 120,
-              fontWeight: 900,
-              color: "#22c55e",
-              lineHeight: 1,
-              letterSpacing: "-1px",
-              textShadow:
-                "0 6px 0 #15914f, 0 12px 0 #118347, 0 18px 0 #0e6f3d, 0 24px 18px rgba(3, 35, 22, 0.75)",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
             }}
-          >
-            Plantmaxxing
-          </span>
+          />
         </div>
-
-        <img
-          src={mascotUrl}
-          alt="Buff carrot mascot flexing"
-          style={{
-            width: 470,
-            height: 470,
-            objectFit: "contain",
-            marginTop: 8,
-          }}
-        />
       </div>
     ),
     { ...size }

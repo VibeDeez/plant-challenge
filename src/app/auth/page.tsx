@@ -62,19 +62,16 @@ const STEPS = [
     num: "01",
     title: "Log Your Plants",
     desc: "Ate an apple? A handful of walnuts? Log each unique plant species you eat throughout the week.",
-    illo: "/illustrations/character-radish.png",
   },
   {
     num: "02",
     title: "Watch Your Week Build",
     desc: "Track your progress toward 30 points with your weekly ring. Herbs and spices count too.",
-    illo: "/illustrations/character-sunflower.png",
   },
   {
     num: "03",
     title: "Compete & Share",
     desc: "See how you stack up on the family leaderboard. Get the whole household involved.",
-    illo: "/illustrations/character-tomato.png",
   },
 ];
 
@@ -207,40 +204,25 @@ export default function AuthPage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-brand-dark grain mt-safe">
 
         <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          {/* 3D headline */}
-          <h1 className="mb-1">
-            <span
-              className="block text-[clamp(3rem,12vw,8rem)] font-black leading-[0.85] tracking-tight text-brand-green font-display animate-fadeInUp"
-              style={{
-                textShadow: "0 4px 0 #166534, 0 8px 0 #14532d, 0 12px 24px rgba(0,0,0,0.4)",
-                animationDelay: "0.1s",
-              }}
-            >
-              Plantmaxxing
-            </span>
-          </h1>
+          <h1 className="sr-only">Plantmaxxing</h1>
 
-          {/* Mascot — the buff carrot */}
-          <div className="relative mx-auto w-64 h-64 sm:w-72 sm:h-72 mt-2 -mb-2 animate-fadeInUp" style={{ animationDelay: "0.3s" }}>
+          <div
+            className="relative mx-auto w-full max-w-[260px] sm:max-w-[320px] animate-fadeInUp"
+            style={{ animationDelay: "0.1s" }}
+          >
             <Image
-              src="/illustrations/character-carrot.png"
-              alt="Plantmaxxing mascot — a buff carrot flexing"
-              width={288}
-              height={288}
-              className="object-contain animate-gentleFloat"
-              unoptimized
+              src="/logo-plantmaxxing.svg"
+              alt="Plantmaxxing logo"
+              width={512}
+              height={512}
+              className="w-full h-auto object-contain"
               priority
             />
           </div>
 
-          <div className="max-w-sm mx-auto mb-8 animate-fadeInUp" style={{ animationDelay: "0.5s" }}>
-            <p className="text-lg sm:text-xl font-display text-brand-cream/80 leading-relaxed">
-              Stop letting processed slop
-              <br />
-              <span className="font-bold whitespace-nowrap">cortisol-maxx</span> your flora.
-            </p>
-            <p className="text-lg sm:text-xl font-display text-brand-cream/80 leading-relaxed mt-4">
-              Become <span className="text-brand-green font-bold">unmoggable.</span>
+          <div className="max-w-md mx-auto mb-8 animate-fadeInUp" style={{ animationDelay: "0.3s" }}>
+            <p className="text-base sm:text-lg text-brand-cream/85 leading-relaxed">
+              Build healthier nutrition habits by tracking your weekly plant diversity.
             </p>
           </div>
 
@@ -307,17 +289,6 @@ export default function AuthPage() {
                 }`}
                 style={{ transitionDelay: stepsReveal.visible ? `${100 + i * 150}ms` : "0ms" }}
               >
-                {/* Character illustration */}
-                <div className="flex items-end justify-center pt-6 px-4 bg-white/20">
-                  <Image
-                    src={step.illo}
-                    alt=""
-                    width={220}
-                    height={280}
-                    className="object-contain h-52 sm:h-64"
-                    unoptimized
-                  />
-                </div>
                 <div className="relative bg-white/30 backdrop-blur-sm p-6 text-center sm:text-left">
                   <div className="text-5xl font-bold text-brand-green/20 mb-3 font-display">
                     {step.num}

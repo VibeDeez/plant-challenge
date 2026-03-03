@@ -31,10 +31,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/opengraph-image?v=20260225",
+        url: "/opengraph-image?v=20260303",
         width: 1200,
         height: 630,
-        alt: "Plantmaxxing — Become unmoggable",
+        alt: "Plantmaxxing logo on dark green background",
       },
     ],
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Plantmaxxing",
     description: "Track your weekly plant diversity. Feed your gut. Transform your health.",
-    images: ["/opengraph-image?v=20260225"],
+    images: ["/opengraph-image?v=20260303"],
   },
 };
 

@@ -7,7 +7,7 @@ export const contentType = "image/png";
 export default async function AppleIcon() {
   const host = headers().get("host") ?? "plantmaxxing.com";
   const protocol = host.includes("localhost") ? "http" : "https";
-  const mascotUrl = `${protocol}://${host}/illustrations/character-carrot.png`;
+  const logoUrl = `${protocol}://${host}/logo-plantmaxxing.svg`;
 
   return new ImageResponse(
     (
@@ -21,30 +21,18 @@ export default async function AppleIcon() {
           justifyContent: "center",
           backgroundColor: "#1a3a2a",
           borderRadius: "40px",
+          padding: "20px",
         }}
       >
         <img
-          src={mascotUrl}
-          alt=""
+          src={logoUrl}
+          alt="Plantmaxxing logo"
           style={{
-            width: 130,
-            height: 130,
+            width: "100%",
+            height: "100%",
             objectFit: "contain",
-            marginTop: -4,
           }}
         />
-        <span
-          style={{
-            fontSize: "18px",
-            fontWeight: 900,
-            color: "#22c55e",
-            lineHeight: 1,
-            marginTop: -8,
-            textShadow: "0 2px 0 #15914f",
-          }}
-        >
-          Plantmaxxing
-        </span>
       </div>
     ),
     { ...size }

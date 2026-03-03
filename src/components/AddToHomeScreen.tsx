@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { X, Share } from "lucide-react";
 
 /**
@@ -61,9 +62,14 @@ export default function AddToHomeScreen() {
           </button>
 
           {/* App icon preview */}
-          <div className="shrink-0 flex flex-col items-center justify-center w-14 h-14 rounded-2xl bg-brand-green/15 border border-brand-green/20">
-            <span className="text-xl font-black text-brand-green leading-none">30</span>
-            <span className="text-[7px] font-bold text-brand-cream/70 tracking-wider uppercase leading-none mt-0.5">Plants</span>
+          <div className="shrink-0 w-14 h-14 rounded-2xl border border-brand-green/20 overflow-hidden bg-brand-dark">
+            <Image
+              src="/logo-plantmaxxing.svg"
+              alt="Plantmaxxing app icon"
+              width={56}
+              height={56}
+              className="w-full h-full object-contain"
+            />
           </div>
 
           {/* Instructions */}

@@ -1,0 +1,19 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - heading "Set New Password" [level=1] [ref=e4]
+      - paragraph [ref=e5]: Enter your new password below.
+      - generic [ref=e7]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: New Password
+          - textbox "New Password" [ref=e10]:
+            - /placeholder: At least 6 characters
+        - generic [ref=e11]:
+          - generic [ref=e12]: Confirm Password
+          - textbox "Confirm Password" [ref=e13]:
+            - /placeholder: Re-enter your password
+        - button "Update Password" [ref=e14]
+      - paragraph [ref=e15]:
+        - link "Back to sign in" [ref=e16] [cursor=pointer]:
+          - /url: /auth
+  - alert [ref=e17]

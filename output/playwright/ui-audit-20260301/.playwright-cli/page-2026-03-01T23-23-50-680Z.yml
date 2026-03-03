@@ -1,0 +1,172 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - heading "Plantmaxxing" [level=1] [ref=e5]:
+        - generic [ref=e6]: Plantmaxxing
+      - img "Plantmaxxing mascot — a buff carrot flexing" [ref=e8]
+      - generic [ref=e9]:
+        - paragraph [ref=e10]:
+          - text: Stop letting processed slop
+          - text: cortisol-maxx your flora.
+        - paragraph [ref=e11]: Become unmoggable.
+      - generic [ref=e12]:
+        - link "Get Started" [ref=e13] [cursor=pointer]:
+          - /url: "#start"
+        - link "Sign In" [ref=e14] [cursor=pointer]:
+          - /url: "#start"
+    - paragraph [ref=e16]: Botanical Specimens · 8 Categories
+    - generic [ref=e68]:
+      - heading "How It Works" [level=2] [ref=e69]
+      - generic [ref=e70]:
+        - generic [ref=e73]:
+          - generic [ref=e74]: "01"
+          - heading "Log Your Plants" [level=3] [ref=e75]
+          - paragraph [ref=e76]: Ate an apple? A handful of walnuts? Log each unique plant species you eat throughout the week.
+        - generic [ref=e79]:
+          - generic [ref=e80]: "02"
+          - heading "Watch Your Week Build" [level=3] [ref=e81]
+          - paragraph [ref=e82]: Track your progress toward 30 points with your weekly ring. Herbs and spices count too.
+        - generic [ref=e85]:
+          - generic [ref=e86]: "03"
+          - heading "Compete & Share" [level=3] [ref=e87]
+          - paragraph [ref=e88]: See how you stack up on the family leaderboard. Get the whole household involved.
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - heading "8 Categories. Endless Variety." [level=2] [ref=e92]
+        - paragraph [ref=e93]: Every unique plant you eat earns points. The more diverse your plate, the healthier your gut.
+      - generic [ref=e96]:
+        - generic [ref=e97]:
+          - img "Fruits" [ref=e99]
+          - generic [ref=e100]:
+            - heading "Fruits" [level=3] [ref=e101]
+            - paragraph [ref=e102]: Apple, Banana, Mango, Blueberry
+            - generic [ref=e103]: 1 pt each
+        - generic [ref=e104]:
+          - img "Vegetables" [ref=e106]
+          - generic [ref=e107]:
+            - heading "Vegetables" [level=3] [ref=e108]
+            - paragraph [ref=e109]: Broccoli, Spinach, Carrot, Kale
+            - generic [ref=e110]: 1 pt each
+        - generic [ref=e111]:
+          - img "Whole Grains" [ref=e113]
+          - generic [ref=e114]:
+            - heading "Whole Grains" [level=3] [ref=e115]
+            - paragraph [ref=e116]: Oats, Quinoa, Brown Rice, Barley
+            - generic [ref=e117]: 1 pt each
+        - generic [ref=e118]:
+          - img "Legumes" [ref=e120]
+          - generic [ref=e121]:
+            - heading "Legumes" [level=3] [ref=e122]
+            - paragraph [ref=e123]: Chickpeas, Lentils, Black Beans
+            - generic [ref=e124]: 1 pt each
+        - generic [ref=e125]:
+          - img "Nuts" [ref=e127]
+          - generic [ref=e128]:
+            - heading "Nuts" [level=3] [ref=e129]
+            - paragraph [ref=e130]: Almonds, Walnuts, Cashews, Pecans
+            - generic [ref=e131]: 1 pt each
+        - generic [ref=e132]:
+          - img "Seeds" [ref=e134]
+          - generic [ref=e135]:
+            - heading "Seeds" [level=3] [ref=e136]
+            - paragraph [ref=e137]: Chia, Flax, Hemp, Pumpkin Seeds
+            - generic [ref=e138]: 1 pt each
+        - generic [ref=e139]:
+          - img "Herbs" [ref=e141]
+          - generic [ref=e142]:
+            - heading "Herbs" [level=3] [ref=e143]
+            - paragraph [ref=e144]: Basil, Cilantro, Mint, Rosemary
+            - generic [ref=e145]: ¼ pt each
+        - generic [ref=e146]:
+          - img "Spices" [ref=e148]
+          - generic [ref=e149]:
+            - heading "Spices" [level=3] [ref=e150]
+            - paragraph [ref=e151]: Turmeric, Cumin, Cinnamon, Ginger
+            - generic [ref=e152]: ¼ pt each
+    - generic [ref=e154]:
+      - heading "Backed by the Largest Gut Study Ever Published" [level=2] [ref=e155]
+      - paragraph [ref=e156]: People who ate 30+ plants per week had significantly more diverse gut bacteria — regardless of whether they were vegan, vegetarian, or omnivore.
+      - paragraph [ref=e157]: Based on the American Gut Project research
+    - generic [ref=e159]:
+      - heading "Tips for Hitting 30" [level=2] [ref=e160]
+      - paragraph [ref=e161]: Simple strategies to build plant diversity into every meal.
+      - generic [ref=e162]:
+        - generic [ref=e164]:
+          - img [ref=e166]
+          - heading "Power Breakfast" [level=3] [ref=e171]
+          - paragraph [ref=e172]: Overnight oats with oats, chia, walnuts, blueberries, banana, and cinnamon = 5.25 points before leaving the house.
+        - generic [ref=e174]:
+          - img [ref=e176]
+          - heading "Spice Rack Hack" [level=3] [ref=e178]
+          - paragraph [ref=e179]: Use 4-8 different spices daily. Over a week, herbs and spices alone can contribute 7-10+ points.
+        - generic [ref=e181]:
+          - img [ref=e183]
+          - heading "Mixed Bag Approach" [level=3] [ref=e186]
+          - paragraph [ref=e187]: "Buy pre-mixed bags: mixed greens, trail mix, frozen stir-fry blends. Each component counts individually."
+        - generic [ref=e189]:
+          - img [ref=e191]
+          - heading "Grain Rotation" [level=3] [ref=e200]
+          - paragraph [ref=e201]: Rotate through oats, quinoa, barley, farro, buckwheat, millet, and brown rice. 7 grain points with zero extra effort.
+        - generic [ref=e203]:
+          - img [ref=e205]
+          - heading "Smoothie Stacking" [level=3] [ref=e208]
+          - paragraph [ref=e209]: "A single smoothie can contain 6-10 plants: spinach, banana, mango, hemp seeds, flaxseed, ginger, turmeric."
+        - generic [ref=e211]:
+          - img [ref=e213]
+          - heading "Topping Tax" [level=3] [ref=e216]
+          - paragraph [ref=e217]: Add seeds, nuts, or fresh herbs to every meal. Pumpkin seeds on soup, sesame on stir-fry. Adds 2-4 points daily.
+    - generic [ref=e219]:
+      - heading "Common Questions" [level=2] [ref=e220]
+      - paragraph [ref=e221]: Edge cases, common mistakes, and special situations.
+      - generic [ref=e222]:
+        - generic [ref=e224]:
+          - button "What Counts? (Edge Cases)" [ref=e225]:
+            - generic [ref=e226]: What Counts? (Edge Cases)
+            - img [ref=e227]
+          - generic [ref=e230]:
+            - group [ref=e231]:
+              - generic "Red, green, brown lentils?" [ref=e232] [cursor=pointer]
+            - group [ref=e233]:
+              - generic "Red, green, yellow bell pepper?" [ref=e234] [cursor=pointer]
+            - group [ref=e235]:
+              - generic "Tofu, tempeh, edamame?" [ref=e236] [cursor=pointer]
+            - group [ref=e237]:
+              - generic "White rice?" [ref=e238] [cursor=pointer]
+            - group [ref=e239]:
+              - generic "Coffee and tea?" [ref=e240] [cursor=pointer]
+            - group [ref=e241]:
+              - generic "Dark chocolate (>70%)?" [ref=e242] [cursor=pointer]
+            - group [ref=e243]:
+              - generic "Frozen vegetables?" [ref=e244] [cursor=pointer]
+            - group [ref=e245]:
+              - generic "Nut butters and tahini?" [ref=e246] [cursor=pointer]
+            - group [ref=e247]:
+              - generic "Fermented plants (kimchi, sauerkraut)?" [ref=e248] [cursor=pointer]
+            - group [ref=e249]:
+              - generic "Mushrooms and seaweed?" [ref=e250] [cursor=pointer]
+        - button "Common Mistakes" [ref=e253]:
+          - generic [ref=e254]: Common Mistakes
+          - img [ref=e255]
+        - button "Special Situations" [ref=e259]:
+          - generic [ref=e260]: Special Situations
+          - img [ref=e261]
+    - generic [ref=e264]:
+      - heading "Start Plantmaxxing" [level=2] [ref=e265]
+      - generic [ref=e266]:
+        - generic [ref=e267]:
+          - generic [ref=e268]:
+            - generic [ref=e269]: Email
+            - textbox "Email" [ref=e270]:
+              - /placeholder: you@example.com
+          - generic [ref=e271]:
+            - generic [ref=e272]: Password
+            - textbox "Password" [ref=e273]:
+              - /placeholder: At least 6 characters
+          - button "Sign In" [ref=e274]
+        - paragraph [ref=e275]:
+          - button "Forgot password?" [ref=e276]
+        - paragraph [ref=e277]:
+          - text: Don't have an account?
+          - button "Sign up" [ref=e278]
+    - paragraph [ref=e281]: Plantmaxxing · Inspired by the American Gut Project research · 2026
+  - alert [ref=e282]

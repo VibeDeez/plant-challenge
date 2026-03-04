@@ -88,7 +88,11 @@ export default function SageMenuLogReviewSheet({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/40 animate-fadeIn" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/40 animate-fadeIn"
+        onClick={onClose}
+        data-haptic="selection"
+      />
       <div className="relative w-full max-h-[85vh] overflow-y-auto rounded-t-3xl bg-brand-cream pb-20 animate-slideUp">
         <div className="flex justify-center pt-2 pb-0">
           <div className="h-1 w-10 rounded-full bg-brand-dark/15" />
@@ -105,6 +109,7 @@ export default function SageMenuLogReviewSheet({
           <button
             type="button"
             onClick={onClose}
+            data-haptic="selection"
             className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 transition-colors hover:bg-brand-dark/5 hover:text-brand-dark"
           >
             <X size={20} />

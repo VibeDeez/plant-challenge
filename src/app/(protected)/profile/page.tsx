@@ -4,6 +4,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useApp, type Member } from "@/components/ProtectedLayout";
+import { useAppHaptics } from "@/lib/haptics/useAppHaptics";
 import AddKidModal from "@/components/AddKidModal";
 import PlantPicker from "@/components/PlantPicker";
 import {
@@ -14,6 +15,7 @@ import {
   ChevronRight,
   Trash2,
   Lock,
+  Smartphone,
 } from "lucide-react";
 import { ALL_ILLUSTRATIONS } from "@/lib/constants";
 import Image from "next/image";
@@ -24,6 +26,7 @@ const supabase = createClient();
 
 export default function ProfilePage() {
   const { userId, members, refreshMembers } = useApp();
+  const { enabled: hapticsEnabled, setEnabled: setHapticsEnabled } = useAppHaptics();
   const [editingOwner, setEditingOwner] = useState(false);
   const [ownerName, setOwnerName] = useState("");
   const [ownerEmoji, setOwnerEmoji] = useState("");
@@ -255,6 +258,7 @@ export default function ProfilePage() {
                     </button>
                     <button
                       onClick={() => deleteKid(kid.id)}
+                      data-haptic="warning"
                       className="flex h-11 w-11 items-center justify-center rounded-xl transition-colors hover:bg-red-50"
                     >
                       <Trash2 size={14} className="text-brand-muted/60 hover:text-red-500" />
@@ -268,6 +272,40 @@ export default function ProfilePage() {
 
         <div className="stack-card">
           <h2 className="text-lg text-brand-dark font-display">Account Settings</h2>
+
+          <button
+            type="button"
+            onClick={() => setHapticsEnabled(!hapticsEnabled)}
+            data-haptic="selection"
+            className="rounded-2xl border border-brand-dark/10 bg-white/60 px-4 py-3.5 text-left transition-colors hover:bg-white"
+            aria-pressed={hapticsEnabled}
+            aria-label="Toggle haptic feedback"
+          >
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-dark/5">
+                <Smartphone size={18} className="text-brand-dark" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold text-brand-dark">
+                  Haptic Feedback
+                </span>
+                <span className="block text-xs text-brand-muted">
+                  Uses supported phone vibration for taps and key actions.
+                </span>
+              </span>
+              <span
+                className={`inline-flex h-7 w-12 items-center rounded-full p-1 transition-colors ${
+                  hapticsEnabled ? "bg-brand-green" : "bg-brand-dark/20"
+                }`}
+              >
+                <span
+                  className={`h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+                    hapticsEnabled ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </span>
+            </div>
+          </button>
 
           <Link
             href="/profile/security"
@@ -313,6 +351,7 @@ export default function ProfilePage() {
         {/* Sign Out */}
         <button
           onClick={handleSignOut}
+          data-haptic="warning"
           className="flex items-center gap-2 w-full justify-center rounded-xl border border-brand-dark/10 px-4 py-3.5 text-sm font-medium text-brand-muted hover:bg-brand-dark/5 transition-colors"
         >
           <LogOut size={16} />

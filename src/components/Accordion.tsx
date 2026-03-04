@@ -18,6 +18,7 @@ export default function Accordion({
     <div className="border-b border-brand-dark/10">
       <button
         onClick={() => setOpen(!open)}
+        data-haptic="selection"
         className="flex w-full items-center justify-between py-4 text-left"
       >
         <span

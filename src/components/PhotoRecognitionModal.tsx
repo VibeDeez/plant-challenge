@@ -155,6 +155,7 @@ export default function PhotoRecognitionModal({
             <SheetClose asChild>
               <button
                 type="button"
+                data-haptic="selection"
                 className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
                 aria-label="Close photo recognition sheet"
               >
@@ -195,6 +196,7 @@ export default function PhotoRecognitionModal({
                       reset();
                       fileRef.current?.click();
                     }}
+                    data-haptic="selection"
                     className="absolute top-3 right-3 flex min-h-11 items-center bg-black/40 text-white rounded-xl px-4 py-1.5 text-xs font-medium hover:bg-black/60 transition-colors"
                   >
                     Retake
@@ -242,6 +244,7 @@ export default function PhotoRecognitionModal({
                         setSelected(all);
                       }
                     }}
+                    data-haptic="selection"
                     className="min-h-11 rounded-lg px-2 text-xs font-medium text-brand-green"
                   >
                     {selectedCount > 0 ? "Deselect all" : "Select all"}
@@ -260,6 +263,7 @@ export default function PhotoRecognitionModal({
                         key={idx}
                         onClick={() => !alreadyLogged && toggleSelect(idx)}
                         disabled={alreadyLogged}
+                        data-haptic="selection"
                         className={`w-full flex items-center gap-3 rounded-xl p-3 text-left transition-all ${
                           alreadyLogged
                             ? "bg-brand-dark/5 opacity-50"

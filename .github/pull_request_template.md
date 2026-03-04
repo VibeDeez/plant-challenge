@@ -24,6 +24,7 @@
 - [ ] Env vars changed listed
 - [ ] AI provider behavior changed listed
 - [ ] API contract docs updated (if applicable)
+- [ ] New interactive UI includes haptics intent or explicit opt-out
 
 ## Notes for Reviewers
 - Areas to focus:

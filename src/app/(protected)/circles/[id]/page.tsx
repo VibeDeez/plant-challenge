@@ -676,6 +676,7 @@ export default function CircleDetailPage() {
           <div className="flex gap-6">
             <button
               onClick={() => setTab("leaderboard")}
+              data-haptic="selection"
               className={`min-h-11 pb-3 text-sm font-medium transition-colors ${
                 tab === "leaderboard"
                   ? "border-b-2 border-brand-green text-brand-green font-semibold"
@@ -686,6 +687,7 @@ export default function CircleDetailPage() {
             </button>
             <button
               onClick={() => setTab("activity")}
+              data-haptic="selection"
               className={`min-h-11 pb-3 text-sm font-medium transition-colors ${
                 tab === "activity"
                   ? "border-b-2 border-brand-green text-brand-green font-semibold"
@@ -707,6 +709,7 @@ export default function CircleDetailPage() {
               <div className="flex gap-2 mb-5">
                 <button
                   onClick={() => setLbView("weekly")}
+                  data-haptic="selection"
                   className={`min-h-11 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     lbView === "weekly"
                       ? "bg-brand-green text-white"
@@ -717,6 +720,7 @@ export default function CircleDetailPage() {
                 </button>
                 <button
                   onClick={() => setLbView("alltime")}
+                  data-haptic="selection"
                   className={`min-h-11 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                     lbView === "alltime"
                       ? "bg-brand-green text-white"
@@ -878,6 +882,7 @@ export default function CircleDetailPage() {
                               <button
                                 key={re.key}
                                 onClick={() => handleReaction(act.id, re.key)}
+                                data-haptic="selection"
                                 className={`flex min-h-11 items-center gap-1 px-3 py-1 rounded-full text-xs transition-colors ${
                                   data.userReacted
                                     ? "bg-brand-green/20 border border-brand-green"
@@ -893,6 +898,7 @@ export default function CircleDetailPage() {
                           {/* + button to open picker */}
                           <button
                             onClick={() => setOpenPicker(pickerOpen ? null : act.id)}
+                            data-haptic="selection"
                             className="flex items-center justify-center h-11 w-11 rounded-full bg-brand-dark/[0.04] border border-brand-dark/10 text-brand-muted hover:bg-brand-dark/10 transition-colors text-sm"
                           >
                             +
@@ -906,6 +912,7 @@ export default function CircleDetailPage() {
                               <button
                                 key={re.key}
                                 onClick={() => handleReaction(act.id, re.key)}
+                                data-haptic="selection"
                                 className="flex items-center justify-center h-11 w-11 rounded-xl hover:bg-brand-dark/[0.06] transition-colors text-lg"
                               >
                                 {re.display}

@@ -43,6 +43,7 @@ export default function PlantCard({
       {gutHealthBlurb && onInfoTap && (
         <button
           onClick={onInfoTap}
+          data-haptic="selection"
           className="flex h-11 w-11 items-center justify-center rounded-xl transition-all"
           style={{ color: `${color}80` }}
           aria-label="Gut health info"
@@ -52,6 +53,7 @@ export default function PlantCard({
       )}
       <button
         onClick={() => onDelete(log.id)}
+        data-haptic="warning"
         className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/20 sm:opacity-0 sm:group-hover:opacity-100 hover:text-red-500 hover:bg-red-50 transition-all"
       >
         <Trash2 size={16} />

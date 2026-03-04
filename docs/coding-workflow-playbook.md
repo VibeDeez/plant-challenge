@@ -155,6 +155,15 @@ Timeout: 45m
 - Keep one active coding task unless explicitly parallelized.
 - If user asks for collaboration on UI, stop and present options before implementation.
 
+## 7.1) Haptics interaction policy
+- New interactive components must use semantic controls (`button`, `a`, submit controls) whenever possible.
+- If a component is intentionally non-semantic (for example, clickable overlay/container), it must declare haptics intent via `data-haptic`.
+- Default intent for new actions is `data-haptic="light"` unless a stronger semantic intent applies:
+  - selection/toggle/tab interactions: `data-haptic="selection"`
+  - destructive actions (delete/remove/sign out/revoke): `data-haptic="warning"`
+- Intentional no-haptics interactions must opt out explicitly with `data-haptic="off"`.
+- New haptic pattern overrides must use `data-haptic-pattern="<preset-or-pattern-name>"` and include a short PR note explaining why.
+
 ---
 
 ## 8) Done definition for each task

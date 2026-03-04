@@ -191,6 +191,7 @@ export default function CirclesPage() {
                 setJoinCode("");
                 setJoinError("");
               }}
+              data-haptic="selection"
               className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-brand-dark/10 bg-white/50 px-4 py-3 text-sm font-semibold text-brand-dark hover:bg-white/80 transition-colors"
             >
               <Ticket size={16} />
@@ -289,6 +290,7 @@ export default function CirclesPage() {
               <SheetClose asChild>
                 <button
                   type="button"
+                  data-haptic="selection"
                   className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-muted hover:bg-brand-dark/5 transition-colors"
                   aria-label="Close join circle sheet"
                 >

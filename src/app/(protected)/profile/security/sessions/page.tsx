@@ -159,6 +159,7 @@ export default function SessionSettingsPage() {
                 type="button"
                 onClick={() => revoke("others")}
                 disabled={working !== null}
+                data-haptic="warning"
                 className="mt-3 min-h-11 w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-green-hover disabled:opacity-60"
               >
                 {working === "others" ? "Working..." : "Sign Out Other Devices"}
@@ -168,6 +169,7 @@ export default function SessionSettingsPage() {
                 type="button"
                 onClick={() => revoke("global")}
                 disabled={working !== null}
+                data-haptic="warning"
                 className="mt-2 min-h-11 w-full rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-100 disabled:opacity-60"
               >
                 <span className="inline-flex items-center gap-2">

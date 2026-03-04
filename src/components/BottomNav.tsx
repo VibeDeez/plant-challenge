@@ -39,6 +39,7 @@ export default function BottomNav() {
             <Link
               key={href}
               href={href}
+              data-haptic="selection"
               className={`relative mx-auto flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-1.5 text-[11px] font-medium tracking-wide transition-all ${classes}`}
             >
               {iconNode ? (

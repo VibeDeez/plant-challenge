@@ -674,6 +674,7 @@ export default function VoiceLogModal({
             <SheetClose asChild>
               <button
                 type="button"
+                data-haptic="selection"
                 className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
                 aria-label="Close voice log sheet"
               >
@@ -687,6 +688,7 @@ export default function VoiceLogModal({
               type="button"
               onClick={toggleRecording}
               disabled={isUploading}
+              data-haptic="selection"
               className={getRecordingButtonClassName(isRecording, isUploading)}
             >
               <span className="inline-flex items-center gap-2">
@@ -700,6 +702,7 @@ export default function VoiceLogModal({
                 type="button"
                 onClick={handleDiscardDraft}
                 disabled={isUploading || isSubmitting}
+                data-haptic="warning"
                 className="w-full min-h-11 rounded-xl border border-brand-dark/15 bg-white px-4 py-2.5 text-sm font-semibold text-brand-dark transition-colors hover:bg-brand-dark/5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="inline-flex items-center gap-2">
@@ -752,6 +755,7 @@ export default function VoiceLogModal({
                         key={`${item.name}-${idx}`}
                         onClick={() => !item.duplicate && toggleResult(idx)}
                         disabled={item.duplicate}
+                        data-haptic="selection"
                         className={getResultRowClassName(item)}
                       >
                         <div className={getResultCheckClassName(item)}>

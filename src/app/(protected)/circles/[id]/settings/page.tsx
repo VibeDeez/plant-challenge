@@ -325,6 +325,7 @@ export default function CircleSettingsPage() {
             <button
               onClick={handleRegenerate}
               disabled={regenerating}
+              data-haptic="selection"
               className="flex h-11 items-center gap-1.5 rounded-xl border border-brand-dark/10 bg-white/50 px-4 text-sm font-medium text-brand-muted hover:bg-white/80 hover:text-brand-dark transition-colors disabled:opacity-50"
             >
               <RefreshCw size={14} className={regenerating ? "animate-spin" : ""} />
@@ -362,6 +363,7 @@ export default function CircleSettingsPage() {
                           m.member.display_name
                         )
                       }
+                      data-haptic="warning"
                       className="flex h-11 w-11 items-center justify-center rounded-xl hover:bg-red-50 transition-colors"
                       title={`Remove ${m.member.display_name}`}
                     >
@@ -409,6 +411,7 @@ export default function CircleSettingsPage() {
               <button
                 onClick={handleTransfer}
                 disabled={!transferTargetId || transferring}
+                data-haptic="warning"
                 className="flex h-11 items-center justify-center bg-brand-green text-white font-semibold rounded-xl px-4 text-sm hover:bg-brand-green-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
               >
                 {transferring ? "Transferring..." : "Transfer"}
@@ -427,6 +430,7 @@ export default function CircleSettingsPage() {
           {!showDeleteConfirm ? (
             <button
               onClick={() => setShowDeleteConfirm(true)}
+              data-haptic="warning"
               className="rounded-xl border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-100 transition-colors"
             >
               Delete Circle
@@ -449,6 +453,7 @@ export default function CircleSettingsPage() {
                 <button
                   onClick={handleDelete}
                   disabled={deleteTyped !== circle.name || deleting}
+                  data-haptic="warning"
                   className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {deleting ? "Deleting..." : "Delete Forever"}
@@ -458,6 +463,7 @@ export default function CircleSettingsPage() {
                     setShowDeleteConfirm(false);
                     setDeleteTyped("");
                   }}
+                  data-haptic="selection"
                   className="rounded-xl px-4 py-2.5 text-sm font-medium text-brand-muted hover:bg-brand-dark/5 transition-colors"
                 >
                   Cancel

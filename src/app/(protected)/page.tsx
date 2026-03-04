@@ -216,6 +216,7 @@ export default function HomePage() {
             <div className="relative bg-brand-green/10 border border-brand-green/20 rounded-2xl p-5 animate-fadeInUp">
               <button
                 onClick={dismissCircleBanner}
+                data-haptic="selection"
                 className="absolute top-2 right-2 flex h-11 w-11 items-center justify-center rounded-xl text-brand-muted hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
                 aria-label="Dismiss"
               >
@@ -315,6 +316,7 @@ export default function HomePage() {
                       aria-expanded={isExpanded}
                       aria-controls={panelId}
                       onClick={() => toggleWeekCategory(category)}
+                      data-haptic="selection"
                       className="flex min-h-11 w-full items-center gap-3 px-4 py-3 text-left active:scale-[0.995]"
                     >
                       <div

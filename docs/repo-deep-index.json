@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-03-02",
+  "generatedAt": "2026-03-03",
   "files": {
     "src/app/(protected)/add/page.tsx": {
-      "lines": 588,
+      "lines": 603,
       "exports": [
         "AddPlantPage"
       ],
@@ -110,7 +110,7 @@
       "env": []
     },
     "src/app/(protected)/profile/page.tsx": {
-      "lines": 280,
+      "lines": 333,
       "exports": [
         "ProfilePage"
       ],
@@ -120,14 +120,124 @@
       ],
       "env": []
     },
+    "src/app/(protected)/profile/privacy/page.tsx": {
+      "lines": 215,
+      "exports": [
+        "PrivacyPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/(protected)/profile/security/change-email/page.tsx": {
+      "lines": 116,
+      "exports": [
+        "ChangeEmailPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/(protected)/profile/security/page.tsx": {
+      "lines": 259,
+      "exports": [
+        "SecuritySettingsPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/(protected)/profile/security/sessions/page.tsx": {
+      "lines": 201,
+      "exports": [
+        "SessionSettingsPage"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
     "src/app/(protected)/sage/page.tsx": {
-      "lines": 133,
+      "lines": 123,
       "exports": [
         "SagePage"
       ],
       "methods": [],
       "supabase": [
         "plant_log"
+      ],
+      "env": []
+    },
+    "src/app/api/account/delete/route.ts": {
+      "lines": 89,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [
+        "account_deletion_request"
+      ],
+      "env": []
+    },
+    "src/app/api/account/email-change/request/route.ts": {
+      "lines": 113,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/api/account/export/route.ts": {
+      "lines": 120,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [
+        "account_export_request",
+        "member",
+        "plant_log"
+      ],
+      "env": []
+    },
+    "src/app/api/account/password-reset/request/route.ts": {
+      "lines": 67,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/api/account/sessions/revoke/route.ts": {
+      "lines": 81,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [],
+      "env": []
+    },
+    "src/app/api/account/sessions/route.ts": {
+      "lines": 64,
+      "exports": [
+        "GET"
+      ],
+      "methods": [
+        "GET"
+      ],
+      "supabase": [
+        "account_security_event"
       ],
       "env": []
     },
@@ -181,8 +291,25 @@
         "OPENROUTER_API_KEY"
       ]
     },
+    "src/app/api/sage/menu-max/route.ts": {
+      "lines": 695,
+      "exports": [
+        "POST"
+      ],
+      "methods": [
+        "POST"
+      ],
+      "supabase": [
+        "plant"
+      ],
+      "env": [
+        "OPENROUTER_API_KEY",
+        "SAGE_MENU_OPENROUTER_MODEL",
+        "SAGE_MENU_TIMEOUT_MS"
+      ]
+    },
     "src/app/api/sage/route.test.mjs": {
-      "lines": 75,
+      "lines": 90,
       "exports": [],
       "methods": [],
       "supabase": [],
@@ -205,7 +332,7 @@
       ]
     },
     "src/app/api/sage/routeUtils.ts": {
-      "lines": 100,
+      "lines": 114,
       "exports": [
         "parseSageTimeoutMs",
         "getSageRequestLimitError",
@@ -232,7 +359,7 @@
       ]
     },
     "src/app/apple-icon.tsx": {
-      "lines": 53,
+      "lines": 41,
       "exports": [
         "size",
         "contentType"
@@ -269,7 +396,7 @@
       "env": []
     },
     "src/app/auth/page.tsx": {
-      "lines": 739,
+      "lines": 710,
       "exports": [
         "AuthPage"
       ],
@@ -287,9 +414,8 @@
       "env": []
     },
     "src/app/icon.tsx": {
-      "lines": 35,
+      "lines": 40,
       "exports": [
-        "Icon",
         "size",
         "contentType"
       ],
@@ -311,7 +437,7 @@
       ]
     },
     "src/app/manifest.ts": {
-      "lines": 22,
+      "lines": 27,
       "exports": [
         "manifest"
       ],
@@ -320,7 +446,7 @@
       "env": []
     },
     "src/app/opengraph-image.tsx": {
-      "lines": 67,
+      "lines": 57,
       "exports": [
         "alt",
         "size",
@@ -349,7 +475,7 @@
       "env": []
     },
     "src/components/AddToHomeScreen.tsx": {
-      "lines": 104,
+      "lines": 110,
       "exports": [
         "AddToHomeScreen"
       ],
@@ -471,9 +597,29 @@
       "env": []
     },
     "src/components/SageChat.tsx": {
-      "lines": 228,
+      "lines": 187,
       "exports": [
         "SageChat"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/SageMenuLogReviewSheet.tsx": {
+      "lines": 171,
+      "exports": [
+        "SageMenuLogReviewSheet"
+      ],
+      "methods": [],
+      "supabase": [
+        "plant_log"
+      ],
+      "env": []
+    },
+    "src/components/SageMenuMax.tsx": {
+      "lines": 387,
+      "exports": [
+        "SageMenuMax"
       ],
       "methods": [],
       "supabase": [],
@@ -491,6 +637,74 @@
     "src/components/ui/sheet.tsx": {
       "lines": 61,
       "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/account/rateLimit.ts": {
+      "lines": 46,
+      "exports": [
+        "checkRateLimit"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/account/requestMeta.ts": {
+      "lines": 42,
+      "exports": [
+        "getRequestMeta",
+        "getRequestOrigin"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "NEXT_PUBLIC_SITE_URL"
+      ]
+    },
+    "src/lib/account/securityEvents.ts": {
+      "lines": 38,
+      "exports": [
+        "logSecurityEvent"
+      ],
+      "methods": [],
+      "supabase": [
+        "account_security_event"
+      ],
+      "env": []
+    },
+    "src/lib/ai/menuMaxTypes.ts": {
+      "lines": 45,
+      "exports": [
+        "MenuMaxInputMode",
+        "MenuMaxContext",
+        "MenuMaxRequest",
+        "MenuMaxPlant",
+        "MenuMaxRecommendation",
+        "MenuMaxLogCandidate",
+        "MenuMaxResponse"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/menuMaxUtils.test.mjs": {
+      "lines": 80,
+      "exports": [],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/menuMaxUtils.ts": {
+      "lines": 129,
+      "exports": [
+        "extractVisibleTextFromHtml",
+        "trimSourceText",
+        "isValidMenuImageDataUrl",
+        "clampConfidence",
+        "mergeLogCandidates",
+        "MAX_MENU_SOURCE_TEXT_LENGTH"
+      ],
       "methods": [],
       "supabase": [],
       "env": []
@@ -516,6 +730,18 @@
       "supabase": [],
       "env": []
     },
+    "src/lib/ai/openrouterClient.ts": {
+      "lines": 30,
+      "exports": [
+        "getOpenRouterClient",
+        "isOpenRouterAbortError"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": [
+        "OPENROUTER_API_KEY"
+      ]
+    },
     "src/lib/ai/sageRules.test.mjs": {
       "lines": 54,
       "exports": [],
@@ -532,6 +758,20 @@
         "SageContext",
         "SageResponse",
         "DeterministicSageResult"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/ai/sageSpecies.ts": {
+      "lines": 72,
+      "exports": [
+        "normalizeText",
+        "hasAlias",
+        "normalizeSpeciesName",
+        "isDuplicateSpeciesInWeek",
+        "SAGE_ALIAS_MAP",
+        "SageSpeciesContext"
       ],
       "methods": [],
       "supabase": [],
@@ -784,6 +1024,9 @@
   },
   "crossCutting": {
     "supabaseRefs": [
+      "account_deletion_request",
+      "account_export_request",
+      "account_security_event",
       "circle",
       "circle_activity",
       "circle_activity_reaction",
@@ -805,6 +1048,8 @@
       "NODE_ENV",
       "OPENROUTER_API_KEY",
       "SAGE_DETERMINISTIC_ONLY",
+      "SAGE_MENU_OPENROUTER_MODEL",
+      "SAGE_MENU_TIMEOUT_MS",
       "SAGE_OPENROUTER_MODEL",
       "SAGE_OPENROUTER_TIMEOUT_MS",
       "VOICE_OPENROUTER_MODEL",

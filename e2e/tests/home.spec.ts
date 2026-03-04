@@ -32,13 +32,10 @@ test.describe("Home page", () => {
     await expect(page.getByText("Log Plants")).toBeVisible();
   });
 
-  test("shows Sage teaser and opens dedicated Sage page", async ({
+  test("navigates to dedicated Sage page from bottom nav", async ({
     authedPage: page,
   }) => {
-    const sageTeaser = page.getByTestId("sage-teaser");
-    await expect(sageTeaser).toBeVisible();
-
-    await page.getByRole("link", { name: /Visit Sage/i }).click();
+    await page.locator("nav").getByRole("link", { name: /^Sage$/ }).click();
     await expect(page).toHaveURL(/\/sage/);
     await expect(page.getByTestId("sage-chat-section")).toBeVisible();
   });
@@ -47,7 +44,6 @@ test.describe("Home page", () => {
     authedPage: page,
   }) => {
     await page.goto("/sage");
-    await page.getByRole("button", { name: /Ask Sage Quick help/i }).click();
 
     const question = page.locator("#sage-question");
     await question.fill("Does espresso count?");
@@ -112,22 +108,14 @@ test.describe("Home page", () => {
     await page.goto("/");
     await page.waitForSelector("nav");
 
-    // Category breakdown should show both categories
-    await expect(page.getByText("Categories Hit")).toBeVisible();
-    const grid = page.getByTestId("category-breakdown-grid");
-    await expect(grid).toBeVisible();
+    // Category accordion cards should show both categories in a single-column stack
+    const fruitsCard = page.getByRole("button", { name: /Fruits/i }).first();
+    const vegetablesCard = page.getByRole("button", { name: /Vegetables/i }).first();
+    await expect(fruitsCard).toBeVisible();
+    await expect(vegetablesCard).toBeVisible();
 
-    const columnCount = await grid.evaluate((el) => {
-      const columns = getComputedStyle(el).gridTemplateColumns;
-      return columns.split(" ").filter(Boolean).length;
-    });
-    expect(columnCount).toBe(1);
-
-    const cards = grid.locator(":scope > div");
-    await expect(cards).toHaveCount(2);
-
-    const firstCard = await cards.nth(0).boundingBox();
-    const secondCard = await cards.nth(1).boundingBox();
+    const firstCard = await fruitsCard.boundingBox();
+    const secondCard = await vegetablesCard.boundingBox();
     expect(firstCard).not.toBeNull();
     expect(secondCard).not.toBeNull();
     expect(Math.abs((firstCard?.x ?? 0) - (secondCard?.x ?? 0))).toBeLessThan(2);

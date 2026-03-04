@@ -3,17 +3,26 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MessageCircle, Sparkles, NotebookPen, Camera, Link2 } from "lucide-react";
+import { Leaf } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getWeekStart } from "@/lib/weekUtils";
 import { useApp } from "@/components/ProtectedLayout";
 import SageChat from "@/components/SageChat";
+import SageMenuMax from "@/components/SageMenuMax";
+
+type PlantLogRow = {
+  plant_name: string;
+  category: string;
+  points: number;
+};
 
 const supabase = createClient();
 
 export default function SagePage() {
   const { activeMember } = useApp();
-  const [loggedPlantsThisWeek, setLoggedPlantsThisWeek] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+  const [weekLogs, setWeekLogs] = useState<PlantLogRow[]>([]);
   const weekStart = useMemo(() => getWeekStart(), []);
 
   useEffect(() => {
@@ -22,19 +31,43 @@ export default function SagePage() {
 
       const { data } = await supabase
         .from("plant_log")
-        .select("plant_name")
+        .select("plant_name, category, points")
         .eq("member_id", activeMember.id)
         .eq("week_start", weekStart);
 
-      setLoggedPlantsThisWeek(
-        (data ?? [])
-          .map((row) => row.plant_name?.trim())
-          .filter((name): name is string => Boolean(name))
+      const logs = (data ?? []).filter(
+        (row): row is PlantLogRow =>
+          typeof row.plant_name === "string" &&
+          typeof row.category === "string" &&
+          typeof row.points === "number"
       );
+      setWeekLogs(logs);
     }
 
     fetchWeekContext();
   }, [activeMember, weekStart]);
+
+  const alreadyLoggedThisWeek = useMemo(
+    () =>
+      weekLogs
+        .map((row) => row.plant_name.trim())
+        .filter((name) => name.length > 0),
+    [weekLogs]
+  );
+
+  const totalPoints = useMemo(
+    () => Number(weekLogs.reduce((sum, row) => sum + row.points, 0).toFixed(2)),
+    [weekLogs]
+  );
+
+  const uniquePlants = useMemo(
+    () => new Set(alreadyLoggedThisWeek.map((name) => name.toLowerCase())).size,
+    [alreadyLoggedThisWeek]
+  );
+
+  const requestedMode = searchParams.get("mode");
+  const initialMenuMode =
+    requestedMode === "image" || requestedMode === "discover" ? requestedMode : "url";
 
   return (
     <div className="min-h-screen bg-brand-bg" data-testid="sage-page">
@@ -51,73 +84,30 @@ export default function SagePage() {
         </div>
         <div className="relative mx-auto max-w-lg">
           <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-brand-cream/60">
-            <Sparkles size={14} />
+            <Leaf size={14} />
             Sage v2
           </p>
           <h1 className="font-display text-3xl text-brand-cream">Sage</h1>
           <p className="mt-2 max-w-sm text-sm text-brand-cream/70">
-            Your plantmaxxing co-pilot for questions, quick chat logging, and menu planning.
+            Your plantmaxxing co-pilot for rule clarity and menu decisions.
           </p>
         </div>
       </section>
 
-      <section className="bg-brand-bg px-page py-section grain-light">
-        <div className="mx-auto max-w-lg stack-card">
-          <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
-            <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
-              <MessageCircle size={14} />
-              Ask Sage
-            </p>
-            <h2 className="text-lg font-display text-brand-dark">Rule Q&A</h2>
-            <p className="mt-1 text-sm text-brand-muted">
-              Ask count-rule or scoring questions with your current week context.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <SageChat alreadyLoggedThisWeek={loggedPlantsThisWeek} />
+      <SageChat alreadyLoggedThisWeek={alreadyLoggedThisWeek} />
 
       <section className="bg-brand-bg px-page pb-28 grain-light">
         <div className="mx-auto max-w-lg stack-card">
-          <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
-            <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
-              <NotebookPen size={14} />
-              Quick Log
-            </p>
-            <h2 className="text-lg font-display text-brand-dark">Log via chat intent</h2>
-            <p className="mt-1 text-sm text-brand-muted">
-              Coming soon: Sage will suggest one-tap saves from chat responses.
-            </p>
-            <button
-              type="button"
-              disabled
-              className="mt-3 inline-flex min-h-11 items-center justify-center rounded-xl bg-brand-green/40 px-4 py-2 text-sm font-semibold text-white opacity-80"
-            >
-              Quick Log Placeholder
-            </button>
-          </article>
-
-          <article className="rounded-2xl border border-brand-dark/10 bg-white/70 p-4">
-            <p className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-muted">
-              <Camera size={14} />
-              Menu Max
-            </p>
-            <h2 className="text-lg font-display text-brand-dark">Restaurant helper</h2>
-            <p className="mt-1 text-sm text-brand-muted">
-              Coming soon: paste a menu URL or upload a photo to find max-point options.
-            </p>
-            <div className="mt-3 space-y-2">
-              <div className="flex min-h-11 items-center gap-2 rounded-xl border border-brand-dark/10 bg-brand-bg px-3 text-sm text-brand-muted">
-                <Link2 size={15} />
-                URL input placeholder
-              </div>
-              <div className="flex min-h-11 items-center gap-2 rounded-xl border border-dashed border-brand-dark/20 bg-brand-bg px-3 text-sm text-brand-muted">
-                <Camera size={15} />
-                Photo upload placeholder
-              </div>
-            </div>
-          </article>
+          <SageMenuMax
+            memberId={activeMember?.id ?? null}
+            alreadyLoggedThisWeek={alreadyLoggedThisWeek}
+            weekProgress={{
+              points: totalPoints,
+              uniquePlants,
+              target: 30,
+            }}
+            initialMode={initialMenuMode}
+          />
 
           <Link
             href="/add"

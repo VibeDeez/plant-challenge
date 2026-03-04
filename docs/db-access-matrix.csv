@@ -30,6 +30,12 @@ src/app/(protected)/profile/page.tsx,member,delete
 src/app/(protected)/profile/page.tsx,member,insert
 src/app/(protected)/profile/page.tsx,member,update
 src/app/(protected)/sage/page.tsx,plant_log,select
+src/app/api/account/delete/route.ts,account_deletion_request,insert
+src/app/api/account/export/route.ts,account_export_request,insert
+src/app/api/account/export/route.ts,account_export_request,update
+src/app/api/account/export/route.ts,member,select
+src/app/api/account/export/route.ts,plant_log,select
+src/app/api/account/sessions/route.ts,account_security_event,select
 src/app/api/e2e/cleanup/route.ts,circle,delete
 src/app/api/e2e/cleanup/route.ts,circle_member,delete
 src/app/api/e2e/cleanup/route.ts,member,delete
@@ -37,4 +43,7 @@ src/app/api/e2e/cleanup/route.ts,member,select
 src/app/api/e2e/cleanup/route.ts,member,update
 src/app/api/e2e/cleanup/route.ts,plant_log,delete
 src/app/api/recognize/route.ts,plant,select
+src/app/api/sage/menu-max/route.ts,plant,select
 src/components/ProtectedLayout.tsx,member,select
+src/components/SageMenuLogReviewSheet.tsx,plant_log,insert
+src/lib/account/securityEvents.ts,account_security_event,insert

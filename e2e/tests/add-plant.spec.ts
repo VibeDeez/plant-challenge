@@ -11,17 +11,17 @@ test.describe("Add Plant page", () => {
     await page.waitForSelector('input[placeholder="Search plants..."]');
   });
 
-  test("shows search bar and category tabs", async ({
+  test("shows search bar and grouped categories", async ({
     authedPage: page,
   }) => {
     await expect(
       page.locator('input[placeholder="Search plants..."]')
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "All" }).first()
+      page.locator("h2").filter({ hasText: "Fruits" })
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "Fruits" }).first()
+      page.locator("h2").filter({ hasText: "Vegetables" })
     ).toBeVisible();
   });
 
@@ -89,21 +89,18 @@ test.describe("Add Plant page", () => {
     ).toBeVisible();
   });
 
-  test("category tab filters to that category only", async ({
+  test("category accordion expands the selected category", async ({
     authedPage: page,
   }) => {
     const veggieTab = page
       .getByRole("button", { name: "Vegetables" })
       .first();
     await veggieTab.click();
-    // Should show vegetable items in flat list
+    await expect(veggieTab).toHaveAttribute("aria-expanded", "true");
+    // Shows vegetables when that section is expanded.
     await expect(
       page.getByRole("button", { name: /^Broccoli/ })
     ).toBeVisible();
-    // Gallery group headers should not appear (flat list mode)
-    await expect(
-      page.locator("h2").filter({ hasText: "Fruits" })
-    ).not.toBeVisible();
   });
 
   test("click plant to log it — gets checkmark", async ({

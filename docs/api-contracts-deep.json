@@ -1,5 +1,135 @@
 [
   {
+    "route": "/api/account/delete",
+    "file": "src/app/api/account/delete/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "400",
+      "401",
+      "429",
+      "500"
+    ],
+    "errorMessages": [
+      "Internal server error",
+      "Invalid JSON body",
+      "Too many deletion requests. Please try again tomorrow.",
+      "Unauthorized"
+    ],
+    "env": []
+  },
+  {
+    "route": "/api/account/email-change/request",
+    "file": "src/app/api/account/email-change/request/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "400",
+      "401",
+      "429",
+      "500"
+    ],
+    "errorMessages": [
+      "Internal server error",
+      "Invalid JSON body",
+      "No existing email found for this account",
+      "Please enter a valid email address",
+      "That is already your current email",
+      "Too many email change requests. Please try again shortly.",
+      "Unauthorized",
+      "email is required"
+    ],
+    "env": []
+  },
+  {
+    "route": "/api/account/export",
+    "file": "src/app/api/account/export/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "400",
+      "401",
+      "429",
+      "500"
+    ],
+    "errorMessages": [
+      "Internal server error",
+      "Too many export requests. Please try again later.",
+      "Unauthorized"
+    ],
+    "env": []
+  },
+  {
+    "route": "/api/account/password-reset/request",
+    "file": "src/app/api/account/password-reset/request/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "400",
+      "401",
+      "429",
+      "500"
+    ],
+    "errorMessages": [
+      "Internal server error",
+      "No email found for this account",
+      "Too many reset requests. Please try again shortly.",
+      "Unauthorized"
+    ],
+    "env": []
+  },
+  {
+    "route": "/api/account/sessions",
+    "file": "src/app/api/account/sessions/route.ts",
+    "methods": [
+      "GET"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "401",
+      "500"
+    ],
+    "errorMessages": [
+      "Internal server error",
+      "Unauthorized"
+    ],
+    "env": []
+  },
+  {
+    "route": "/api/account/sessions/revoke",
+    "file": "src/app/api/account/sessions/revoke/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "400",
+      "401",
+      "429",
+      "500"
+    ],
+    "errorMessages": [
+      "Internal server error",
+      "Too many revoke requests. Please try again shortly.",
+      "Unauthorized"
+    ],
+    "env": []
+  },
+  {
     "route": "/api/e2e/cleanup",
     "file": "src/app/api/e2e/cleanup/route.ts",
     "methods": [
@@ -78,6 +208,49 @@
       "SAGE_DETERMINISTIC_ONLY",
       "SAGE_OPENROUTER_MODEL",
       "SAGE_OPENROUTER_TIMEOUT_MS"
+    ]
+  },
+  {
+    "route": "/api/sage/menu-max",
+    "file": "src/app/api/sage/menu-max/route.ts",
+    "methods": [
+      "POST"
+    ],
+    "authRequired": true,
+    "requestFieldsInCode": [],
+    "statusCodes": [
+      "400",
+      "401",
+      "422",
+      "500",
+      "502",
+      "504"
+    ],
+    "errorMessages": [
+      "Could not read that link. Paste a screenshot/photo or use Find Recipe and I can analyze it.",
+      "I couldn't find recipe pages for that query yet. Try a more specific search phrase.",
+      "I found links but couldn't parse enough recipe detail. Try another query or paste a direct recipe link.",
+      "Internal server error",
+      "Invalid JSON body",
+      "Invalid context shape",
+      "Menu Max could not parse recommendations from the model output",
+      "Menu Max model is not configured",
+      "Menu Max model request failed",
+      "Menu Max request timed out. Please try again.",
+      "Menu Max returned an empty response",
+      "Please provide a valid menu or recipe URL.",
+      "Request body must be an object",
+      "Unauthorized",
+      "imageDataUrl is required when mode='image'",
+      "imageDataUrl must be a valid base64 data URL.",
+      "mode must be 'url', 'image', or 'discover'",
+      "query is required when mode='discover'",
+      "url is required when mode='url'"
+    ],
+    "env": [
+      "OPENROUTER_API_KEY",
+      "SAGE_MENU_OPENROUTER_MODEL",
+      "SAGE_MENU_TIMEOUT_MS"
     ]
   },
   {

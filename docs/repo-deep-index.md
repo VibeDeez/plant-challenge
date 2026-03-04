@@ -1,22 +1,22 @@
 # Repo Deep Index - Plant Challenge
 
-Last updated: 2026-03-03
+Last updated: 2026-03-04
 
 ## APP files (25)
-- `src/app/(protected)/add/page.tsx` - 603 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
-- `src/app/(protected)/circles/[id]/page.tsx` - 928 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
-- `src/app/(protected)/circles/[id]/settings/page.tsx` - 473 lines | exports:CircleSettingsPage | db:circle, circle_member
+- `src/app/(protected)/add/page.tsx` - 610 lines | exports:AddPlantPage | db:circle_member, plant, plant_log
+- `src/app/(protected)/circles/[id]/page.tsx` - 935 lines | exports:CircleDetailPage | db:circle, circle_activity, circle_activity_reaction, circle_alltime_score, circle_member, circle_weekly_score
+- `src/app/(protected)/circles/[id]/settings/page.tsx` - 479 lines | exports:CircleSettingsPage | db:circle, circle_member
 - `src/app/(protected)/circles/create/page.tsx` - 260 lines | exports:CircleCreatePage | db:circle, circle_member
-- `src/app/(protected)/circles/page.tsx` - 340 lines | exports:CirclesPage | db:circle_member, circle_weekly_score, rpc:join_circle
+- `src/app/(protected)/circles/page.tsx` - 342 lines | exports:CirclesPage | db:circle_member, circle_weekly_score, rpc:join_circle
 - `src/app/(protected)/join/[code]/page.tsx` - 105 lines | exports:JoinCirclePage | db:rpc:join_circle
 - `src/app/(protected)/layout.tsx` - 10 lines | exports:ProtectedGroupLayout
 - `src/app/(protected)/learn/page.tsx` - 702 lines | exports:LearnPage
-- `src/app/(protected)/page.tsx` - 397 lines | exports:HomePage | db:circle_member, plant, plant_log
-- `src/app/(protected)/profile/page.tsx` - 333 lines | exports:ProfilePage | db:member
-- `src/app/(protected)/profile/privacy/page.tsx` - 215 lines | exports:PrivacyPage
+- `src/app/(protected)/page.tsx` - 399 lines | exports:HomePage | db:circle_member, plant, plant_log
+- `src/app/(protected)/profile/page.tsx` - 372 lines | exports:ProfilePage | db:member
+- `src/app/(protected)/profile/privacy/page.tsx` - 216 lines | exports:PrivacyPage
 - `src/app/(protected)/profile/security/change-email/page.tsx` - 116 lines | exports:ChangeEmailPage
 - `src/app/(protected)/profile/security/page.tsx` - 259 lines | exports:SecuritySettingsPage
-- `src/app/(protected)/profile/security/sessions/page.tsx` - 201 lines | exports:SessionSettingsPage
+- `src/app/(protected)/profile/security/sessions/page.tsx` - 203 lines | exports:SessionSettingsPage
 - `src/app/(protected)/sage/page.tsx` - 123 lines | exports:SagePage | db:plant_log
 - `src/app/apple-icon.tsx` - 41 lines | exports:size, contentType
 - `src/app/auth/callback/redirect.test.mjs` - 30 lines
@@ -25,7 +25,7 @@ Last updated: 2026-03-03
 - `src/app/auth/page.tsx` - 710 lines | exports:AuthPage
 - `src/app/auth/reset-password/page.tsx` - 137 lines | exports:ResetPasswordPage
 - `src/app/icon.tsx` - 40 lines | exports:size, contentType
-- `src/app/layout.tsx` - 71 lines | exports:RootLayout, metadata, viewport | env:NEXT_PUBLIC_SITE_URL
+- `src/app/layout.tsx` - 72 lines | exports:RootLayout, metadata, viewport | env:NEXT_PUBLIC_SITE_URL
 - `src/app/manifest.ts` - 27 lines | exports:manifest
 - `src/app/opengraph-image.tsx` - 57 lines | exports:alt, size, contentType
 
@@ -45,29 +45,30 @@ Last updated: 2026-03-03
 - `src/app/api/sage/routeUtils.ts` - 114 lines | exports:parseSageTimeoutMs, getSageRequestLimitError, extractModelMessageContent, makeDeterministicOnlySageFallbackResponse
 - `src/app/api/voice-log/route.ts` - 428 lines | methods:POST | exports:POST | env:OPENROUTER_API_KEY, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS
 
-## COMPONENT files (20)
-- `src/components/Accordion.tsx` - 43 lines | exports:Accordion
+## COMPONENT files (21)
+- `src/components/Accordion.tsx` - 44 lines | exports:Accordion
 - `src/components/AddKidModal.tsx` - 96 lines | exports:AddKidModal
 - `src/components/AddToHomeScreen.tsx` - 110 lines | exports:AddToHomeScreen | env:NODE_ENV
-- `src/components/BottomNav.tsx` - 57 lines | exports:BottomNav
+- `src/components/BottomNav.tsx` - 58 lines | exports:BottomNav
 - `src/components/CategoryTabs.tsx` - 42 lines | exports:CategoryTabs
-- `src/components/GutHealthPopover.tsx` - 79 lines | exports:GutHealthPopover
+- `src/components/GutHealthPopover.tsx` - 81 lines | exports:GutHealthPopover
+- `src/components/HapticsProvider.tsx` - 180 lines | exports:HapticsProvider
 - `src/components/LeaderboardRow.tsx` - 279 lines | exports:LeaderboardRow
-- `src/components/MemberSwitcher.tsx` - 80 lines | exports:MemberSwitcher
-- `src/components/PhotoRecognitionModal.tsx` - 342 lines | exports:PhotoRecognitionModal
+- `src/components/MemberSwitcher.tsx` - 82 lines | exports:MemberSwitcher
+- `src/components/PhotoRecognitionModal.tsx` - 346 lines | exports:PhotoRecognitionModal
 - `src/components/PlantAvatar.tsx` - 30 lines | exports:PlantAvatar
-- `src/components/PlantCard.tsx` - 62 lines | exports:PlantCard
+- `src/components/PlantCard.tsx` - 64 lines | exports:PlantCard
 - `src/components/PlantListItem.tsx` - 57 lines | exports:PlantListItem
 - `src/components/PlantPicker.tsx` - 32 lines | exports:PlantPicker
 - `src/components/ProgressBar.tsx` - 90 lines | exports:ProgressBar
 - `src/components/ProtectedLayout.tsx` - 132 lines | exports:ProtectedLayout, useApp | db:member
 - `src/components/SageChat.tsx` - 187 lines | exports:SageChat
-- `src/components/SageMenuLogReviewSheet.tsx` - 171 lines | exports:SageMenuLogReviewSheet | db:plant_log
-- `src/components/SageMenuMax.tsx` - 387 lines | exports:SageMenuMax
-- `src/components/VoiceLogModal.tsx` - 831 lines | exports:VoiceLogModal
-- `src/components/ui/sheet.tsx` - 61 lines
+- `src/components/SageMenuLogReviewSheet.tsx` - 176 lines | exports:SageMenuLogReviewSheet | db:plant_log
+- `src/components/SageMenuMax.tsx` - 391 lines | exports:SageMenuMax
+- `src/components/VoiceLogModal.tsx` - 835 lines | exports:VoiceLogModal
+- `src/components/ui/sheet.tsx` - 62 lines
 
-## LIB files (31)
+## LIB files (37)
 - `src/lib/account/rateLimit.ts` - 46 lines | exports:checkRateLimit
 - `src/lib/account/requestMeta.ts` - 42 lines | exports:getRequestMeta, getRequestOrigin | env:NEXT_PUBLIC_SITE_URL
 - `src/lib/account/securityEvents.ts` - 38 lines | exports:logSecurityEvent | db:account_security_event
@@ -89,6 +90,12 @@ Last updated: 2026-03-03
 - `src/lib/circles.ts` - 342 lines | exports:generateInviteCode, getShareUrl, isValidCircleId, isValidInviteCode, validateJoinCirclePayload, detectLeaderboardDiscrepancies... | env:NEXT_PUBLIC_SITE_URL
 - `src/lib/constants.ts` - 310 lines | exports:getAvatarByKey, getRandomAvatarKey, CATEGORIES, CATEGORY_COLORS, CATEGORY_EMOJI, CATEGORY_ICONS...
 - `src/lib/copy.ts` - 6 lines | exports:DUPLICATE_SPECIES_GUARD_COPY, DUPLICATE_SPECIES_SHORT_COPY
+- `src/lib/haptics/preferences.test.mjs` - 24 lines
+- `src/lib/haptics/preferences.ts` - 15 lines | exports:parseStoredHapticsEnabled, serializeHapticsEnabled, HAPTICS_ENABLED_STORAGE_KEY, HAPTICS_DEFAULT_ENABLED
+- `src/lib/haptics/resolveInteraction.test.mjs` - 36 lines
+- `src/lib/haptics/resolveInteraction.ts` - 160 lines | exports:findHapticTarget, isSubmitControl, resolveHapticInputForElement, resolveIntentFromDataAttribute, isDestructiveLabel, isDestructiveClassName
+- `src/lib/haptics/types.ts` - 34 lines | exports:isHapticIntent, normalizeHapticInput, HAPTIC_INTENTS, HAPTICS_DEFAULT_TAP_INTENT, HapticIntent
+- `src/lib/haptics/useAppHaptics.ts` - 28 lines | exports:useAppHaptics, AppHapticsContext, AppHapticsTriggerInput, AppHapticsContextValue
 - `src/lib/imageUtils.ts` - 50 lines | exports:compressImage, getApproxDataUrlBytes, MAX_UPLOAD_FILE_BYTES, MAX_IMAGE_DATA_URL_BYTES
 - `src/lib/leaderboardGoal.test.mjs` - 29 lines
 - `src/lib/leaderboardGoal.ts` - 33 lines | exports:getLeaderboardGoalState, getLeaderboardGoalMeta, WEEKLY_GOAL_POINTS, LeaderboardGoalState

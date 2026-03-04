@@ -32,6 +32,7 @@ export default function GutHealthPopover({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center px-6 animate-fadeIn"
       onClick={onClose}
+      data-haptic="selection"
     >
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/40" />
@@ -44,6 +45,7 @@ export default function GutHealthPopover({
         {/* Close button */}
         <button
           onClick={onClose}
+          data-haptic="selection"
           className="absolute top-2 right-2 flex h-11 w-11 items-center justify-center rounded-full text-brand-muted hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
           aria-label="Close"
         >

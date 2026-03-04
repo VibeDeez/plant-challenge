@@ -260,6 +260,7 @@ export default function AddPlantPage() {
             {/* Pic Log banner */}
             <button
               onClick={() => setShowCamera(true)}
+              data-haptic="selection"
               className="flex min-h-11 w-full items-center gap-3 rounded-2xl border border-brand-cream/25 bg-gradient-to-br from-brand-cream/16 to-brand-cream/8 px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-[2px] transition-all hover:border-brand-cream/40 hover:from-brand-cream/20 hover:to-brand-cream/12 active:scale-[0.98]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-cream/30 bg-brand-green/20">
@@ -275,6 +276,7 @@ export default function AddPlantPage() {
 
             <button
               onClick={() => setShowVoice(true)}
+              data-haptic="selection"
               className="flex min-h-11 w-full items-center gap-3 rounded-2xl border border-brand-cream/25 bg-gradient-to-br from-brand-cream/16 to-brand-cream/8 px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] backdrop-blur-[2px] transition-all hover:border-brand-cream/40 hover:from-brand-cream/20 hover:to-brand-cream/12 active:scale-[0.98]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand-cream/30 bg-brand-green/20">
@@ -372,6 +374,7 @@ export default function AddPlantPage() {
                         aria-expanded={isExpanded}
                         aria-controls={panelId}
                         onClick={() => toggleCategory(cat)}
+                        data-haptic="selection"
                         className="flex min-h-11 w-full items-center gap-3 p-4 text-left active:scale-[0.995]"
                       >
                         <div
@@ -462,6 +465,7 @@ export default function AddPlantPage() {
               {/* Don't see your plant? CTA */}
               <button
                 onClick={() => setShowCustom(true)}
+                data-haptic="selection"
                 className="w-full rounded-2xl border-2 border-dashed border-brand-dark/15 bg-brand-dark/[0.03] p-5 text-center transition-colors hover:border-brand-dark/25 hover:bg-brand-dark/[0.06] active:scale-[0.99]"
               >
                 <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-green/10">
@@ -481,6 +485,7 @@ export default function AddPlantPage() {
               {filtered.length > 0 && (
                 <button
                   onClick={() => setShowCustom(true)}
+                  data-haptic="selection"
                   className="mb-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-dark/20 bg-brand-dark/[0.03] px-4 py-3 text-sm font-semibold text-brand-dark transition-colors hover:border-brand-dark/30 hover:bg-brand-dark/[0.06] active:scale-[0.99]"
                 >
                   <Plus size={16} strokeWidth={2.5} className="text-brand-green" />
@@ -511,6 +516,7 @@ export default function AddPlantPage() {
                   </p>
                   <button
                     onClick={() => setShowCustom(true)}
+                    data-haptic="selection"
                     className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-green-hover active:scale-[0.97] transition-all"
                   >
                     <Plus size={16} strokeWidth={2.5} />
@@ -538,6 +544,7 @@ export default function AddPlantPage() {
               <SheetClose asChild>
                 <button
                   type="button"
+                  data-haptic="selection"
                   className="flex h-11 w-11 items-center justify-center rounded-xl text-brand-dark/40 hover:text-brand-dark hover:bg-brand-dark/5 transition-colors"
                   aria-label="Close custom plant sheet"
                 >

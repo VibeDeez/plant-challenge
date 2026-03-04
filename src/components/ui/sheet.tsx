@@ -22,6 +22,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     ref={ref}
+    data-haptic="selection"
     className={cn("fixed inset-0 z-50 bg-black/40 animate-fadeIn", className)}
     {...props}
   />

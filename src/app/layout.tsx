@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, Fraunces } from "next/font/google";
+import HapticsProvider from "@/components/HapticsProvider";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -63,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${dmSans.variable} ${fraunces.variable}`}>
       <body className="min-h-screen bg-[var(--background)]">
-        {children}
+        <HapticsProvider>{children}</HapticsProvider>
       </body>
     </html>
   );

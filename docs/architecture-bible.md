@@ -1,6 +1,6 @@
 # Architecture Bible - Plant Challenge
 
-Last updated: 2026-03-03
+Last updated: 2026-03-04
 
 This is a high-signal onboarding map from user journeys to UI, API, and data interactions.
 

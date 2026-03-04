@@ -29,6 +29,7 @@ export default function MemberSwitcher() {
       <div className="max-w-lg mx-auto px-5">
         <button
           onClick={() => setOpen((o) => !o)}
+          data-haptic="selection"
           className="flex min-h-11 items-center gap-2 w-full py-2.5 text-left"
         >
           <PlantAvatar plantKey={activeMember?.avatar_emoji ?? "sprout"} size="sm" />
@@ -53,6 +54,7 @@ export default function MemberSwitcher() {
                     setActiveMemberId(m.id);
                     setOpen(false);
                   }}
+                  data-haptic="selection"
                   className={`flex min-h-11 items-start gap-2.5 w-full rounded-xl px-3 py-2 text-sm transition-colors ${
                     active
                       ? "bg-brand-green/20 text-brand-green font-semibold"

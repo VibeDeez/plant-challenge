@@ -181,6 +181,7 @@ export default function PrivacyPage() {
             type="button"
             onClick={handleDeleteRequest}
             disabled={deleting || confirmText !== "DELETE"}
+            data-haptic="warning"
             className="mt-3 min-h-11 w-full rounded-xl border border-red-300 bg-red-600 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="inline-flex items-center gap-2">

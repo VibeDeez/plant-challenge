@@ -158,6 +158,7 @@ export default function SageMenuMax({
           <button
             type="button"
             onClick={() => setMode("url")}
+            data-haptic="selection"
             className={`min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold ${
               mode === "url"
                 ? "border-brand-green bg-brand-green/10 text-brand-dark"
@@ -172,6 +173,7 @@ export default function SageMenuMax({
           <button
             type="button"
             onClick={() => setMode("image")}
+            data-haptic="selection"
             className={`min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold ${
               mode === "image"
                 ? "border-brand-green bg-brand-green/10 text-brand-dark"
@@ -186,6 +188,7 @@ export default function SageMenuMax({
           <button
             type="button"
             onClick={() => setMode("discover")}
+            data-haptic="selection"
             className={`col-span-2 min-h-11 rounded-xl border px-3 py-2 text-sm font-semibold ${
               mode === "discover"
                 ? "border-brand-green bg-brand-green/10 text-brand-dark"
@@ -353,6 +356,7 @@ export default function SageMenuMax({
               <button
                 type="button"
                 onClick={() => setReviewOpen(true)}
+                data-haptic="selection"
                 disabled={response.logCandidates.length === 0}
                 className="w-full min-h-11 rounded-xl bg-brand-dark px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-dark/90 disabled:cursor-not-allowed disabled:opacity-60"
               >

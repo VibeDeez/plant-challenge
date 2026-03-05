@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     const limiterKey = `account-delete:${user.id}`;
-    const limit = checkRateLimit(limiterKey, REQUEST_LIMIT, WINDOW_MS);
+    const limit = await checkRateLimit(supabase, limiterKey, REQUEST_LIMIT, WINDOW_MS);
     if (!limit.ok) {
       return NextResponse.json(
         { error: "Too many deletion requests. Please try again tomorrow." },

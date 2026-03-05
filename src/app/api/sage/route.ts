@@ -14,6 +14,7 @@ import {
 } from "./routeUtils";
 import { apiError } from "@/lib/api/errors";
 import { createApiTelemetry } from "@/lib/api/telemetry";
+import { checkRateLimit } from "@/lib/account/rateLimit";
 import {
   fetchWithPolicy,
   parseBooleanFlag,
@@ -24,6 +25,8 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const SAGE_OPENROUTER_MODEL =
   process.env.SAGE_OPENROUTER_MODEL ?? "x-ai/grok-4-fast";
+const WINDOW_MS = 10 * 60 * 1000;
+const REQUEST_LIMIT = 30;
 
 const SAGE_POLICY = {
   ...SAGE_OPENROUTER_POLICY,
@@ -198,7 +201,7 @@ export async function POST(req: NextRequest) {
       | "SAGE_INTERNAL_ERROR"
       | "AUTH_UNAUTHORIZED",
     message: string,
-    extras?: { timeout?: boolean }
+    extras?: { timeout?: boolean; headers?: HeadersInit }
   ) => {
     telemetry({
       statusCode: status,
@@ -206,7 +209,7 @@ export async function POST(req: NextRequest) {
       fallbackUsed,
       timeout: extras?.timeout,
     });
-    return apiError(status, code, message);
+    return apiError(status, code, message, { headers: extras?.headers });
   };
 
   const respondOk = (payload: unknown, mode: SageMode) => {
@@ -234,6 +237,23 @@ export async function POST(req: NextRequest) {
     } = await supabase.auth.getUser();
     if (!user) {
       return respondError(401, "AUTH_UNAUTHORIZED", "Unauthorized");
+    }
+
+    const limit = await checkRateLimit(
+      supabase,
+      `sage:${user.id}`,
+      REQUEST_LIMIT,
+      WINDOW_MS
+    );
+    if (!limit.ok) {
+      return respondError(
+        429,
+        "SAGE_REQUEST_LIMIT",
+        "Too many Sage requests. Please try again shortly.",
+        {
+          headers: { "Retry-After": String(limit.retryAfterSeconds) },
+        }
+      );
     }
 
     let body: unknown;

@@ -1,5 +1,8 @@
 # Baseline allowlist for docs/db-access-matrix.csv table_or_rpc values.
 # Add new values here when schema references intentionally expand.
+account_deletion_request
+account_export_request
+account_security_event
 circle
 circle_activity
 circle_activity_reaction
@@ -9,4 +12,7 @@ circle_weekly_score
 member
 plant
 plant_log
+request_rate_limit_event
+rpc:consume_rate_limit
+rpc:create_circle
 rpc:join_circle

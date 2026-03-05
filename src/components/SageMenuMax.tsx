@@ -381,7 +381,7 @@ export default function SageMenuMax({
         memberId={memberId}
         weekStart={weekStart}
         onLogged={(count, names) => {
-          setLocalLogged((prev) => [...prev, ...names]);
+          setLocalLogged((prev) => Array.from(new Set([...prev, ...names])));
           setSuccessMessage(`Logged ${count} plant${count === 1 ? "" : "s"} from Menu Max.`);
         }}
       />

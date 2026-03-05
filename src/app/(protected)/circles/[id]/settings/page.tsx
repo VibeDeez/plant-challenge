@@ -129,7 +129,9 @@ export default function CircleSettingsPage() {
   async function handleCopyLink() {
     if (!circle) return;
     try {
-      await navigator.clipboard.writeText(getShareUrl(circle.invite_code));
+      await navigator.clipboard.writeText(
+        getShareUrl(circle.invite_code, window.location.origin)
+      );
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {

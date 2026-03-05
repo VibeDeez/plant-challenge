@@ -1,6 +1,6 @@
 # Architecture Bible - Plant Challenge
 
-Last updated: 2026-03-04
+Last updated: 2026-03-05
 
 This is a high-signal onboarding map from user journeys to UI, API, and data interactions.
 
@@ -11,6 +11,7 @@ Key files:
 - `src/lib/supabase/middleware.ts`
 - `src/components/ProtectedLayout.tsx`
 Data operations inferred:
+- `member` -> `insert`
 - `member` -> `select`
 
 ## Home Dashboard
@@ -36,6 +37,7 @@ Data operations inferred:
 - `plant` -> `select`
 - `plant_log` -> `insert`
 - `plant_log` -> `select`
+- `plant_log` -> `upsert`
 
 ## Circles
 Key files:
@@ -46,7 +48,6 @@ Key files:
 - `src/lib/circles.ts`
 Data operations inferred:
 - `circle` -> `delete`
-- `circle` -> `insert`
 - `circle` -> `select`
 - `circle` -> `update`
 - `circle_activity` -> `select`
@@ -55,7 +56,6 @@ Data operations inferred:
 - `circle_activity_reaction` -> `select`
 - `circle_alltime_score` -> `select`
 - `circle_member` -> `delete`
-- `circle_member` -> `insert`
 - `circle_member` -> `select`
 - `circle_weekly_score` -> `select`
 - `rpc:join_circle` -> `call`
@@ -93,6 +93,6 @@ Data operations inferred:
 - `src/app/api/e2e/cleanup/route.ts` | methods: POST | status codes: 207, 400, 401, 404 | env: E2E_TEST, NODE_ENV
 - `src/app/api/e2e/login/route.ts` | methods: GET | status codes: 401, 404, 500 | env: E2E_TEST, E2E_TEST_EMAIL, E2E_TEST_PASSWORD, NODE_ENV
 - `src/app/api/recognize/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY
-- `src/app/api/sage/menu-max/route.ts` | methods: POST | status codes: 400, 401, 422, 500, 502, 504 | env: OPENROUTER_API_KEY, SAGE_MENU_OPENROUTER_MODEL, SAGE_MENU_TIMEOUT_MS
+- `src/app/api/sage/menu-max/route.ts` | methods: POST | status codes: 400, 401, 422, 429, 500, 502, 504 | env: OPENROUTER_API_KEY, SAGE_MENU_OPENROUTER_MODEL, SAGE_MENU_TIMEOUT_MS
 - `src/app/api/sage/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY, SAGE_DETERMINISTIC_ONLY, SAGE_OPENROUTER_MODEL, SAGE_OPENROUTER_TIMEOUT_MS
 - `src/app/api/voice-log/route.ts` | methods: POST | status codes: n/a | env: OPENROUTER_API_KEY, VOICE_OPENROUTER_MODEL, VOICE_OPENROUTER_TIMEOUT_MS

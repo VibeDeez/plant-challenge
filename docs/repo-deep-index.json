@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-03-04",
+  "generatedAt": "2026-03-05",
   "files": {
     "src/app/(protected)/add/page.tsx": {
-      "lines": 610,
+      "lines": 700,
       "exports": [
         "AddPlantPage"
       ],
@@ -15,7 +15,7 @@
       "env": []
     },
     "src/app/(protected)/circles/[id]/page.tsx": {
-      "lines": 935,
+      "lines": 961,
       "exports": [
         "CircleDetailPage"
       ],
@@ -31,7 +31,7 @@
       "env": []
     },
     "src/app/(protected)/circles/[id]/settings/page.tsx": {
-      "lines": 479,
+      "lines": 481,
       "exports": [
         "CircleSettingsPage"
       ],
@@ -43,15 +43,12 @@
       "env": []
     },
     "src/app/(protected)/circles/create/page.tsx": {
-      "lines": 260,
+      "lines": 258,
       "exports": [
         "CircleCreatePage"
       ],
       "methods": [],
-      "supabase": [
-        "circle",
-        "circle_member"
-      ],
+      "supabase": [],
       "env": []
     },
     "src/app/(protected)/circles/page.tsx": {
@@ -277,7 +274,7 @@
       ]
     },
     "src/app/api/recognize/route.ts": {
-      "lines": 270,
+      "lines": 304,
       "exports": [
         "POST"
       ],
@@ -292,7 +289,7 @@
       ]
     },
     "src/app/api/sage/menu-max/route.ts": {
-      "lines": 695,
+      "lines": 688,
       "exports": [
         "POST"
       ],
@@ -316,7 +313,7 @@
       "env": []
     },
     "src/app/api/sage/route.ts": {
-      "lines": 369,
+      "lines": 389,
       "exports": [
         "POST"
       ],
@@ -344,7 +341,7 @@
       "env": []
     },
     "src/app/api/voice-log/route.ts": {
-      "lines": 428,
+      "lines": 449,
       "exports": [
         "POST"
       ],
@@ -396,7 +393,7 @@
       "env": []
     },
     "src/app/auth/page.tsx": {
-      "lines": 710,
+      "lines": 709,
       "exports": [
         "AuthPage"
       ],
@@ -424,7 +421,7 @@
       "env": []
     },
     "src/app/layout.tsx": {
-      "lines": 72,
+      "lines": 70,
       "exports": [
         "RootLayout",
         "metadata",
@@ -504,7 +501,7 @@
       "env": []
     },
     "src/components/GutHealthPopover.tsx": {
-      "lines": 81,
+      "lines": 72,
       "exports": [
         "GutHealthPopover"
       ],
@@ -540,7 +537,7 @@
       "env": []
     },
     "src/components/PhotoRecognitionModal.tsx": {
-      "lines": 346,
+      "lines": 373,
       "exports": [
         "PhotoRecognitionModal"
       ],
@@ -594,7 +591,7 @@
       "env": []
     },
     "src/components/ProtectedLayout.tsx": {
-      "lines": 132,
+      "lines": 263,
       "exports": [
         "ProtectedLayout",
         "useApp"
@@ -615,7 +612,7 @@
       "env": []
     },
     "src/components/SageMenuLogReviewSheet.tsx": {
-      "lines": 176,
+      "lines": 193,
       "exports": [
         "SageMenuLogReviewSheet"
       ],
@@ -635,10 +632,17 @@
       "env": []
     },
     "src/components/VoiceLogModal.tsx": {
-      "lines": 835,
+      "lines": 861,
       "exports": [
         "VoiceLogModal"
       ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/components/ui/dialog.tsx": {
+      "lines": 62,
+      "exports": [],
       "methods": [],
       "supabase": [],
       "env": []
@@ -651,16 +655,19 @@
       "env": []
     },
     "src/lib/account/rateLimit.ts": {
-      "lines": 46,
+      "lines": 108,
       "exports": [
-        "checkRateLimit"
+        "checkRateLimit",
+        "RateLimitResult"
       ],
       "methods": [],
-      "supabase": [],
+      "supabase": [
+        "rpc:consume_rate_limit"
+      ],
       "env": []
     },
     "src/lib/account/requestMeta.ts": {
-      "lines": 42,
+      "lines": 34,
       "exports": [
         "getRequestMeta",
         "getRequestOrigin"
@@ -816,10 +823,19 @@
       "env": []
     },
     "src/lib/api/errors.ts": {
-      "lines": 37,
+      "lines": 47,
       "exports": [
         "apiError",
         "ApiErrorCode"
+      ],
+      "methods": [],
+      "supabase": [],
+      "env": []
+    },
+    "src/lib/api/safeRemoteText.ts": {
+      "lines": 214,
+      "exports": [
+        "fetchSafeRemoteText"
       ],
       "methods": [],
       "supabase": [],
@@ -835,7 +851,7 @@
       "env": []
     },
     "src/lib/circles.test.mjs": {
-      "lines": 127,
+      "lines": 143,
       "exports": [],
       "methods": [],
       "supabase": [],
@@ -844,7 +860,7 @@
       ]
     },
     "src/lib/circles.ts": {
-      "lines": 342,
+      "lines": 346,
       "exports": [
         "generateInviteCode",
         "getShareUrl",
@@ -1110,6 +1126,7 @@
       "member",
       "plant",
       "plant_log",
+      "rpc:consume_rate_limit",
       "rpc:join_circle"
     ],
     "envVars": [

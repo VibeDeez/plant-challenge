@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { apiError } from "@/lib/api/errors";
 import { createApiTelemetry } from "@/lib/api/telemetry";
+import { checkRateLimit } from "@/lib/account/rateLimit";
 import {
   fetchWithPolicy,
   VOICE_OPENROUTER_POLICY,
@@ -15,6 +16,8 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const VOICE_OPENROUTER_MODEL =
   process.env.VOICE_OPENROUTER_MODEL ?? "openai/gpt-audio-mini";
+const WINDOW_MS = 15 * 60 * 1000;
+const REQUEST_LIMIT = 12;
 
 const VOICE_POLICY = {
   ...VOICE_OPENROUTER_POLICY,
@@ -53,6 +56,7 @@ type VoiceLogErrorCode =
   | "VOICE_LOG_AUDIO_MISSING"
   | "VOICE_LOG_AUDIO_INVALID"
   | "VOICE_LOG_FORMAT_INVALID"
+  | "VOICE_LOG_REQUEST_LIMIT"
   | "VOICE_LOG_TIMEOUT"
   | "VOICE_LOG_PROVIDER_FAILURE"
   | "VOICE_LOG_INTERNAL_ERROR"
@@ -197,7 +201,7 @@ export async function POST(req: NextRequest) {
     status: number,
     code: VoiceLogErrorCode,
     message: string,
-    extras?: { timeout?: boolean }
+    extras?: { timeout?: boolean; headers?: HeadersInit }
   ) => {
     telemetry({
       statusCode: status,
@@ -220,7 +224,7 @@ export async function POST(req: NextRequest) {
         actorId
       )
     );
-    return apiError(status, code, message);
+    return apiError(status, code, message, { headers: extras?.headers });
   };
 
   const respondOk = (payload: unknown) => {
@@ -272,6 +276,23 @@ export async function POST(req: NextRequest) {
       return respondError(401, "AUTH_UNAUTHORIZED", "Unauthorized");
     }
     actorId = user.id;
+
+    const limit = await checkRateLimit(
+      supabase,
+      `voice-log:${user.id}`,
+      REQUEST_LIMIT,
+      WINDOW_MS
+    );
+    if (!limit.ok) {
+      return respondError(
+        429,
+        "VOICE_LOG_REQUEST_LIMIT",
+        "Too many voice log requests. Please try again shortly.",
+        {
+          headers: { "Retry-After": String(limit.retryAfterSeconds) },
+        }
+      );
+    }
 
     let body: unknown;
     try {

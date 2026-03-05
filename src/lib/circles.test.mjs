@@ -39,6 +39,22 @@ test("getShareUrl uses plantmaxxing.com fallback and normalizes trailing slash",
   }
 });
 
+test("getShareUrl prefers an explicit origin over configured env", () => {
+  const original = process.env.NEXT_PUBLIC_SITE_URL;
+  process.env.NEXT_PUBLIC_SITE_URL = "https://plantmaxxing.com";
+
+  assert.equal(
+    getShareUrl("ABC234", "https://staging.plantmaxxing.test/"),
+    "https://staging.plantmaxxing.test/join/ABC234"
+  );
+
+  if (original === undefined) {
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+  } else {
+    process.env.NEXT_PUBLIC_SITE_URL = original;
+  }
+});
+
 test("validateJoinCirclePayload blocks malformed success response without circle id", () => {
   const result = validateJoinCirclePayload({ success: true });
   assert.equal(result.ok, false);

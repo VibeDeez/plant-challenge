@@ -47,10 +47,18 @@ type Props = {
   onClose: () => void;
   plants: Plant[];
   loggedNames: Set<string>;
+  draftScope: string | null;
   onLogPlants: (plants: VoicePlantToLog[]) => Promise<void>;
 };
 
 const VOICE_LOG_DRAFT_KEY = "voice-log-draft-v1";
+
+function getVoiceLogDraftKey(scope: string | null): string {
+  const normalizedScope = scope?.trim();
+  return normalizedScope
+    ? `${VOICE_LOG_DRAFT_KEY}:${normalizedScope}`
+    : VOICE_LOG_DRAFT_KEY;
+}
 
 function normalizePlantName(name: string): string {
   return name
@@ -296,6 +304,7 @@ export default function VoiceLogModal({
   onClose,
   plants,
   loggedNames,
+  draftScope,
   onLogPlants,
 }: Props) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -326,6 +335,7 @@ export default function VoiceLogModal({
     });
     return keys;
   }, [loggedNames]);
+  const draftStorageKey = useMemo(() => getVoiceLogDraftKey(draftScope), [draftScope]);
 
   const selectedCount = results.filter((result) => result.selected && !result.duplicate).length;
   const hasDraft =
@@ -352,7 +362,14 @@ export default function VoiceLogModal({
     trackAnalyticsEvent(buildAnalyticsEvent("voice_log_opened", "client", {}));
 
     try {
-      const rawDraft = window.localStorage.getItem(VOICE_LOG_DRAFT_KEY);
+      let rawDraft = window.localStorage.getItem(draftStorageKey);
+      if (!rawDraft && draftStorageKey !== VOICE_LOG_DRAFT_KEY) {
+        rawDraft = window.localStorage.getItem(VOICE_LOG_DRAFT_KEY);
+        if (rawDraft) {
+          window.localStorage.setItem(draftStorageKey, rawDraft);
+          window.localStorage.removeItem(VOICE_LOG_DRAFT_KEY);
+        }
+      }
       if (!rawDraft) return;
       const draft = JSON.parse(rawDraft) as {
         transcript?: string;
@@ -364,25 +381,25 @@ export default function VoiceLogModal({
     } catch {
       // no-op on corrupt draft
     }
-  }, [open]);
+  }, [draftStorageKey, open]);
 
   useEffect(() => {
     if (!open) return;
     try {
       if (!transcript && results.length === 0) {
         if (didConfirmRef.current) {
-          window.localStorage.removeItem(VOICE_LOG_DRAFT_KEY);
+          window.localStorage.removeItem(draftStorageKey);
         }
         return;
       }
       window.localStorage.setItem(
-        VOICE_LOG_DRAFT_KEY,
+        draftStorageKey,
         JSON.stringify({ transcript, results })
       );
     } catch {
       // ignore storage failures
     }
-  }, [open, transcript, results]);
+  }, [draftStorageKey, open, transcript, results]);
 
   function resetState() {
     setIsRecording(false);
@@ -415,6 +432,15 @@ export default function VoiceLogModal({
         })
       );
     }
+
+    if (didConfirmRef.current) {
+      try {
+        window.localStorage.removeItem(draftStorageKey);
+      } catch {
+        // ignore storage failures
+      }
+    }
+
     resetState();
     onClose();
   }
@@ -434,7 +460,7 @@ export default function VoiceLogModal({
     );
 
     try {
-      window.localStorage.removeItem(VOICE_LOG_DRAFT_KEY);
+      window.localStorage.removeItem(draftStorageKey);
     } catch {
       // ignore storage failures
     }

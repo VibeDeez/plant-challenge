@@ -57,11 +57,15 @@ export function generateInviteCode(): string {
   return code;
 }
 
-export function getShareUrl(inviteCode: string): string {
-  const configuredBase = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  const base = configuredBase && configuredBase.length > 0
-    ? configuredBase
-    : "https://plantmaxxing.com";
+export function getShareUrl(inviteCode: string, baseOrigin?: string): string {
+  const configuredBase =
+    baseOrigin?.trim() ||
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+    (typeof window !== "undefined" ? window.location.origin : "");
+  const base =
+    configuredBase && configuredBase.length > 0
+      ? configuredBase
+      : "https://plantmaxxing.com";
   const normalizedBase = base.replace(/\/+$/, "");
   return `${normalizedBase}/join/${inviteCode}`;
 }

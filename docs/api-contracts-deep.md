@@ -1,6 +1,6 @@
 # API Contracts - Deep Pass
 
-Last updated: 2026-03-04
+Last updated: 2026-03-05
 
 Generated from route implementations. This is code-derived and should be treated as source-aligned reference.
 
@@ -99,8 +99,8 @@ Generated from route implementations. This is code-derived and should be treated
 - Methods: POST
 - Auth required: yes
 - Request fields observed: none or query-only
-- Status codes observed: 400, 401, 422, 500, 502, 504
-- Error messages observed: Could not read that link. Paste a screenshot/photo or use Find Recipe and I can analyze it.; I couldn't find recipe pages for that query yet. Try a more specific search phrase.; I found links but couldn't parse enough recipe detail. Try another query or paste a direct recipe link.; Internal server error; Invalid JSON body; Invalid context shape; Menu Max could not parse recommendations from the model output; Menu Max model is not configured; Menu Max model request failed; Menu Max request timed out. Please try again.; Menu Max returned an empty response; Please provide a valid menu or recipe URL.; Request body must be an object; Unauthorized; imageDataUrl is required when mode='image'; imageDataUrl must be a valid base64 data URL.; mode must be 'url', 'image', or 'discover'; query is required when mode='discover'; url is required when mode='url'
+- Status codes observed: 400, 401, 422, 429, 500, 502, 504
+- Error messages observed: Could not read that link. Paste a screenshot/photo or use Find Recipe and I can analyze it.; I couldn't find recipe pages for that query yet. Try a more specific search phrase.; I found links but couldn't parse enough recipe detail. Try another query or paste a direct recipe link.; Internal server error; Invalid JSON body; Invalid context shape; Menu Max could not parse recommendations from the model output; Menu Max model is not configured; Menu Max model request failed; Menu Max request timed out. Please try again.; Menu Max returned an empty response; Please provide a valid menu or recipe URL.; Request body must be an object; Too many Menu Max requests. Please try again shortly.; Unauthorized; imageDataUrl is required when mode='image'; imageDataUrl must be a valid base64 data URL.; mode must be 'url', 'image', or 'discover'; query is required when mode='discover'; url is required when mode='url'
 - Env vars: OPENROUTER_API_KEY, SAGE_MENU_OPENROUTER_MODEL, SAGE_MENU_TIMEOUT_MS
 
 ## `/api/voice-log`

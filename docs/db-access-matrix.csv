@@ -3,6 +3,7 @@ src/app/(protected)/add/page.tsx,circle_member,select
 src/app/(protected)/add/page.tsx,plant,select
 src/app/(protected)/add/page.tsx,plant_log,insert
 src/app/(protected)/add/page.tsx,plant_log,select
+src/app/(protected)/add/page.tsx,plant_log,upsert
 src/app/(protected)/circles/[id]/page.tsx,circle,select
 src/app/(protected)/circles/[id]/page.tsx,circle_activity,select
 src/app/(protected)/circles/[id]/page.tsx,circle_activity_reaction,delete
@@ -16,8 +17,6 @@ src/app/(protected)/circles/[id]/settings/page.tsx,circle,select
 src/app/(protected)/circles/[id]/settings/page.tsx,circle,update
 src/app/(protected)/circles/[id]/settings/page.tsx,circle_member,delete
 src/app/(protected)/circles/[id]/settings/page.tsx,circle_member,select
-src/app/(protected)/circles/create/page.tsx,circle,insert
-src/app/(protected)/circles/create/page.tsx,circle_member,insert
 src/app/(protected)/circles/page.tsx,circle_member,select
 src/app/(protected)/circles/page.tsx,circle_weekly_score,select
 src/app/(protected)/circles/page.tsx,rpc:join_circle,call
@@ -44,6 +43,8 @@ src/app/api/e2e/cleanup/route.ts,member,update
 src/app/api/e2e/cleanup/route.ts,plant_log,delete
 src/app/api/recognize/route.ts,plant,select
 src/app/api/sage/menu-max/route.ts,plant,select
+src/components/ProtectedLayout.tsx,member,insert
 src/components/ProtectedLayout.tsx,member,select
-src/components/SageMenuLogReviewSheet.tsx,plant_log,insert
+src/components/SageMenuLogReviewSheet.tsx,plant_log,upsert
+src/lib/account/rateLimit.ts,rpc:consume_rate_limit,call
 src/lib/account/securityEvents.ts,account_security_event,insert

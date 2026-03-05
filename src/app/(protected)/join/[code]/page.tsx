@@ -56,7 +56,7 @@ export default function JoinCirclePage() {
   }, [activeMember, code, router]);
 
   if (error) {
-    const isAlreadyMember = error.toLowerCase().includes("already a member");
+    const isAlreadyMember = /already (a member|in this circle)/i.test(error);
 
     return (
       <main className="flex items-center justify-center min-h-screen bg-brand-bg">

@@ -222,6 +222,7 @@
       "400",
       "401",
       "422",
+      "429",
       "500",
       "502",
       "504"
@@ -240,6 +241,7 @@
       "Menu Max returned an empty response",
       "Please provide a valid menu or recipe URL.",
       "Request body must be an object",
+      "Too many Menu Max requests. Please try again shortly.",
       "Unauthorized",
       "imageDataUrl is required when mode='image'",
       "imageDataUrl must be a valid base64 data URL.",

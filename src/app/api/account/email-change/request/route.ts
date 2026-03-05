@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     }
 
     const limiterKey = `email-change:${user.id}`;
-    const limit = checkRateLimit(limiterKey, REQUEST_LIMIT, WINDOW_MS);
+    const limit = await checkRateLimit(supabase, limiterKey, REQUEST_LIMIT, WINDOW_MS);
     if (!limit.ok) {
       return NextResponse.json(
         { error: "Too many email change requests. Please try again shortly." },

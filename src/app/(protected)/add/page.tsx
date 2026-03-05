@@ -41,17 +41,32 @@ export default function AddPlantPage() {
   const { activeMember } = useApp();
   const [plants, setPlants] = useState<Plant[]>([]);
   const [loggedNames, setLoggedNames] = useState<Set<string>>(new Set());
+  const [loggingPlantIds, setLoggingPlantIds] = useState<Set<number>>(new Set());
   const [search, setSearch] = useState("");
   const [customName, setCustomName] = useState("");
   const [customCategory, setCustomCategory] = useState("Fruits");
+  const [savingCustom, setSavingCustom] = useState(false);
   const [showCustom, setShowCustom] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showVoice, setShowVoice] = useState(false);
   const [weekTotalPoints, setWeekTotalPoints] = useState(0);
   const [feedback, setFeedback] = useState<LogFeedback | null>(null);
+  const [logError, setLogError] = useState<string | null>(null);
   const [circleCount, setCircleCount] = useState(0);
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const weekStart = useMemo(() => getWeekStart(), []);
+  const normalizedLoggedNames = useMemo(
+    () =>
+      new Set(
+        Array.from(loggedNames).map((name) => normalizePlantName(name).toLowerCase())
+      ),
+    [loggedNames]
+  );
+
+  const isLoggedThisWeek = useCallback(
+    (name: string) => normalizedLoggedNames.has(normalizePlantName(name).toLowerCase()),
+    [normalizedLoggedNames]
+  );
 
   const toggleCategory = useCallback((cat: string) => {
     setExpandedCategories((prev) => {
@@ -91,15 +106,37 @@ export default function AddPlantPage() {
   }, [fetchData]);
 
   async function logPlant(plant: Plant) {
-    if (!activeMember) return;
-    const { error } = await supabase.from("plant_log").insert({
-      member_id: activeMember.id,
-      plant_name: plant.name,
-      category: plant.category,
-      points: plant.points,
-      week_start: weekStart,
-    });
-    if (!error) {
+    if (!activeMember || loggingPlantIds.has(plant.id) || isLoggedThisWeek(plant.name)) {
+      return;
+    }
+
+    setLoggingPlantIds((prev) => new Set(prev).add(plant.id));
+    setLogError(null);
+
+    try {
+      const { error } = await supabase.from("plant_log").insert({
+        member_id: activeMember.id,
+        plant_name: plant.name,
+        category: plant.category,
+        points: plant.points,
+        week_start: weekStart,
+      });
+
+      if (error) {
+        if (error.code === "23505") {
+          setLoggedNames((prev) => new Set(prev).add(plant.name));
+          setFeedback({
+            pointsAdded: 0,
+            duplicateCount: 1,
+            newUniqueCount: 0,
+            uniqueProgress: loggedNames.size,
+            hasCircleImpact: circleCount > 0,
+          });
+          return;
+        }
+        throw error;
+      }
+
       setLoggedNames((prev) => new Set(prev).add(plant.name));
       setWeekTotalPoints((prev) => prev + plant.points);
       setFeedback({
@@ -109,38 +146,80 @@ export default function AddPlantPage() {
         uniqueProgress: loggedNames.size + 1,
         hasCircleImpact: circleCount > 0,
       });
+    } catch {
+      setLogError("Could not save that plant. Please try again.");
+    } finally {
+      setLoggingPlantIds((prev) => {
+        const next = new Set(prev);
+        next.delete(plant.id);
+        return next;
+      });
     }
   }
 
   async function logCustomPlant(e: React.FormEvent) {
     e.preventDefault();
-    if (!activeMember || !customName.trim()) return;
+    if (!activeMember || !customName.trim() || savingCustom) return;
     const normalizedCustomName = normalizePlantName(customName);
-    const alreadyLoggedThisWeek = Array.from(loggedNames).some(
-      (name) => normalizePlantName(name).toLowerCase() === normalizedCustomName.toLowerCase()
-    );
+    const alreadyLoggedThisWeek = isLoggedThisWeek(normalizedCustomName);
     const isHerbOrSpice =
       customCategory === "Herbs" || customCategory === "Spices";
     const points = isHerbOrSpice ? 0.25 : 1;
-    const { error } = await supabase.from("plant_log").insert({
-      member_id: activeMember.id,
-      plant_name: normalizedCustomName,
-      category: customCategory,
-      points,
-      week_start: weekStart,
-    });
-    if (!error) {
+
+    if (alreadyLoggedThisWeek) {
+      setLogError(null);
+      setFeedback({
+        pointsAdded: 0,
+        duplicateCount: 1,
+        newUniqueCount: 0,
+        uniqueProgress: loggedNames.size,
+        hasCircleImpact: circleCount > 0,
+      });
+      return;
+    }
+
+    setSavingCustom(true);
+    setLogError(null);
+
+    try {
+      const { error } = await supabase.from("plant_log").insert({
+        member_id: activeMember.id,
+        plant_name: normalizedCustomName,
+        category: customCategory,
+        points,
+        week_start: weekStart,
+      });
+
+      if (error) {
+        if (error.code === "23505") {
+          setLoggedNames((prev) => new Set(prev).add(normalizedCustomName));
+          setFeedback({
+            pointsAdded: 0,
+            duplicateCount: 1,
+            newUniqueCount: 0,
+            uniqueProgress: loggedNames.size,
+            hasCircleImpact: circleCount > 0,
+          });
+          return;
+        }
+        throw error;
+      }
+
       setLoggedNames((prev) => new Set(prev).add(normalizedCustomName));
       setWeekTotalPoints((prev) => prev + points);
       setFeedback({
         pointsAdded: points,
-        duplicateCount: alreadyLoggedThisWeek ? 1 : 0,
-        newUniqueCount: alreadyLoggedThisWeek ? 0 : 1,
-        uniqueProgress: loggedNames.size + (alreadyLoggedThisWeek ? 0 : 1),
+        duplicateCount: 0,
+        newUniqueCount: 1,
+        uniqueProgress: loggedNames.size + 1,
         hasCircleImpact: circleCount > 0,
       });
       setCustomName("");
       setShowCustom(false);
+    } catch {
+      setLogError("Could not save that plant. Please try again.");
+    } finally {
+      setSavingCustom(false);
     }
   }
 
@@ -148,10 +227,7 @@ export default function AddPlantPage() {
     recognized: { name: string; category: string; points: number; confidence?: number }[]
   ) {
     if (!activeMember) return;
-
-    const normalizedLogged = new Set(
-      Array.from(loggedNames).map((name) => normalizePlantName(name).toLowerCase())
-    );
+    setLogError(null);
 
     const seen = new Set<string>();
     const uniqueRecognized = recognized
@@ -168,7 +244,7 @@ export default function AddPlantPage() {
       });
 
     const inserts = uniqueRecognized
-      .filter((p) => !normalizedLogged.has(p.name.toLowerCase()))
+      .filter((p) => !isLoggedThisWeek(p.name))
       .map((p) => ({
         member_id: activeMember.id,
         plant_name: p.name,
@@ -188,23 +264,28 @@ export default function AddPlantPage() {
       });
       return;
     }
-    const { error } = await supabase.from("plant_log").insert(inserts);
-    if (!error) {
-      const addedPoints = inserts.reduce((sum, row) => sum + Number(row.points ?? 0), 0);
-      setWeekTotalPoints((prev) => prev + addedPoints);
-      setLoggedNames((prev) => {
-        const next = new Set(prev);
-        inserts.forEach((i) => next.add(i.plant_name));
-        return next;
-      });
-      setFeedback({
-        pointsAdded: addedPoints,
-        duplicateCount,
-        newUniqueCount: inserts.length,
-        uniqueProgress: loggedNames.size + inserts.length,
-        hasCircleImpact: circleCount > 0,
-      });
+    const { error } = await supabase.from("plant_log").upsert(inserts, {
+      onConflict: "member_id,plant_name,week_start",
+      ignoreDuplicates: true,
+    });
+    if (error) {
+      throw new Error(error.message || "Could not save recognized plants");
     }
+
+    const addedPoints = inserts.reduce((sum, row) => sum + Number(row.points ?? 0), 0);
+    setWeekTotalPoints((prev) => prev + addedPoints);
+    setLoggedNames((prev) => {
+      const next = new Set(prev);
+      inserts.forEach((i) => next.add(i.plant_name));
+      return next;
+    });
+    setFeedback({
+      pointsAdded: addedPoints,
+      duplicateCount,
+      newUniqueCount: inserts.length,
+      uniqueProgress: loggedNames.size + inserts.length,
+      hasCircleImpact: circleCount > 0,
+    });
   }
 
   async function logVoicePlants(
@@ -326,6 +407,12 @@ export default function AddPlantPage() {
             </div>
           )}
 
+          {logError && (
+            <div className="mb-3 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+              {logError}
+            </div>
+          )}
+
           {/* Search bar */}
           <div className="relative mb-2">
             <Search
@@ -416,14 +503,15 @@ export default function AddPlantPage() {
                           <div className="relative overflow-hidden border-t border-brand-dark/10">
                             <div className="relative flex flex-wrap justify-center gap-1.5 py-3">
                               {items.map((plant) => {
-                                const logged = loggedNames.has(plant.name);
+                                const logged = isLoggedThisWeek(plant.name);
+                                const pending = loggingPlantIds.has(plant.id);
                                 return (
                                   <button
                                     key={plant.id}
-                                    onClick={() => !logged && logPlant(plant)}
-                                    disabled={logged}
+                                    onClick={() => !logged && !pending && logPlant(plant)}
+                                    disabled={logged || pending}
                                     className={`relative min-h-11 rounded-full border px-4 py-1.5 text-left transition-all backdrop-blur-sm ${
-                                      logged
+                                      logged || pending
                                         ? "bg-brand-dark/5 opacity-50 border-brand-dark/10"
                                         : "bg-white/30 hover:bg-white/50 hover:shadow-md active:scale-[0.97] border-brand-dark/10"
                                     }`}
@@ -497,7 +585,7 @@ export default function AddPlantPage() {
                 <PlantListItem
                   key={plant.id}
                   plant={plant}
-                  logged={loggedNames.has(plant.name)}
+                  logged={isLoggedThisWeek(plant.name)}
                   onLog={logPlant}
                 />
               ))}
@@ -580,9 +668,10 @@ export default function AddPlantPage() {
               <div className="shrink-0 border-t border-brand-dark/10 bg-brand-cream pt-3">
                 <button
                   type="submit"
+                  disabled={savingCustom}
                   className="w-full rounded-xl bg-brand-green px-4 py-3 text-sm font-semibold text-white hover:bg-brand-green-hover transition-colors"
                 >
-                  Log Plant
+                  {savingCustom ? "Logging..." : "Log Plant"}
                 </button>
               </div>
             </form>
@@ -593,7 +682,7 @@ export default function AddPlantPage() {
       <PhotoRecognitionModal
         open={showCamera}
         onClose={() => setShowCamera(false)}
-        loggedNames={loggedNames}
+        loggedNames={normalizedLoggedNames}
         onLogPlants={logRecognizedPlants}
       />
 
@@ -601,7 +690,8 @@ export default function AddPlantPage() {
         open={showVoice}
         onClose={() => setShowVoice(false)}
         plants={plants}
-        loggedNames={loggedNames}
+        loggedNames={normalizedLoggedNames}
+        draftScope={activeMember?.id ?? null}
         onLogPlants={logVoicePlants}
       />
     </>

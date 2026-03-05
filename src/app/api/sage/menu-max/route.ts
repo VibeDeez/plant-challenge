@@ -24,11 +24,15 @@ import {
   extractModelMessageContent,
   parseSageTimeoutMs,
 } from "../routeUtils";
+import { checkRateLimit } from "@/lib/account/rateLimit";
+import { fetchSafeRemoteText } from "@/lib/api/safeRemoteText";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const MENU_MAX_MODEL =
   process.env.SAGE_MENU_OPENROUTER_MODEL ?? "google/gemini-2.0-flash-lite-001";
 const REQUEST_TIMEOUT_MS = parseSageTimeoutMs(process.env.SAGE_MENU_TIMEOUT_MS);
+const WINDOW_MS = 15 * 60 * 1000;
+const REQUEST_LIMIT = 10;
 
 const MAX_URL_LENGTH = 500;
 const MAX_QUERY_LENGTH = 220;
@@ -37,6 +41,7 @@ const MAX_CONTEXT_ITEMS = 120;
 const MAX_DISCOVER_RESULTS = 5;
 const MAX_DISCOVER_SOURCES = 4;
 const MAX_SOURCE_TEXT_FOR_MODEL = 3200;
+const MAX_REMOTE_SOURCE_BYTES = 512 * 1024;
 
 type ModelRecommendation = {
   dishName: string;
@@ -216,34 +221,25 @@ async function searchRecipeUrls(query: string): Promise<RecipeSearchHit[]> {
 }
 
 async function fetchRecipeSource(hit: RecipeSearchHit): Promise<RecipeSource | null> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-
   try {
-    const response = await fetch(hit.url, {
-      signal: controller.signal,
-      headers: {
-        "User-Agent": "Plantmaxxing Recipe Finder",
-      },
+    const { text, finalUrl } = await fetchSafeRemoteText(hit.url, {
+      timeoutMs: REQUEST_TIMEOUT_MS,
+      maxBytes: MAX_REMOTE_SOURCE_BYTES,
+      userAgent: "Plantmaxxing Recipe Finder",
     });
-    if (!response.ok) return null;
-
-    const html = await response.text();
     const extracted = trimSourceText(
-      extractVisibleTextFromHtml(html),
+      extractVisibleTextFromHtml(text),
       MAX_SOURCE_TEXT_FOR_MODEL
     );
     if (extracted.length < 120) return null;
 
     return {
       title: hit.title,
-      url: hit.url,
+      url: finalUrl,
       text: extracted,
     };
   } catch {
     return null;
-  } finally {
-    clearTimeout(timeout);
   }
 }
 
@@ -417,6 +413,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    const limit = await checkRateLimit(
+      supabase,
+      `menu-max:${user.id}`,
+      REQUEST_LIMIT,
+      WINDOW_MS
+    );
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Too many Menu Max requests. Please try again shortly." },
+        {
+          status: 429,
+          headers: { "Retry-After": String(limit.retryAfterSeconds) },
+        }
+      );
+    }
+
     if (!OPENROUTER_API_KEY) {
       return NextResponse.json(
         { error: "Menu Max model is not configured" },
@@ -482,28 +494,23 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-      let sourceHtml = "";
       try {
-        const sourceRes = await fetch(trimmedUrl, {
-          signal: controller.signal,
-          headers: {
-            "User-Agent": "Plantmaxxing Menu Max",
-          },
+        const { text, finalUrl } = await fetchSafeRemoteText(trimmedUrl, {
+          timeoutMs: REQUEST_TIMEOUT_MS,
+          maxBytes: MAX_REMOTE_SOURCE_BYTES,
+          userAgent: "Plantmaxxing Menu Max",
         });
-
-        if (!sourceRes.ok) {
-          return NextResponse.json(
-            {
-              error:
-                "Could not read that link. Paste a screenshot/photo or use Find Recipe and I can analyze it.",
-            },
-            { status: 422 }
-          );
+        const visibleText = trimSourceText(extractVisibleTextFromHtml(text));
+        if (visibleText.length < 120) {
+          sourceNotes.push("Source text was sparse; recommendations may be less precise.");
         }
 
-        sourceHtml = await sourceRes.text();
+        userMessageContent = JSON.stringify({
+          mode,
+          url: finalUrl,
+          extractedSourceText: visibleText,
+          context: context ?? null,
+        });
       } catch {
         return NextResponse.json(
           {
@@ -512,21 +519,7 @@ export async function POST(req: NextRequest) {
           },
           { status: 422 }
         );
-      } finally {
-        clearTimeout(timeout);
       }
-
-      const visibleText = trimSourceText(extractVisibleTextFromHtml(sourceHtml));
-      if (visibleText.length < 120) {
-        sourceNotes.push("Source text was sparse; recommendations may be less precise.");
-      }
-
-      userMessageContent = JSON.stringify({
-        mode,
-        url: trimmedUrl,
-        extractedSourceText: visibleText,
-        context: context ?? null,
-      });
     } else if (mode === "image") {
       if (typeof imageDataUrl !== "string" || imageDataUrl.trim().length === 0) {
         return NextResponse.json(

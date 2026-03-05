@@ -7,6 +7,7 @@ export type ApiErrorCode =
   | "RECOGNIZE_INVALID_BODY"
   | "RECOGNIZE_IMAGE_MISSING"
   | "RECOGNIZE_IMAGE_INVALID"
+  | "RECOGNIZE_REQUEST_LIMIT"
   | "RECOGNIZE_TIMEOUT"
   | "RECOGNIZE_PROVIDER_FAILURE"
   | "RECOGNIZE_INTERNAL_ERROR"
@@ -26,11 +27,20 @@ export type ApiErrorCode =
   | "VOICE_LOG_AUDIO_MISSING"
   | "VOICE_LOG_AUDIO_INVALID"
   | "VOICE_LOG_FORMAT_INVALID"
+  | "VOICE_LOG_REQUEST_LIMIT"
   | "VOICE_LOG_TIMEOUT"
   | "VOICE_LOG_PROVIDER_FAILURE"
   | "VOICE_LOG_INTERNAL_ERROR"
   | "AUTH_UNAUTHORIZED";
 
-export function apiError(status: number, code: ApiErrorCode, error: string) {
-  return NextResponse.json({ error, code }, { status });
+export function apiError(
+  status: number,
+  code: ApiErrorCode,
+  error: string,
+  init?: { headers?: HeadersInit }
+) {
+  return NextResponse.json(
+    { error, code },
+    { status, headers: init?.headers }
+  );
 }

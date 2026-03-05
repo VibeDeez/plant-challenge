@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { apiError } from "@/lib/api/errors";
 import { createApiTelemetry } from "@/lib/api/telemetry";
+import { checkRateLimit } from "@/lib/account/rateLimit";
 import {
   fetchWithPolicy,
   RECOGNIZE_OPENROUTER_POLICY,
@@ -15,6 +16,8 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const VISION_MODEL = "google/gemini-2.0-flash-lite-001";
 const MAX_IMAGE_DATA_URL_LENGTH = 4 * 1024 * 1024;
+const WINDOW_MS = 15 * 60 * 1000;
+const REQUEST_LIMIT = 20;
 
 const SYSTEM_PROMPT = `You are a food recognition assistant for a plant diversity tracking app. Analyze the photo and identify all visible plant-based whole foods.
 
@@ -39,6 +42,7 @@ type RecognizeErrorCode =
   | "RECOGNIZE_INVALID_BODY"
   | "RECOGNIZE_IMAGE_MISSING"
   | "RECOGNIZE_IMAGE_INVALID"
+  | "RECOGNIZE_REQUEST_LIMIT"
   | "RECOGNIZE_TIMEOUT"
   | "RECOGNIZE_PROVIDER_FAILURE"
   | "RECOGNIZE_INTERNAL_ERROR"
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest) {
     status: number,
     code: RecognizeErrorCode,
     message: string,
-    extras?: { timeout?: boolean }
+    extras?: { timeout?: boolean; headers?: HeadersInit }
   ) => {
     telemetry({ statusCode: status, parseFailed, timeout: extras?.timeout });
     trackAnalyticsEvent(
@@ -76,7 +80,7 @@ export async function POST(req: NextRequest) {
         actorId
       )
     );
-    return apiError(status, code, message);
+    return apiError(status, code, message, { headers: extras?.headers });
   };
 
   const respondOk = (payload: unknown, extras?: { plantCount?: number }) => {
@@ -120,6 +124,23 @@ export async function POST(req: NextRequest) {
       return respondError(401, "AUTH_UNAUTHORIZED", "Unauthorized");
     }
     actorId = user.id;
+
+    const limit = await checkRateLimit(
+      supabase,
+      `recognize:${user.id}`,
+      REQUEST_LIMIT,
+      WINDOW_MS
+    );
+    if (!limit.ok) {
+      return respondError(
+        429,
+        "RECOGNIZE_REQUEST_LIMIT",
+        "Too many recognition requests. Please try again shortly.",
+        {
+          headers: { "Retry-After": String(limit.retryAfterSeconds) },
+        }
+      );
+    }
 
     let body: unknown;
     try {
@@ -209,7 +230,20 @@ export async function POST(req: NextRequest) {
     }
 
     const orData = await orResponse.json();
-    const content = orData.choices?.[0]?.message?.content ?? "[]";
+    const rawContent = orData.choices?.[0]?.message?.content;
+    const content =
+      typeof rawContent === "string"
+        ? rawContent
+        : Array.isArray(rawContent)
+          ? rawContent
+              .map((part) =>
+                part && typeof part === "object" && typeof part.text === "string"
+                  ? part.text
+                  : ""
+              )
+              .join("\n")
+              .trim()
+          : "[]";
 
     const jsonStr = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     let identified: { name: string; category: string }[];

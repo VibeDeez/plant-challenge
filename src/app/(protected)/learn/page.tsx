@@ -171,7 +171,7 @@ export default function LearnPage() {
           </div>
 
           {/* Scoring cards grid */}
-          <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
             {/* 1 point card */}
             <div
               className={`bg-white/40 backdrop-blur-sm rounded-2xl border border-brand-dark/5 p-4 transition-all duration-700 delay-100 ${
@@ -320,7 +320,7 @@ export default function LearnPage() {
           </div>
 
           {/* Tip cards grid */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {STRATEGIES.map((strategy, i) => {
               const Icon = STRATEGY_ICONS[strategy.icon];
               const illoSrc =

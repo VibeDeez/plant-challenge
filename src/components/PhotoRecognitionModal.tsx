@@ -28,7 +28,7 @@ type Props = {
   open: boolean;
   onClose: () => void;
   loggedNames: Set<string>;
-  onLogPlants: (plants: RecognizedPlant[]) => void;
+  onLogPlants: (plants: RecognizedPlant[]) => Promise<void>;
 };
 
 export default function PhotoRecognitionModal({
@@ -42,7 +42,12 @@ export default function PhotoRecognitionModal({
   const [results, setResults] = useState<RecognizedPlant[]>([]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  function isAlreadyLogged(name: string) {
+    return loggedNames.has(name.trim().replace(/\s+/g, " ").toLowerCase());
+  }
 
   function reset() {
     setPreview(null);
@@ -50,6 +55,7 @@ export default function PhotoRecognitionModal({
     setResults([]);
     setSelected(new Set());
     setError(null);
+    setSaving(false);
   }
 
   function handleClose() {
@@ -94,7 +100,7 @@ export default function PhotoRecognitionModal({
 
       const preSelected = new Set<number>();
       plants.forEach((p, i) => {
-        if (!loggedNames.has(p.name)) preSelected.add(i);
+        if (!isAlreadyLogged(p.name)) preSelected.add(i);
       });
       setSelected(preSelected);
     } catch (error) {
@@ -114,10 +120,24 @@ export default function PhotoRecognitionModal({
     });
   }
 
-  function handleLog() {
+  async function handleLog() {
     const toLog = results.filter((_, i) => selected.has(i));
-    onLogPlants(toLog);
-    handleClose();
+    if (toLog.length === 0 || saving) return;
+
+    setSaving(true);
+    setError(null);
+
+    try {
+      await onLogPlants(toLog);
+      handleClose();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not save those plants. Please try again."
+      );
+      setSaving(false);
+    }
   }
 
   useEffect(() => {
@@ -133,9 +153,11 @@ export default function PhotoRecognitionModal({
 
   const selectedCount = selected.size;
   const uncertainCount = results.filter(
-    (plant) => !loggedNames.has(plant.name) && requiresConfidenceReview(normalizeRecognitionConfidence(plant.confidence))
+    (plant) =>
+      !isAlreadyLogged(plant.name) &&
+      requiresConfidenceReview(normalizeRecognitionConfidence(plant.confidence))
   ).length;
-  const duplicateCount = results.filter((plant) => loggedNames.has(plant.name)).length;
+  const duplicateCount = results.filter((plant) => isAlreadyLogged(plant.name)).length;
 
   return (
     <Sheet
@@ -234,12 +256,15 @@ export default function PhotoRecognitionModal({
                   </p>
                   <button
                     onClick={() => {
-                      if (selectedCount === results.filter((_, i) => !loggedNames.has(results[i].name)).length) {
+                      if (
+                        selectedCount ===
+                        results.filter((plant) => !isAlreadyLogged(plant.name)).length
+                      ) {
                         setSelected(new Set());
                       } else {
                         const all = new Set<number>();
                         results.forEach((p, i) => {
-                          if (!loggedNames.has(p.name)) all.add(i);
+                          if (!isAlreadyLogged(p.name)) all.add(i);
                         });
                         setSelected(all);
                       }
@@ -253,7 +278,7 @@ export default function PhotoRecognitionModal({
 
                 <div className="space-y-2">
                   {results.map((plant, idx) => {
-                    const alreadyLogged = loggedNames.has(plant.name);
+                    const alreadyLogged = isAlreadyLogged(plant.name);
                     const isSelected = selected.has(idx);
                     const color = CATEGORY_COLORS[plant.category] ?? "#6b7260";
                     const lowConfidence = requiresConfidenceReview(normalizeRecognitionConfidence(plant.confidence));
@@ -318,14 +343,16 @@ export default function PhotoRecognitionModal({
 
                 <button
                   onClick={handleLog}
-                  disabled={selectedCount === 0}
+                  disabled={selectedCount === 0 || saving}
                   className={`w-full rounded-xl px-4 py-3 text-sm font-semibold text-white transition-colors ${
-                    selectedCount > 0
+                    selectedCount > 0 && !saving
                       ? "bg-brand-green hover:bg-brand-green-hover"
                       : "bg-brand-green/30 cursor-not-allowed"
                   }`}
                 >
-                  {selectedCount > 0
+                  {saving
+                    ? "Saving..."
+                    : selectedCount > 0
                     ? `Log ${selectedCount} Plant${selectedCount !== 1 ? "s" : ""}`
                     : "Select plants to log"}
                 </button>

@@ -470,7 +470,7 @@ export default function CircleDetailPage() {
   // ---------- Copy invite ----------
   function handleCopy() {
     if (!circle) return;
-    const url = getShareUrl(circle.invite_code);
+    const url = getShareUrl(circle.invite_code, window.location.origin);
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -522,7 +522,33 @@ export default function CircleDetailPage() {
         .from("circle_activity_reaction")
         .select("*")
         .in("activity_id", ids);
-      if (rxData) setReactions(rxData as CircleActivityReaction[]);
+      if (rxData) {
+        const sanitized = sanitizeActivityFeed({
+          activities: activities.map((activity) => ({
+            id: activity.id,
+            circle_id: activity.circle_id,
+            member_id: activity.member_id,
+            event_type: activity.event_type,
+          })),
+          reactions: (rxData as CircleActivityReaction[]).map((row) => ({
+            activity_id: row.activity_id,
+            member_id: row.member_id,
+            emoji: row.emoji,
+          })),
+          memberIds,
+        });
+
+        setReactions(
+          (rxData as CircleActivityReaction[]).filter((row) =>
+            sanitized.reactions.some(
+              (safe) =>
+                safe.activity_id === row.activity_id &&
+                safe.member_id === row.member_id &&
+                safe.emoji === row.emoji
+            )
+          )
+        );
+      }
     }
 
     setOpenPicker(null);

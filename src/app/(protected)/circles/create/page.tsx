@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useApp } from "@/components/ProtectedLayout";
-import { generateInviteCode, getShareUrl, isValidCircleId } from "@/lib/circles";
+import { getShareUrl, isValidCircleId } from "@/lib/circles";
 import Link from "next/link";
 import { ArrowLeft, Copy, Share2, ArrowRight, Check } from "lucide-react";
 
@@ -41,71 +41,69 @@ export default function CircleCreatePage() {
     setCreating(true);
     setError("");
 
-    let circle: CreatedCircle | null = null;
-    let attempts = 0;
-    const MAX_ATTEMPTS = 3;
-
-    while (!circle && attempts < MAX_ATTEMPTS) {
-      attempts++;
-      const code = generateInviteCode();
-
-      const { data, error: insertError } = await supabase
-        .from("circle")
-        .insert({
-          name: name.trim(),
-          invite_code: code,
-          admin_id: activeMember.id,
-        })
-        .select()
-        .single();
-
-      if (insertError) {
-        // Unique violation on invite_code — retry
-        if (
-          insertError.code === "23505" &&
-          insertError.message?.includes("invite_code")
-        ) {
-          continue;
+    try {
+      const { data, error: rpcError } = await supabase.rpc(
+        "create_circle",
+        {
+          p_name: name.trim(),
+          p_admin_member_id: activeMember.id,
         }
-        setError(insertError.message || "Failed to create circle");
-        setCreating(false);
+      );
+
+      if (rpcError) {
+        setError(rpcError.message || "Failed to create circle");
         return;
       }
 
-      if (!isCreatedCirclePayload(data)) {
+      const payload =
+        data && typeof data === "object" && !Array.isArray(data)
+          ? {
+              id:
+                "id" in data && isValidCircleId(data.id)
+                  ? data.id
+                  : "circle_id" in data && isValidCircleId(data.circle_id)
+                    ? data.circle_id
+                    : null,
+              name: typeof data.name === "string" ? data.name : null,
+              invite_code:
+                typeof data.invite_code === "string" ? data.invite_code : null,
+              error:
+                typeof data.error === "string" ? data.error : null,
+            }
+          : null;
+
+      if (payload?.error) {
+        setError(payload.error);
+        return;
+      }
+
+      if (
+        !payload ||
+        !payload.id ||
+        !payload.name ||
+        !payload.invite_code ||
+        !isCreatedCirclePayload(payload)
+      ) {
         setError("Circle was created, but the response was invalid. Please try again.");
-        setCreating(false);
         return;
       }
 
-      circle = { id: data.id, name: data.name, invite_code: data.invite_code };
-    }
-
-    if (!circle) {
-      setError("Could not generate a unique invite code. Please try again.");
+      setCreated({
+        id: payload.id,
+        name: payload.name,
+        invite_code: payload.invite_code,
+      });
+    } finally {
       setCreating(false);
-      return;
     }
-
-    // Add creator as a member
-    const { error: memberError } = await supabase
-      .from("circle_member")
-      .insert({ circle_id: circle.id, member_id: activeMember.id });
-
-    if (memberError) {
-      setError(memberError.message || "Circle created but failed to join it");
-      setCreating(false);
-      return;
-    }
-
-    setCreated(circle);
-    setCreating(false);
   }
 
   async function handleCopy() {
     if (!created) return;
     try {
-      await navigator.clipboard.writeText(getShareUrl(created.invite_code));
+      await navigator.clipboard.writeText(
+        getShareUrl(created.invite_code, window.location.origin)
+      );
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -116,7 +114,7 @@ export default function CircleCreatePage() {
 
   async function handleShare() {
     if (!created) return;
-    const url = getShareUrl(created.invite_code);
+    const url = getShareUrl(created.invite_code, window.location.origin);
     const shareData = {
       title: `Join ${created.name} on Placeholder`,
       text: `Join my Crop Circle "${created.name}" and compete on weekly plant leaderboards! Use code: ${created.invite_code}`,

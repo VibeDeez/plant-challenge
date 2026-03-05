@@ -29,13 +29,5 @@ export function getRequestOrigin(request: NextRequest): string {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (siteUrl) return siteUrl.replace(/\/$/, "");
 
-  const requestOrigin = new URL(request.url).origin;
-  if (
-    requestOrigin.includes("localhost") ||
-    requestOrigin.includes("127.0.0.1")
-  ) {
-    return requestOrigin;
-  }
-
-  return "https://plantmaxxing.com";
+  return new URL(request.url).origin;
 }

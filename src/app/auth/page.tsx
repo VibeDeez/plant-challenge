@@ -5,7 +5,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import {
   CATEGORY_COLORS,
-  CATEGORY_ICONS,
   CATEGORY_ILLUSTRATIONS,
   ALL_ILLUSTRATIONS,
   PARADE_ILLUSTRATIONS,
